@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  account_id             String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account_name           String                   @db.VarChar(50)
+  email                  String                   @unique(map: "email_unique") @db.VarChar(100)
+  phone                  String                   @db.VarChar(20)
+  password               String                   @db.VarChar(20)
+  is_admin               Boolean                  @default(false)
+  date_created           DateTime                 @default(now()) @db.Timestamp(6)
+  Account_Payment_Method Account_Payment_Method[]
+  Order                  Order[]
+  Review                 Review[]
+  Shopping_Cart          Shopping_Cart[]
+  User_Address           User_Address[]
+}
+
+model Account_Payment_Method {
+  apm_id         String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  provider       String         @db.VarChar(60)
+  account_number String         @db.VarChar(50)
+  expiry_date    DateTime       @db.Date
+  is_default     Boolean        @default(false)
+  account_id     String         @db.Uuid
+  method_id      Int
+  Account        Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_1")
+  Payment_Method Payment_Method @relation(fields: [method_id], references: [method_id], onDelete: Cascade, map: "fk_payment_2")
+}
+
+model Address {
+  address_id    String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  unit_number   String         @db.VarChar(10)
+  street_number String         @db.VarChar(100)
+  address_line1 String         @db.VarChar(100)
+  address_line2 String?        @db.VarChar(100)
+  city          String         @db.VarChar(50)
+  region        String?        @db.VarChar(50)
+  postal_code   String         @db.VarChar(10)
+  country_id    Int
+  Country       Country        @relation(fields: [country_id], references: [country_id], onDelete: Cascade, map: "fk_country")
+  User_Address  User_Address[]
+}
+
+model Cart_Details {
+  cd_id          String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  quantity       Int
+  cart_id        String         @db.Uuid
+  pw_id          String         @db.Uuid
+  Shopping_Cart  Shopping_Cart  @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, map: "fk_cart_details_1")
+  Product_Weight Product_Weight @relation(fields: [pw_id], references: [pw_id], onDelete: Cascade, map: "fk_cart_details_2")
+}
+
+model Category {
+  category_id   Int       @id(map: "category_pkey") @default(autoincrement())
+  category_name String    @db.VarChar(50)
+  Product       Product[]
+}
+
+model Country {
+  country_id   Int       @id @default(autoincrement())
+  country_name String    @db.VarChar(50)
+  Address      Address[]
+}
+
+model Discount {
+  discount_id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  discount_code       String   @db.VarChar(15)
+  discount_value      Float    @db.Real
+  max_discount_amount Float    @db.Real
+  min_order_amount    Float    @db.Real
+  start_date          DateTime @db.Timestamp(6)
+  end_date            DateTime @db.Timestamp(6)
+  is_active           Boolean
+  Order               Order[]
+}
+
+model Flavour_Note {
+  flavour_id      Int               @id @default(autoincrement())
+  flavour_name    String            @db.VarChar(30)
+  Product_Flavour Product_Flavour[]
+}
+
+model Order {
+  order_id        String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  order_date      DateTime        @db.Timestamp(6)
+  order_total     Float           @db.Real
+  note            String?         @db.VarChar(1024)
+  account_id      String          @db.Uuid
+  shipping_id     Int
+  status_id       Int
+  discount_id     String          @db.Uuid
+  Account         Account         @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_order")
+  Discount        Discount        @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fk_discount")
+  Shipping_Method Shipping_Method @relation(fields: [shipping_id], references: [shipping_id], onDelete: Cascade, map: "fk_shipping")
+  Order_Status    Order_Status    @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "fk_status")
+  Order_Details   Order_Details[]
+}
+
+model Order_Details {
+  od_id          String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  quantity       Int
+  subtotal       Float          @db.Real
+  is_ground      Boolean
+  order_id       String         @db.Uuid
+  pw_id          String         @db.Uuid
+  Order          Order          @relation(fields: [order_id], references: [order_id], onDelete: Cascade, map: "fk_order_details_1")
+  Product_Weight Product_Weight @relation(fields: [pw_id], references: [pw_id], onDelete: Cascade, map: "fk_order_details_2")
+}
+
+model Order_Status {
+  status_id   Int     @id @default(autoincrement())
+  status_name String  @db.VarChar(50)
+  Order       Order[]
+}
+
+model Payment_Method {
+  method_id              Int                      @id @default(autoincrement())
+  method_name            String                   @db.VarChar(60)
+  Account_Payment_Method Account_Payment_Method[]
+}
+
+model Product {
+  product_id      String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  product_name    String            @db.VarChar(50)
+  description     String?           @db.VarChar(200)
+  image_url       String            @db.VarChar(200)
+  category_id     Int
+  type_id         Int
+  Category        Category          @relation(fields: [category_id], references: [category_id], onDelete: Cascade, map: "fk_category")
+  Product_Type    Product_Type      @relation(fields: [type_id], references: [type_id], onDelete: Cascade, map: "fk_product_type")
+  Product_Flavour Product_Flavour[]
+  Product_Weight  Product_Weight[]
+  Review          Review[]
+}
+
+model Product_Flavour {
+  product_id   String       @db.Uuid
+  flavour_id   Int
+  Flavour_Note Flavour_Note @relation(fields: [flavour_id], references: [flavour_id], onDelete: Cascade, map: "fk_flavour_to_product")
+  Product      Product      @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_to_flavour")
+
+  @@id([product_id, flavour_id])
+}
+
+model Product_Type {
+  type_id   Int       @id(map: "product_type_pkey") @default(autoincrement())
+  type_name String    @db.VarChar(50)
+  Product   Product[]
+}
+
+model Product_Weight {
+  pw_id         String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  product_price Float           @db.Real
+  qty_in_stock  Int
+  weight_id     Int
+  product_id    String          @db.Uuid
+  Cart_Details  Cart_Details[]
+  Order_Details Order_Details[]
+  Product       Product         @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_to_weight")
+  Weight_Option Weight_Option   @relation(fields: [weight_id], references: [weight_id], onDelete: Cascade, map: "fk_weight_to_product")
+}
+
+model Review {
+  review_id   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  review_date DateTime @default(now()) @db.Timestamp(6)
+  star        Int
+  comment     String?  @db.VarChar(1000)
+  product_id  String   @db.Uuid
+  account_id  String   @db.Uuid
+  Account     Account  @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_review")
+  Product     Product  @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_review")
+}
+
+model Shipping_Method {
+  shipping_id     Int     @id @default(autoincrement())
+  shipping_method String  @db.VarChar(50)
+  shipping_price  Float   @db.Real
+  Order           Order[]
+}
+
+model Shopping_Cart {
+  cart_id      String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account_id   String         @db.Uuid
+  Cart_Details Cart_Details[]
+  Account      Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_cart")
+}
+
+model User_Address {
+  ua_id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  is_defeault Boolean @default(false)
+  account_id  String  @db.Uuid
+  address_id  String  @db.Uuid
+  Account     Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_to_address")
+  Address     Address @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_address_to_account")
+}
+
+model Weight_Option {
+  weight_id      Int              @id @default(autoincrement())
+  weight_name    String           @db.VarChar(15)
+  Product_Weight Product_Weight[]
+}
