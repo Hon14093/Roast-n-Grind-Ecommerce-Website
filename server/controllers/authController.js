@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createAccount, findAccountByEmail } from '../models/Account';
+import { createAccount, findAccountByEmail, getAllAccounts } from '../models/Account.js';
 
 dotenv.config();
 
@@ -12,6 +12,7 @@ const jwtSecret = process.env.JWT_SECRET;
 export const register = async (req,res) => {
     try {
         const {account_name, email, phone, password} = req.body;
+        
 
         if (!account_name || !email || !phone || !password) {
             return res.status(400).json({ message: 'All fields are required.'});
@@ -26,14 +27,9 @@ export const register = async (req,res) => {
         // hash password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const accountData = {
-            account_name,
-            email,
-            phone,
-            password: hashedPassword
-        };
+        req.body.password = hashedPassword;
 
-        const newAccount = await createAccount(accountData);
+        const newAccount = await createAccount(req.body);
         console.log(newAccount);
 
         return res.status(201).json({
@@ -43,14 +39,16 @@ export const register = async (req,res) => {
 
     } catch (error) {
         console.log(error);
+        console.log(req.body);
     }
 }
 
-export const login = async (res,req) => {
+// for future reference: if doesn't run, try changing parameters to (req,res,next)
+export const login = async (req,res) => {
     try {
-        const {email, paswword} = red.body;
+        const {email, password} = req.body;
 
-        if (!email || !paswword) {
+        if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required.'});
         }
 
@@ -81,6 +79,16 @@ export const login = async (res,req) => {
 
     } catch (error) {
         console.log(error);
+        console.log(req.body)
         return res.status(500).json({ message: 'Internal server error!' });
+    }
+}
+
+export const returnAllAccounts = async (req,res) => {
+    try {
+        const allAccounts = await getAllAccounts();
+        return res.status(200).json(allAccounts);
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error!'});
     }
 }
