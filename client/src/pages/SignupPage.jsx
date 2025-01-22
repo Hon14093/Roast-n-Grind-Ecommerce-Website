@@ -10,7 +10,7 @@ function SignupPage() {
                 <Header />
 
                 <main>
-                <SignupBody />
+                    <SignupBody />
                 </main>
 
             </div>

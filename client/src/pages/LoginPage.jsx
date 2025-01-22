@@ -10,7 +10,7 @@ function LoginPage() {
                 <Header />
 
                 <main>
-                <LoginBody />
+                    <LoginBody />
                 </main>
 
             </div>
