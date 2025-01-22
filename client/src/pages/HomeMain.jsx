@@ -1,7 +1,7 @@
 import React from 'react'
-import HeroSection from '../components/homeComponents/HeroSection'
-import FeaturedProductsSection from '../components/homeComponents/FeaturedProductsSection'
-import StorySection from '../components/homeComponents/StorySection'
+import HeroSection from '../components/HomePage/HeroSection'
+import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection'
+import StorySection from '../components/HomePage/StorySection'
 
 function HomeMain() {
     return (

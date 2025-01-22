@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import logoWhite from '../images/white.png'
-import logoBlack from '../images/orange.png'
+import logoWhite from '../../images/white.png'
+import logoBlack from '../../images/orange.png'
 
 function Header() {
     const [scrollDirection, setScrollDirection] = useState(null);
@@ -48,15 +48,17 @@ function Header() {
                 <section className='absolute left-1/2 transform -translate-x-1/2 font-bold'>
                     <ul className='flex gap-8'>
                         <li className='navList group'>
-                            <a className='navAnchor'>Shop</a>
-                        </li>
-                        <li className='navList group'>
-                            <Link to="/AboutUs">
-                                <a className='navAnchor'>About Us</a>
+                            <Link to="/Shop">
+                                <a className='navAnchor'>Shop</a>
                             </Link>
                         </li>
                         <li className='navList group'>
-                            <a className='navAnchor'>Contact</a>
+                            <Link to="/AboutUs">
+                                <a className='navAnchor'>Giới Thiệu</a>
+                            </Link>
+                        </li>
+                        <li className='navList group'>
+                            <a className='navAnchor'>Liên Hệ</a>
                         </li>
                         <li className='navList group'>
                             <a className='navAnchor'>FAQ</a>

@@ -1,12 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const tempData = {
-    account_name: 'Alohaii',
-    email: 'alohaii@gmail.com',
-    phone: '98239823',
-    password: '11111'
-}
+// const tempData = {
+//     account_name: 'Alohaii',
+//     email: 'alohaii@gmail.com',
+//     phone: '98239823',
+//     password: '11111'
+// }
 
 export const createAccount = async (data) => {
     return await prisma.account.create({

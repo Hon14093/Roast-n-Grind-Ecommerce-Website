@@ -4,6 +4,7 @@ import App from './App.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import AboutUsPage from './pages/AboutUsPage.jsx'
+import ShopPage from './pages/ShopPage.jsx'
 import './index.css'
 
 import {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "AboutUs",
     element: <AboutUsPage />
+  },
+  {
+    path: "Shop",
+    element: <ShopPage />
   }
 ])
 
