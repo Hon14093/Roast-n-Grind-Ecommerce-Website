@@ -13,6 +13,7 @@ function LoginBody() {
         axios.post('http://localhost:5000/api/auth/login', {email, password})
         .then(result => {
             console.log(result);
+            navigate('/');
         })
         .catch(result => console.log(result))
 

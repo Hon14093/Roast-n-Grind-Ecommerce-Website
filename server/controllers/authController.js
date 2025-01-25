@@ -33,6 +33,7 @@ export const register = async (req,res) => {
         console.log(newAccount);
 
         return res.status(201).json({
+            status: 1,
             message: 'Account created successfully!',
             account_id: newAccount.account_id
         })
@@ -40,6 +41,9 @@ export const register = async (req,res) => {
     } catch (error) {
         console.log(error);
         console.log(req.body);
+        return res.status(500).json({ 
+            message: 'Internal server error!',
+        });
     }
 }
 
@@ -54,12 +58,12 @@ export const login = async (req,res) => {
 
         const account = await findAccountByEmail(email);
         if (!account) {
-            return res.status(400).json({ message: 'Account not found.' });
+            return res.status(404).json({ message: 'Account not found.' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, account.password);
         if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Incorrect password.' });
+            return res.status(401).json({ message: 'Incorrect password.' });
         }
 
         // generate token
@@ -75,7 +79,9 @@ export const login = async (req,res) => {
         return res.status(200).json({
             status: 1,
             message: 'Login successful',
-            token
+            token,
+            account_id: account.account_id,
+            is_admin: account.is_admin
         })
 
     } catch (error) {

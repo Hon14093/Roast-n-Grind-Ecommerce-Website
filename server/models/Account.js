@@ -11,12 +11,6 @@ const prisma = new PrismaClient();
 export const createAccount = async (data) => {
     return await prisma.account.create({
         data: data
-        // data: {
-        //     account_name: 'Jane Doe',
-        //     email: 'Janedoe@gmail.com',
-        //     phone: '091212121',
-        //     password: 'password'
-        // }
     });
 }
 
