@@ -5,9 +5,9 @@
   line-height: 1.5;
   font-weight: 400;
 
+  background-color: #ede8e1;
   /* color-scheme: light dark; */
   /* color: rgba(255, 255, 255, 0.87); */
-  background-color: #ede8e1;
 
   /* font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,7 +26,7 @@ a:hover {
 
 body {
   margin: 0;
-  font: Raleway;
+  font-family: Raleway;
   /* width: 100%; */
   min-width: 320px;
   min-height: 100vh;
@@ -99,12 +99,12 @@ header {
 
 .clearBG {
   background-color: transparent;
-  color: white;
+  @apply text-ivory
 }
 
 .coloredBG {
   background-color: #ede8e1;
-  color: black;
+  @apply text-darkOlive
 }
 
 @keyframes hideHeader {
@@ -178,7 +178,11 @@ header {
 }
 
 .font-serifs {
-  font-family: Self Modern, serif;
+  font-family: serif;
+}
+
+.font-ibm-plex {
+  font-family: 'IBM Plex Serif';
 }
 
 input[type='email'], input[type='password'], .input-primary {
@@ -227,7 +231,7 @@ input[type='email'], input[type='password'], .input-primary {
   margin: 0 auto 20px;
   padding: 10px 40px;
   text-align: center;
-  @apply bg-darkOlive w-fit pt-7 pb-3 px-12 rounded-t-xl;
+  @apply bg-[#2f432b] w-fit pt-7 pb-3 px-12 rounded-t-xl;
 }
 
 /* Two darker shades of dark olive are #1f3323 and #0f2313 */
@@ -272,6 +276,7 @@ input[type='email'], input[type='password'], .input-primary {
   @apply bg-tealBlue;
   border-radius: 100vw;
 }
+
 
 @tailwind base;
 @tailwind components;

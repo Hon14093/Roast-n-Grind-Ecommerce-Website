@@ -1,11 +1,18 @@
 import React from 'react'
-import IntrocuctionSection from './IntrocuctionSection'
+import IntroductionSection from './IntroductionSection'
 import QualitiesSection from './QualitiesSection'
 import AwardsSection from './AwardsSection'
 
 function AboutUsBody() {
     return (
-        <IntrocuctionSection />
+        <>
+            <IntroductionSection />
+
+            <QualitiesSection />
+
+            <AwardsSection />
+        </>
+
     )
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 function IntrocuctionSection() {
     return (
-        <section className='pt-20 px-10 bg-primaryGreen text-ivory pb-20'>
+        <section className='pt-20 text-ivory pb-32'>
             
             <article className='grid grid-cols-12 h-fit gap-5 pt-5'>
 

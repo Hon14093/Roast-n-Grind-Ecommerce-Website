@@ -15,16 +15,18 @@ export default {
         brown: '#9F6243',
         bgColor: '#ede8e1',
         second_bg_color: '#e3e1d5',
-        primaryGreen: '#2f432b',
+        primaryGreen: '#2d392a',
                 
         tealBlue: '#01627F',
         brownSugar: '#9F6243',
         ivory: '#ede8e1',
-        darkOlive: '#2f432b',
+        darkOlive: '#2d392a', 
+        // '#2f432b', lighter green
         crimsonRed: '#780c17',
       },
       fontFamily: {
         greatVibes: ['Great Vibes', 'cursive'],
+        mono: ['Courier Prime', 'Courier', 'monospace']
       }
     },
   },

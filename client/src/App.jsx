@@ -6,11 +6,10 @@ import HomeMain from './pages/HomeMain'
 import FooterTest from './components/layout/FooterTest'
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  
   return (
     <>
-      <div className='text-black'>
+      <div className='text-darkOlive'>
 
           <Header />
 
