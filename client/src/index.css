@@ -74,7 +74,7 @@ button:focus-visible {
   }
 }
 
-header {
+.client-header {
   /* width: 100%; */
   font-family: Courier Prime, Courier, monospace;
   padding-left: 25px;

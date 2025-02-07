@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import AboutUsPage from './pages/AboutUsPage.jsx'
 import ShopPage from './pages/ShopPage.jsx'
+import AdminPage from './pages/AdminPage.jsx'
 import './index.css'
 
 import {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "Shop",
     element: <ShopPage />
+  },
+  {
+    path: "Admin",
+    element: <AdminPage />
   }
 ])
 

@@ -33,8 +33,10 @@ function Header() {
     }, [lastScrollTop]);
 
     return (
-        <header className={
-            `${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} ${isTop ? 'clearBG' : 'coloredBG'}`
+        <header className={`
+            ${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} ${isTop ? 'clearBG' : 'coloredBG'}
+            client-header
+            `
         }>
             <div className='flex gap-4 justify-between items-center p-4 relative font-bold'>
                 {/* logo section */}
