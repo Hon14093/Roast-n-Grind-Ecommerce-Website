@@ -2,23 +2,21 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-function LoginBody() {
-
+function SignupBody() {
+    const [account_name, setName] = useState();
     const [email, setEmail] = useState();
+    const [phone, setPhone] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
 
-    const handleSubmitLogin = async (e) => {
+    // const data = {name, phone, email, password};
+
+    const handleSubmitSignup = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/auth/login', {email, password})
+        axios.post('http://localhost:5000/api/auth/register', {account_name, email, phone, password})
         .then(result => {
             console.log(result);
-            // navigate('/');
-            if (result.is_admin) {
-                navigate('/Admin');
-            } else {
-                navigate('/');
-            }
+            navigate('/');
         })
         .catch(result => console.log(result))
 
@@ -33,12 +31,23 @@ function LoginBody() {
             <article className='w-1/2 bg-primaryGreen text-bgColor items-center justify-center'>
                 <div className='h-screen w-full flex flex-col justify-center md:px-[40px] sm:px-[20px]'>
                     <div className='mx-auto w-full lg:max-w-[400px]'>
-
                         <h2 className="text-center font-serifs text-[40px] lg:text-[60px] font-thin">
-                            Đăng nhập
+                            Đăng ký
                         </h2>
 
-                        <form onSubmit={handleSubmitLogin} className="mt-8 space-y-6">
+                        <form onSubmit={handleSubmitSignup} className="mt-8 space-y-6">
+                            <div>
+                                <input placeholder='Họ và Tên' 
+                                    className='input-primary block w-full' 
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <input placeholder='Số Điện Thoại' 
+                                    className='input-primary block w-full' 
+                                    onChange={(e) => setPhone(e.target.value)}
+                                />
+                            </div>
                             <div>
                                 <input type="email" placeholder='Email' 
                                     className='input-primary block w-full' 
@@ -52,24 +61,16 @@ function LoginBody() {
                                 />
                             </div>
                             <button type='submit' className='block w-full button text-primaryGreen hover:text-ivory'>
-                                Đăng Nhập
+                                Đăng Ký
                             </button>
                         </form>
 
                         <div className='font-mono mt-4 text-[14px] flex flex-col text-center gap-2'>
-                            <p className=''>
-                                <a href="" className='underline hover:no-underline hover:text-bgColor'>
-                                    Quên mật khẩu?
-                                </a>
-                            </p>
                             <p>
-                                Chưa có tài khoản? 
-                                <Link to="/Signup" className='underline hover:no-underline hover:text-bgColor pl-2'>
-                                    Đăng ký ngay!
-                                </Link>
+                                Đã có tài khoản? 
+                                <Link to="/login" className='underline hover:no-underline hover:text-bgColor pl-2'>Đăng nhập</Link>
                             </p>
                         </div>
-
                     </div>
                 </div>
             </article>
@@ -77,4 +78,4 @@ function LoginBody() {
     )
 }
 
-export default LoginBody
+export default SignupBody

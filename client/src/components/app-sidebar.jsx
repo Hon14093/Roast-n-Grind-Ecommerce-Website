@@ -3,6 +3,9 @@ import {
   AudioWaveform,
   BookOpen,
   Bot,
+  Coffee,
+  FileSliders,
+  SlidersHorizontal,
   Command,
   Frame,
   GalleryVerticalEnd,
@@ -26,6 +29,7 @@ import {
 
 // This is sample data.
 const data = {
+  // bottom left avatar
   user: {
     name: "shadcn",
     email: "m@example.com",
@@ -33,107 +37,52 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      name: "Roast & Grind",
+      logo: Coffee,
+      plan: "Coffee beans",
     },
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Thống kê",
+      url: "http://localhost:5173/admin/analytics",
       icon: SquareTerminal,
+      // items: [
+      //   {
+      //     title: "History",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Starred",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Settings",
+      //     url: "#",
+      //   },
+      // ],
+    },
+    {
+      title: "Quản lý",
+      // url: "#",
+      icon: FileSliders,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Sản phẩm",
+          url: "http://localhost:5173/admin/products",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Khuyến mãi",
+          url: "http://localhost:5173/admin/discounts",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Tài khoản",
+          url: "http://localhost:5173/admin/accounts",
         },
       ],
     },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+    
   ],
   projects: [
     {
@@ -158,18 +107,21 @@ export function AppSidebar({
   ...props
 }) {
   return (
-    (<Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
+
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+
       <SidebarRail />
-    </Sidebar>)
+    </Sidebar>
   );
 }

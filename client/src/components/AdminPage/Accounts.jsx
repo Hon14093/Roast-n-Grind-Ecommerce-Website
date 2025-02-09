@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { AppSidebar } from "../app-sidebar.jsx"
 import {
     Breadcrumb,
@@ -14,7 +16,7 @@ import {
     SidebarTrigger,
 } from "../ui/sidebar"
 
-export default function Admin() {
+function Account() {
     return (
         <SidebarProvider>
             {/* Sidebar Component on left side */}
@@ -32,14 +34,14 @@ export default function Admin() {
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
                                     <BreadcrumbLink href="#">
-                                        Building Your Application
+                                        Quản lý
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
 
                                 <BreadcrumbSeparator className="hidden md:block" />
 
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                                    <BreadcrumbPage>Tài khoản</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -57,5 +59,7 @@ export default function Admin() {
             </SidebarInset>
 
         </SidebarProvider>
-    );
+    )
 }
+
+export default Account

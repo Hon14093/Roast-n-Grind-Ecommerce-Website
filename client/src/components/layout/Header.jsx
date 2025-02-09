@@ -50,12 +50,12 @@ function Header() {
                 <section className='absolute left-1/2 transform -translate-x-1/2 font-bold'>
                     <ul className='flex gap-8'>
                         <li className='navList group'>
-                            <Link to="/Shop">
+                            <Link to="/shop">
                                 <a className='navAnchor'>Shop</a>
                             </Link>
                         </li>
                         <li className='navList group'>
-                            <Link to="/AboutUs">
+                            <Link to="/about">
                                 <a className='navAnchor'>Giới Thiệu</a>
                             </Link>
                         </li>
@@ -70,14 +70,14 @@ function Header() {
 
                 {/* account and cart section */}
                 <section className='flex items-center gap-4 text-darkOlive'>
-                    <Link to="/Login" className='p-2 bg-ivory rounded-full'>
+                    <Link to="/login" className='p-2 bg-ivory rounded-full'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
 
                     </Link>
 
-                    <button to="/Login" className='group top-right-button p-2 bg-ivory rounded-full flex gap-1 items-center'>
+                    <button to="/login" className='group top-right-button p-2 bg-ivory rounded-full flex gap-1 items-center'>
                         <p className='px-1'>Cart</p>
                         <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory">0</p>
                     </button>

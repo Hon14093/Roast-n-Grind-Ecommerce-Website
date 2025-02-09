@@ -31,7 +31,7 @@ function Footer({ theme }) {
                             <h2 class={textColor + " mb-6 text-xl font-semibold uppercase"}>Resources</h2>
                             <ul class={textColor + " text-lg"}>
                                 <li class="mb-4">
-                                    <Link to="/Admin" class="hover:underline hover:text-current">Shadcn</Link>
+                                    <Link to="/admin" class="hover:underline hover:text-current">Shadcn</Link>
                                 </li>
                                 <li>
                                     <a href="#" class="hover:underline hover:text-current">Tailwind CSS</a>

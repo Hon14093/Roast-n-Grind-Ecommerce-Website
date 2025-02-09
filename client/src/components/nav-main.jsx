@@ -18,9 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "./ui/sidebar"
 
-export function NavMain({
-  items
-}) {
+export function NavMain({ items }) {
   return (
     (<SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>

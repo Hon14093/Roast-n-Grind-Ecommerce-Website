@@ -1,9 +1,9 @@
 import React from 'react'
-import HeroSection from '../components/HomePage/HeroSection'
-import FeaturedProductsSection from '../components/HomePage/FeaturedProductsSection'
-import StorySection from '../components/HomePage/StorySection'
+import HeroSection from './HeroSection'
+import FeaturedProductsSection from './FeaturedProductsSection'
+import StorySection from './StorySection'
 
-function HomeMain() {
+function HomeBody() {
     return (
         <>
         <section className='w-full relative'>
@@ -25,4 +25,4 @@ function HomeMain() {
     )
 }
 
-export default HomeMain
+export default HomeBody

@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { AppSidebar } from "../app-sidebar.jsx"
 import {
     Breadcrumb,
@@ -14,7 +16,7 @@ import {
     SidebarTrigger,
 } from "../ui/sidebar"
 
-export default function Admin() {
+function Analytics() {
     return (
         <SidebarProvider>
             {/* Sidebar Component on left side */}
@@ -32,14 +34,14 @@ export default function Admin() {
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
                                     <BreadcrumbLink href="#">
-                                        Building Your Application
+                                        R&G
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
 
                                 <BreadcrumbSeparator className="hidden md:block" />
 
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                                    <BreadcrumbPage>Analytics</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -59,3 +61,5 @@ export default function Admin() {
         </SidebarProvider>
     );
 }
+
+export default Analytics
