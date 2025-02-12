@@ -1,18 +1,14 @@
 import { AppSidebar } from "../app-sidebar.jsx"
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "../ui/breadcrumb.jsx"
-import { Separator } from "../ui/separator.jsx"
-import {
-    SidebarInset,
     SidebarProvider,
-    SidebarTrigger,
 } from "../ui/sidebar"
+
+import { Routes, Route, Outlet } from "react-router-dom"
+import Accounts from "./Accounts.jsx"
+import Analytics from "./Analytics.jsx"
+import Discounts from "./Discounts.jsx"
+import Products from "./Products.jsx"
+import Orders from "./Orders.jsx"
 
 export default function Admin() {
     return (
@@ -20,41 +16,14 @@ export default function Admin() {
             {/* Sidebar Component on left side */}
             <AppSidebar />
 
-            {/* Other content on right side */}
-            <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                    <div className="flex items-center gap-2 px-4">
-                        <SidebarTrigger className="-ml-1" />
-                        
-                        <Separator orientation="vertical" className="mr-2 h-4" />
-                        
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Building Your Application
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-
-                                <BreadcrumbSeparator className="hidden md:block" />
-
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
-                </header>
-                
-                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                        <div className="aspect-video rounded-xl bg-muted/50" />
-                    </div>
-                    <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-                </div>
-            </SidebarInset>
+            {/* Other content on right side with SPA application */}
+            <Routes>
+                <Route path="/" element={<Analytics />} />
+                <Route path="/accounts" element={<Accounts />} />
+                <Route path="/discounts" element={<Discounts />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/orders" element={<Orders />} />
+            </Routes>
 
         </SidebarProvider>
     );

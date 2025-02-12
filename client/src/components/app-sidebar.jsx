@@ -69,16 +69,20 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Sản phẩm",
-          url: "http://localhost:5173/admin/products",
-        },
-        {
           title: "Khuyến mãi",
           url: "http://localhost:5173/admin/discounts",
         },
         {
           title: "Tài khoản",
           url: "http://localhost:5173/admin/accounts",
+        },
+        {
+          title: "Đơn hàng",
+          url: "http://localhost:5173/admin/orders",
+        },
+        {
+          title: "Sản phẩm",
+          url: "http://localhost:5173/admin/products",
         },
       ],
     },

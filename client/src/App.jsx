@@ -30,7 +30,7 @@ function App() {
                 <Route path='/signup' element={<SignupPage />} />
 
                 {/* Admin UI */}
-                {/* <Route path='/admin' element={AdminPage} /> */}
+                <Route path='/admin/*' element={<AdminPage />} />
             </Routes>
         </Router>
         
