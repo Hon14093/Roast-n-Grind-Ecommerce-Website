@@ -88,23 +88,6 @@ const data = {
     },
     
   ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
 }
 
 export function AppSidebar({
@@ -112,16 +95,16 @@ export function AppSidebar({
 }) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className='bg-darkOlive text-ivory'>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className='bg-darkOlive text-ivory'>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className='bg-darkOlive text-ivory'>
         <NavUser user={data.user} />
       </SidebarFooter>
 

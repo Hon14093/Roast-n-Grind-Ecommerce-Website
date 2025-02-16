@@ -21,38 +21,55 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-
+import { Button } from '../ui/button.jsx'
+import { Plus } from 'lucide-react'
 import { DataTable } from '../data-table.jsx'
 import { columns } from '../columns.jsx'
+import { useProductActions } from '@/hooks/useProductActions.js'
 
 function Products() {
     // replace this with actual async getData() function
     const test_data = [
         {
+            id: '001',
             name: "Coffee bean #1",
             category: "Light roast",
             size: "250g",
             price: "$9.99"
         },
         {
+            id: '002',
             name: "Coffee bean #2",
             category: "Light roast",
             size: "500g",
             price: "$19.99"
         },
         {
+            id: '003',
             name: "Coffee bean #3",
             category: "Light roast",
             size: "1000g",
             price: "$38.99"
         },
         {
+            id: '004',
             name: "Coffee bean #4",
             category: "Light roast",
             size: "5000g",
             price: "$119.99"
         },
     ]
+
+    const {
+        selectedProduct,
+        isDetailsModalOpen,
+        isEditModalOpen,
+        handleViewDetails,
+        handleEdit,
+        handleDelete,
+        setIsDetailsModalOpen,
+        setIsEditModalOpen,
+    } = useProductActions(test_data);
 
     return (
         <SidebarInset>
@@ -81,22 +98,30 @@ function Products() {
                     </Breadcrumb>
                 </div>
             </header>
-            
-            {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                </div>
-                <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-            </div> */}
 
             <Card className="mx-5">
                 <CardHeader>
-                    Sản phẩm
+                    <div className='flex'>
+                        <div className='font-bold text-2xl'>
+                            Danh sách sản phẩm
+                        </div>
+                        <Button variant='outline' className='ml-auto'>
+                            <Plus />
+                            Thêm sản phẩm
+                        </Button>
+
+                    </div>
+                    
                 </CardHeader>
                 <CardContent>
-                    <DataTable columns={columns} data={test_data} />
+                    <DataTable 
+                        columns={columns({
+                            onViewDetails: handleViewDetails,
+                            onEdit: handleEdit,
+                            onDelete: handleDelete
+                        })} 
+                        data={test_data} 
+                    />
                 </CardContent>
             </Card>
 
