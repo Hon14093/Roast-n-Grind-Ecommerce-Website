@@ -13,7 +13,7 @@ export function DetailsModal({ product, open, onClose }) {
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    Edit product
+                    Details
                 </DialogHeader>
             </DialogContent>
         </Dialog>

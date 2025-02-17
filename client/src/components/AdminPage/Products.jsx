@@ -24,15 +24,11 @@ import {
 import { Button } from '../ui/button.jsx'
 import { Plus } from 'lucide-react'
 import { DataTable } from '../data-table.jsx'
-import { productColumns, cols1 } from '../columns.jsx'
+import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/useProductActions.js'
-// import { DetailsModal } from '../modals/product/DetailsModal.jsx'
+import { DetailsModal } from '../modals/product/DetailsModal.jsx'
 import { TableActionsDropdown } from '../table-actions-dropdown.jsx'
 
-
-// const handleViewDetails = () => {}
-// const handleDelete = () => {}
-// const handleEdit = () => {}
 
 function Products() {
     // replace this with actual async getData() function
@@ -132,11 +128,11 @@ function Products() {
                         data={test_data} 
                     />
 
-                    {/* <DetailsModal 
+                    <DetailsModal 
                         product={selectedProduct}
                         open={isDetailsModalOpen}
                         onClose={() => setIsDetailsModalOpen(false)}
-                    /> */}
+                    />
 
                 </CardContent>
             </Card>

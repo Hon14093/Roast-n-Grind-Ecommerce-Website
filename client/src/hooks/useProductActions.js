@@ -6,7 +6,7 @@ export function useProductActions(products) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const handleViewDetails = (productId) => {
-        // code has not been reviewed
+        // code has not been reviewed, the function of such codes is unknown :)
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
         
@@ -15,7 +15,7 @@ export function useProductActions(products) {
     };
 
     const handleEdit = (productId) => {
-        // code has not been reviewed
+        // code has not been reviewed, the function of such codes is unknown :)
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
         setIsEditModalOpen(true);
