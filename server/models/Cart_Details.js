@@ -1,51 +1,110 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-class CartDetailsController {
-    constructor() {
-        this.prisma = prisma;
-    }
+export const createCartDetail = async (data) => {
+    return await prisma.cartDetails.create({ data });
+};
 
-    // Create a new Cart Detail
-    async createCartDetail(data) {
-        return await this.prisma.cart_Details.create({
-            data: data,
-        });
-    }
+export const getAllCartDetails = async () => {
+    return await prisma.cartDetails.findMany();
+};
 
-    // Get all Cart Details
-    async getAllCartDetails() {
-        return await this.prisma.cart_Details.findMany();
-    }
+export const getCartDetailsById = async (cd_id) => {
+    return await prisma.cartDetails.findUnique({
+        where: { cd_id }
+    });
+};
 
-    // Get a Cart Detail by ID
-    async getCartDetailById(cd_id) {
-        return await this.prisma.cart_Details.findUnique({
-            where: { cd_id: cd_id },
-        });
-    }
+export const getCartDetailsByCartId = async (cart_id) => {
+    return await prisma.cartDetails.findMany({
+        where: { cart_id }
+    });
+};
 
-    // Get Cart Details by Cart ID
-    async getCartDetailsByCartId(cart_id) {
-        return await this.prisma.cart_Details.findMany({
-            where: { cart_id: cart_id },
-        });
-    }
+export const updateCartDetail = async (cd_id, data) => {
+    return await prisma.cartDetails.update({
+        where: { cd_id },
+        data
+    });
+};
 
-    // Update a Cart Detail
-    async updateCartDetail(cd_id, data) {
-        return await this.prisma.cart_Details.update({
-            where: { cd_id: cd_id },
-            data: data,
-        });
-    }
+export const deleteCartDetail = async (cd_id) => {
+    return await prisma.cartDetails.delete({
+        where: { cd_id }
+    });
+};
 
-    // Delete a Cart Detail
-    async deleteCartDetail(cd_id) {
-        return await this.prisma.cart_Details.delete({
-            where: { cd_id: cd_id },
-        });
-    }
-}
+export const getCartDetailsByProductId = async (product_id) => {
+    return await prisma.cartDetails.findMany({
+        where: { product_id }
+    });
+};
 
-export default new CartDetailsController();
+export const getCartDetailsByCartIdAndProductId = async (cart_id, product_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            product_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndProductIdAndWeightId = async (cart_id, product_id, weight_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            product_id,
+            weight_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndProductIdAndFlavourId = async (cart_id, product_id, flavour_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            product_id,
+            flavour_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndProductIdAndFlavourIdAndWeightId = async (cart_id, product_id, flavour_id, weight_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            product_id,
+            flavour_id,
+            weight_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndFlavourId = async (cart_id, flavour_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            flavour_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndWeightId = async (cart_id, weight_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            weight_id
+        }
+    });
+};
+
+export const getCartDetailsByCartIdAndFlavourIdAndWeightId = async (cart_id, flavour_id, weight_id) => {
+    return await prisma.cartDetails.findMany({
+        where: {
+            cart_id,
+            flavour_id,
+            weight_id
+        }
+    });
+};
+

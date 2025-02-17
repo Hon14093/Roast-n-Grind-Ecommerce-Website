@@ -1,36 +1,37 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-class PaymentMethodService {
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
-  async createPaymentMethod(data) {
-    return await this.prisma.payment_Method.create({ data });
-  }
-
-  async getPaymentMethodById(method_id) {
-    return await this.prisma.payment_Method.findUnique({
-      where: { method_id },
+export const createPaymentMethod = async (data) => {
+    return await prisma.payment_Method.create({
+        data: data
     });
-  }
-
-  async getAllPaymentMethods() {
-    return await this.prisma.payment_Method.findMany();
-  }
-
-  async updatePaymentMethod(method_id, data) {
-    return await this.prisma.payment_Method.update({
-      where: { method_id },
-      data,
-    });
-  }
-
-  async deletePaymentMethod(method_id) {
-    return await this.prisma.payment_Method.delete({
-      where: { method_id },
-    });
-  }
 }
 
-module.exports = new PaymentMethodService();
+export const findPaymentMethodById = async (id) => {
+    return await prisma.payment_Method.findUnique({
+        where: { method_id: id } // Fixed field name
+    });
+}
+
+export const getAllPaymentMethods = async () => {
+    return await prisma.payment_Method.findMany();
+}
+
+export const getPaymentMethodByName = async (name) => {
+    return await prisma.payment_Method.findMany({
+        where: { method_name: name }
+    });
+}
+
+export const updatePaymentMethod = async (id, data) => {
+    return await prisma.payment_Method.update({
+        where: { method_id: id },
+        data: data
+    });
+}
+
+export const deletePaymentMethod = async (id) => {
+    return await prisma.payment_Method.delete({
+        where: { method_id: id }
+    });
+}

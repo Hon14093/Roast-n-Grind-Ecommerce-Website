@@ -1,36 +1,33 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-class DiscountService {
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
-  async createDiscount(data) {
-    return await this.prisma.discount.create({ data });
-  }
-
-  async getDiscountById(discount_id) {
-    return await this.prisma.discount.findUnique({
-      where: { discount_id },
+export const createDiscount = async (data) => {
+    return await prisma.discount.create({
+        data: data
     });
-  }
-
-  async getAllDiscounts() {
-    return await this.prisma.discount.findMany();
-  }
-
-  async updateDiscount(discount_id, data) {
-    return await this.prisma.discount.update({
-      where: { discount_id },
-      data,
-    });
-  }
-
-  async deleteDiscount(discount_id) {
-    return await this.prisma.discount.delete({
-      where: { discount_id },
-    });
-  }
 }
 
-module.exports = new DiscountService();
+export const findDiscountById = async (id) => {
+    return await prisma.discount.findUnique({
+        where: { discount_id: id } // Fixed field name
+    });
+}
+
+export const getAllDiscounts = async () => {
+    return await prisma.discount.findMany();
+}
+
+export const getActiveDiscounts = async () => {
+    return await prisma.discount.findMany({
+        where: { is_active: true }
+    });
+}
+
+export const getDiscountsByDateRange = async (startDate, endDate) => {
+    return await prisma.discount.findMany({
+        where: {
+            start_date: { gte: startDate },
+            end_date: { lte: endDate }
+        }
+    });
+  }

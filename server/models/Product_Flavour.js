@@ -1,33 +1,43 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-class ProductFlavourService {
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
-  async createProductFlavour(data) {
-    return await this.prisma.product_Flavour.create({ data });
-  }
-
-  async getProductFlavour(product_id, flavour_id) {
-    return await this.prisma.product_Flavour.findUnique({
-      where: { product_id_flavour_id: { product_id, flavour_id } },
-      include: { Flavour_Note: true, Product: true },
+export const createProductFlavour = async (data) => {
+    return await prisma.product_flavour.create({
+        data: data
     });
-  }
-
-  async getAllProductFlavours() {
-    return await this.prisma.product_Flavour.findMany({
-      include: { Flavour_Note: true, Product: true },
-    });
-  }
-
-  async deleteProductFlavour(product_id, flavour_id) {
-    return await this.prisma.product_Flavour.delete({
-      where: { product_id_flavour_id: { product_id, flavour_id } },
-    });
-  }
 }
 
-module.exports = new ProductFlavourService();
+export const findProductFlavourById = async (id) => {
+    return await prisma.product_flavour.findUnique({
+        where: { pf_id: id } // Fixed field name
+    });
+}
 
+export const getAllProductFlavours = async () => {
+    return await prisma.product_flavour.findMany();
+}
+
+export const getProductFlavourByFlavourId = async (flavourId) => {
+    return await prisma.product_flavour.findMany({
+        where: { flavour_id: flavourId }
+    });
+}
+
+export const getProductFlavourByProductId = async (productId) => {
+    return await prisma.product_flavour.findMany({
+        where: { product_id: productId }
+    });
+}
+
+export const updateProductFlavour = async (id, data) => {
+    return await prisma.product_flavour.update({
+        where: { pf_id: id },
+        data: data
+    });
+}
+
+export const deleteProductFlavour = async (id) => {
+    return await prisma.product_flavour.delete({
+        where: { pf_id: id }
+    });
+}

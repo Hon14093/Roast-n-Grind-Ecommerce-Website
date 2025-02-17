@@ -1,36 +1,30 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-class OrderDetailService {
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
-  async createOrderDetail(data) {
-    return await this.prisma.orderDetail.create({ data });
-  }
-
-  async getOrderDetailById(id) {
-    return await this.prisma.orderDetail.findUnique({
-      where: { id },
+export const createOrderDetail = async (data) => {
+    return await prisma.order_Details.create({
+        data: data
     });
-  }
+};
 
-  async getAllOrderDetails() {
-    return await this.prisma.orderDetail.findMany();
-  }
-
-  async updateOrderDetail(id, data) {
-    return await this.prisma.orderDetail.update({
-      where: { id },
-      data,
+export const findOrderDetailById = async (id) => {
+    return await prisma.order_Details.findUnique({
+        where: { od_id: id } // Fixed field name
     });
-  }
+};
 
-  async deleteOrderDetail(id) {
-    return await this.prisma.orderDetail.delete({
-      where: { id },
+export const getAllOrderDetails = async () => {
+    return await prisma.order_Details.findMany();
+};
+
+export const getOrderDetailsByOrderId = async (orderId) => {
+    return await prisma.order_Details.findMany({
+        where: { order_id: orderId }
     });
-  }
-}
+};
 
-module.exports = new OrderDetailService();
+export const getOrderDetailsByProductWeight = async (pwId) => {
+    return await prisma.order_Details.findMany({
+        where: { pw_id: pwId }
+    });
+};

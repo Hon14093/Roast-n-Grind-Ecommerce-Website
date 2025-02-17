@@ -1,36 +1,39 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-class FlavourNoteService {
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
-  async createFlavourNote(data) {
-    return await this.prisma.flavourNote.create({ data });
-  }
-
-  async getFlavourNoteById(flavour_id) {
-    return await this.prisma.flavourNote.findUnique({
-      where: { flavour_id },
+export const createFlavour = async (data) => {
+    return await prisma.flavour_Note.create({
+        data: data
     });
-  }
+};
 
-  async getAllFlavourNotes() {
-    return await this.prisma.flavourNote.findMany();
-  }
-
-  async updateFlavourNote(flavour_id, data) {
-    return await this.prisma.flavourNote.update({
-      where: { flavour_id },
-      data,
+export const findFlavourById = async (id) => {
+    return await prisma.flavour_Note.findUnique({
+        where: { flavour_id: id } // Fixed field name
     });
-  }
+};
 
-  async deleteFlavourNote(flavour_id) {
-    return await this.prisma.flavourNote.delete({
-      where: { flavour_id },
+export const getAllFlavours = async () => {
+    return await prisma.flavour_Note.findMany();
+};
+
+export const getFlavourByName = async (name) => {
+    return await prisma.flavour_Note.findMany({
+        where: { flavour_name: name }
     });
-  }
-}
+};
 
-module.exports = new FlavourNoteService();
+export const updateFlavour = async (id, data) => {
+    return await prisma.flavour_Note.update({
+        where: { flavour_id: id },
+        data: data
+    });
+};
+
+export const deleteFlavour = async (id) => {
+    return await prisma.flavour_Note.delete({
+        where: { flavour_id: id }
+    });
+};
+
+
