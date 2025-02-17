@@ -60,3 +60,4 @@ export const deleteType = async (data) => {
     }
 }
 
+
