@@ -1,11 +1,58 @@
 import { TableActionsDropdown } from "./table-actions-dropdown";
 
-// replace this with actual function later
-const viewDetails = () => {}
-const editItem = () => {}
-const deleteItem = () => {}
+// const viewDetails = () => {}
+// const editItem = () => {}
+// const deleteItem = () => {}
 
-export const columns = [
+export const accountColumns = [
+    {
+        accessorKey: "name",
+        header: "Name"
+    },
+    {
+        accessorKey: "email",
+        header: "Email"
+    },
+    {
+        accessorKey: "birthday",
+        header: "Birthday"
+    },
+    {
+        accessorKey: "password",
+        header: "Password"
+    },
+]
+
+export const cols1 = [
+    {
+        accessorKey: "name",
+        header: "Name"
+    },
+    {
+        accessorKey: "category",
+        header: "Category"
+    },
+    {
+        accessorKey: "size",
+        header: "Size"
+    },
+    {
+        accessorKey: "price",
+        header: "Price"
+    },
+    {
+        id: "actions",
+        cell: ({row}) => {
+            const product = row.orignal;
+
+            return (
+                <TableActionsDropdown />
+            )
+        }
+    }
+]
+
+export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     {
         accessorKey: "name",
         header: "Name"
@@ -25,14 +72,21 @@ export const columns = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const product = row.orignal;
+            // TO-DO: review code
+            const product = row.original;
 
             return (
                 <TableActionsDropdown 
-                    onViewDetails={viewDetails}
-                    onEdit={editItem}
-                    onDelete={deleteItem}
+                    onViewDetails={() => onViewDetails(product.id)}
+                    onEdit={() => onEdit(product.id)}
+                    onDelete={() => onDelete(product.id)}
                 />
+
+                // <TableActionsDropdown 
+                //     onViewDetails={viewDetails}
+                //     onEdit={editItem}
+                //     onDelete={deleteItem}
+                // />
             )
         }
     }

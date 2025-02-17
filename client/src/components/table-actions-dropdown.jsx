@@ -9,9 +9,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from './ui/button';
 import { MoreHorizontal } from 'lucide-react';
+// { onViewDetails, onEdit, onDelete}
+
+const onViewDetails = () => { console.log("test") }
+const onEdit = () => {}
+const onDelete = () => {}
 
 // this button will be used throughout all management table
-export function TableActionsDropdown({ onViewDetails, onEdit, onDelete}) {
+export function TableActionsDropdown() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

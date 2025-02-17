@@ -4,12 +4,16 @@ export function useProductActions(products) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const handleViewDetails = (productId) => {
+        // code has not been reviewed
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
+        
+        // setSelectedProduct('001');
         setIsDetailsModalOpen(true);
     };
 
     const handleEdit = (productId) => {
+        // code has not been reviewed
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
         setIsEditModalOpen(true);

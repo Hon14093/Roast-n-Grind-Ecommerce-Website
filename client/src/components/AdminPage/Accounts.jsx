@@ -13,8 +13,43 @@ import {
     SidebarInset,
     SidebarTrigger,
 } from "../ui/sidebar"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Button } from '../ui/button.jsx'
+import { Plus } from 'lucide-react'
+import { DataTable } from '../data-table.jsx'
+import { accountColumns } from '../columns.jsx'
 
 function Account() {
+    const temp_data = [
+        {
+            id: '001',
+            name: 'Calliope Mori',
+            email: 'reaper@gmail.com',
+            birthday: '11/1/1990',
+            password: '11111'
+        },
+        {
+            id: '001',
+            name: 'Calliope Mori',
+            email: 'reaper@gmail.com',
+            birthday: '11/1/1990',
+            password: '11111'
+        },
+        {
+            id: '001',
+            name: 'Calliope Mori',
+            email: 'reaper@gmail.com',
+            birthday: '11/1/1990',
+            password: '11111'
+        }
+    ]
     return (
         <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -41,14 +76,24 @@ function Account() {
                 </div>
             </header>
             
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                </div>
-                <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-            </div>
+            <Card>
+                <CardHeader>
+                    <div className='flex'>
+                        <div className='font-bold text-2xl'>
+                            Danh sách tài khoản
+                        </div>
+                        <Button variant='outline' className='ml-auto'>
+                            <Plus />
+                            Thêm sản phẩm
+                        </Button>
+
+                    </div>                    
+                </CardHeader>
+
+                <CardContent>
+                    <DataTable columns={accountColumns} data={temp_data} />
+                </CardContent>
+            </Card>
         </SidebarInset>
     )
 }
