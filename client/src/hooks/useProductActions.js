@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export function useProductActions(products) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -21,7 +23,7 @@ export function useProductActions(products) {
 
     const handleDelete = async (productId) => {
         // 
-        
+        console.log('Delete')
     };
 
     return {

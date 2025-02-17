@@ -25,14 +25,14 @@ import { Button } from '../ui/button.jsx'
 import { Plus } from 'lucide-react'
 import { DataTable } from '../data-table.jsx'
 import { productColumns, cols1 } from '../columns.jsx'
-// import { useProductActions } from '@/hooks/useProductActions.js'
+import { useProductActions } from '@/hooks/useProductActions.js'
 // import { DetailsModal } from '../modals/product/DetailsModal.jsx'
 import { TableActionsDropdown } from '../table-actions-dropdown.jsx'
 
 
-const handleViewDetails = () => {}
-const handleDelete = () => {}
-const handleEdit = () => {}
+// const handleViewDetails = () => {}
+// const handleDelete = () => {}
+// const handleEdit = () => {}
 
 function Products() {
     // replace this with actual async getData() function
@@ -67,16 +67,16 @@ function Products() {
         },
     ]
 
-    // const {
-    //     selectedProduct,
-    //     isDetailsModalOpen,
-    //     isEditModalOpen,
-    //     handleViewDetails,
-    //     handleEdit,
-    //     handleDelete,
-    //     setIsDetailsModalOpen,
-    //     setIsEditModalOpen,
-    // } = useProductActions(test_data);
+    const {
+        selectedProduct,
+        isDetailsModalOpen,
+        isEditModalOpen,
+        handleViewDetails,
+        handleEdit,
+        handleDelete,
+        setIsDetailsModalOpen,
+        setIsEditModalOpen,
+    } = useProductActions(test_data);
 
     return (
         <SidebarInset>
@@ -129,7 +129,6 @@ function Products() {
                             onEdit: handleEdit,
                             onDelete: handleDelete
                         })} 
-                        // columns={cols1}
                         data={test_data} 
                     />
 
