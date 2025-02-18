@@ -1,8 +1,11 @@
 import { 
     Dialog,
     DialogContent,
-    DialogHeader
+    DialogDescription,
+    DialogHeader,
+    DialogTitle
 } from "@/components/ui/dialog";
+// import { DialogTitle } from "@radix-ui/react-dialog";
 
 import React from 'react'
 
@@ -13,7 +16,10 @@ export function DetailsModal({ product, open, onClose }) {
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    Details
+                    <DialogTitle>Thông tin sản phẩm</DialogTitle>
+                    <DialogDescription>
+                        <div>{product.id}</div>
+                    </DialogDescription>
                 </DialogHeader>
             </DialogContent>
         </Dialog>

@@ -112,9 +112,6 @@ function Products() {
                             <Plus />
                             Thêm sản phẩm
                         </Button>
-
-                        <TableActionsDropdown />
-
                     </div>                    
                 </CardHeader>
 
