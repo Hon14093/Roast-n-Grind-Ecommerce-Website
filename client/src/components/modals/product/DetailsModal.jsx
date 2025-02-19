@@ -17,8 +17,9 @@ export function DetailsModal({ product, open, onClose }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Thông tin sản phẩm</DialogTitle>
-                    <DialogDescription>
-                        <div>{product.id}</div>
+                    <DialogDescription className='text-base text-black'>
+                        <span>ID sản phẩm: {product.id}</span> <br />
+                        <span>Tên sản phẩm: {product.name}</span>
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>

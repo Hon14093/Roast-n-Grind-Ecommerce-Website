@@ -34,9 +34,14 @@ function Products() {
     // replace this with actual async getData() function
     const test_data = [
         {
-            id: '001',
-            name: "Coffee bean #1",
-            category: "Light roast",
+            product_id: '001',
+            product_name: "Coffee bean #1",
+            description: 'lkjlksjdf',
+            image_url: '...',
+            roast_id: '1',
+            type_id: '1',
+            aroma: '1',
+            roast_lvl: "Light roast",
             size: "250g",
             price: "$9.99"
         },
