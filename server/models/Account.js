@@ -24,7 +24,7 @@ export const findAccountByEmail = async (email) => {
 
 export const getAllAccounts = async () => {
     return await prisma.account.findMany();
-}
+};
 
 // const data = {
 //     account_name: 'lkjljlsdf',
