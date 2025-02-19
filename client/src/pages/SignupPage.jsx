@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from '../components/Header'
-import SignupBody from '../components/SignupBody'
+import Header from '../components/layout/Header'
+import SignupBody from '../components/AuthPages/SignupBody'
 
 function SignupPage() {
     return (
@@ -10,7 +10,7 @@ function SignupPage() {
                 <Header />
 
                 <main>
-                <SignupBody />
+                    <SignupBody />
                 </main>
 
             </div>

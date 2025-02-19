@@ -115,4 +115,3 @@ export const getPaymentByAccountId = async (accountId) => {
         }
     });
 };
-

@@ -36,4 +36,3 @@ export const deleteFlavour = async (id) => {
     });
 };
 
-

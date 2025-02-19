@@ -35,3 +35,4 @@ export const deletePaymentMethod = async (id) => {
         where: { method_id: id }
     });
 }
+

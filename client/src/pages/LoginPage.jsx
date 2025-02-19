@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from '../components/Header'
-import LoginBody from '../components/LoginBody'
+import Header from '../components/layout/Header'
+import LoginBody from '../components/AuthPages/LoginBody'
 
 function LoginPage() {
     return (
@@ -10,7 +10,7 @@ function LoginPage() {
                 <Header />
 
                 <main>
-                <LoginBody />
+                    <LoginBody />
                 </main>
 
             </div>

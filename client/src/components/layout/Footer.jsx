@@ -1,5 +1,6 @@
 import React from 'react'
-import logoIcon from '../images/logoIcon.png'
+// import logoIcon from '../../images/logoIcon.png'
+import logoIcon from '../../images/logoIcon.png'
 import { Link } from 'react-router-dom'
 
 function Footer({ theme }) {
@@ -30,7 +31,7 @@ function Footer({ theme }) {
                             <h2 class={textColor + " mb-6 text-xl font-semibold uppercase"}>Resources</h2>
                             <ul class={textColor + " text-lg"}>
                                 <li class="mb-4">
-                                    <a href="#" class="hover:underline hover:text-current">Flowbite</a>
+                                    <Link to="/admin/" class="hover:underline hover:text-current">Shadcn</Link>
                                 </li>
                                 <li>
                                     <a href="#" class="hover:underline hover:text-current">Tailwind CSS</a>

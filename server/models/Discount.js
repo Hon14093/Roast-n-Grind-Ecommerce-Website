@@ -31,3 +31,4 @@ export const getDiscountsByDateRange = async (startDate, endDate) => {
         }
     });
   }
+

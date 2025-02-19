@@ -1,16 +1,16 @@
 import React from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import AboutUsBody from '../components/AboutUsBody'
+import Header from '../components/layout/Header'
+import Footer from '../components/layout/Footer'
+import AboutUsBody from '../components/AboutUsPage/AboutUsBody'
 
 function AboutUsPage() {
     return (
         <>
-            <div className='text-black'>
+            <div className='text-darkOlive'>
 
                 <Header />
 
-                <main>
+                <main className='px-10 relative bg-darkOlive z-10'>
                     <AboutUsBody />
                 </main>
 

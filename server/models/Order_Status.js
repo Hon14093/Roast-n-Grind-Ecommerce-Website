@@ -31,5 +31,3 @@ export const deleteOrderStatus = async (id) => {
     });
 }
 
-
-

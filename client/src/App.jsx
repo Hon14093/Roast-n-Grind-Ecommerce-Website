@@ -1,29 +1,41 @@
-import { useState } from 'react'
 import './App.css'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import HomeMain from './pages/HomeMain'
-import FooterTest from './components/FooterTest'
+import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import HomePage from './pages/HomePage';
+import AboutUsPage from './pages/AboutUsPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+
+import AdminPage from './pages/AdminPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [isAdmin, setIsAdmin] = useState(false);
 
-  return (
-    <>
-      <div className='text-black'>
-
-          <Header />
-
-        <main>
-          <HomeMain />
-        </main>
-
-        <Footer />
+    // useEffect(() => {
+    //     const checkAdmin = async () => {
+    //         const user = await fetch()
+    //     }
+    // })
+    
+    return (
+        <>
         
-      </div>
-      
-    </>
-  )
+        <Router>
+            <Routes>
+                {/* Customer UI */}
+                <Route path='/' element={<HomePage />} />
+                <Route path='/about' element={<AboutUsPage />} />
+                <Route path='/login' element={<LoginPage />} />
+                <Route path='/signup' element={<SignupPage />} />
+
+                {/* Admin UI */}
+                <Route path='/admin/*' element={<AdminPage />} />
+            </Routes>
+        </Router>
+        
+        </>
+    )
 }
 
 export default App

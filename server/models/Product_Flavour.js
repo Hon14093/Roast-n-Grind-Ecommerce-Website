@@ -41,3 +41,4 @@ export const deleteProductFlavour = async (id) => {
         where: { pf_id: id }
     });
 }
+
