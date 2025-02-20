@@ -21,20 +21,20 @@ export const accountColumns = [
 
 export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     {
-        accessorKey: "name",
-        header: "Name"
+        accessorKey: "product_name",
+        header: "Tên Sản Phẩm"
     },
     {
-        accessorKey: "category",
-        header: "Category"
+        accessorKey: "roast_lvl",
+        header: "Độ Rang"
     },
     {
-        accessorKey: "size",
-        header: "Size"
+        accessorKey: "weight_name",
+        header: "Cân Nặng"
     },
     {
         accessorKey: "price",
-        header: "Price"
+        header: "Giá Tiền"
     },
     {
         id: "actions",

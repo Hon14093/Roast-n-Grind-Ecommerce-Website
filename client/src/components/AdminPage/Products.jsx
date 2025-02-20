@@ -26,8 +26,7 @@ import { Plus } from 'lucide-react'
 import { DataTable } from '../data-table.jsx'
 import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/useProductActions.js'
-import { DetailsModal } from '../modals/product/DetailsModal.jsx'
-import { TableActionsDropdown } from '../table-actions-dropdown.jsx'
+import { DetailsModal, EditModal } from '../modals/product/ProductModals.jsx'
 
 
 function Products() {
@@ -36,35 +35,50 @@ function Products() {
         {
             product_id: '001',
             product_name: "Coffee bean #1",
+            description: 'I am product 1',
+            image_url: '...',
+            roast_id: '1',
+            type_id: '1',
+            aroma: '1',
+            roast_lvl: "Light roast",
+            weight_name: "250g",
+            price: "$9.99"
+        },
+        {
+            product_id: '002',
+            product_name: "Coffee bean #2",
             description: 'lkjlksjdf',
             image_url: '...',
             roast_id: '1',
             type_id: '1',
             aroma: '1',
             roast_lvl: "Light roast",
-            size: "250g",
+            weight_name: "250g",
             price: "$9.99"
         },
         {
-            id: '002',
-            name: "Coffee bean #2",
-            category: "Light roast",
-            size: "500g",
-            price: "$19.99"
+            product_id: '003',
+            product_name: "Coffee bean #3",
+            description: 'lkjlksjdf',
+            image_url: '...',
+            roast_id: '1',
+            type_id: '1',
+            aroma: '1',
+            roast_lvl: "Light roast",
+            weight_name: "250g",
+            price: "$9.99"
         },
         {
-            id: '003',
-            name: "Coffee bean #3",
-            category: "Light roast",
-            size: "1000g",
-            price: "$38.99"
-        },
-        {
-            id: '004',
-            name: "Coffee bean #4",
-            category: "Light roast",
-            size: "5000g",
-            price: "$119.99"
+            product_id: '004',
+            product_name: "Coffee bean #4",
+            description: 'lkjlksjdf',
+            image_url: '...',
+            roast_id: '1',
+            type_id: '1',
+            aroma: '1',
+            roast_lvl: "Light roast",
+            weight_name: "250g",
+            price: "$9.99"
         },
     ]
 
@@ -134,6 +148,12 @@ function Products() {
                         product={selectedProduct}
                         open={isDetailsModalOpen}
                         onClose={() => setIsDetailsModalOpen(false)}
+                    />
+
+                    <EditModal 
+                        product={selectedProduct}
+                        open={isEditModalOpen}
+                        onClose={() => setIsEditModalOpen(false)}
                     />
 
                 </CardContent>
