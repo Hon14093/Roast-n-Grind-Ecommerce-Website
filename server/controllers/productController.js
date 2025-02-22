@@ -1,16 +1,27 @@
-// import * as productModel from "../models/Product";
 import * as weightModel from "../models/Weight_Option.js"
 import * as categoryModel from "../models/Category.js"
 import * as typeModel from "../models/Product_Type.js"
+import { getAllProducts, getAllProductsDetails } from "../models/Product.js"; // this import works
 
-// export const getAllProducts = async (res, req) => {
-//     try {
-//         const products = await productModel.getAllProducts;
-//         res.status(200).json(products);
-//     } catch (error) {
-        
-//     }
-// }
+export const returnAllProducts = async (req,res) => {
+    try {
+        const products = await getAllProducts();
+        res.status(200).json({ products });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnAllProductsDetails = async (req,res) => {
+    try {
+        const products = await getAllProductsDetails();
+        res.status(200).json({products});
+        // res.status(200).json({ message: 'Product API is working!' });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 // weight option -------------------------------------------------
 export const addWeightOption = async (data) => {

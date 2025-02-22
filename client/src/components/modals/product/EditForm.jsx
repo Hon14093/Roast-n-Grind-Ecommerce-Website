@@ -26,7 +26,7 @@ export function EditForm({ product }) {
     }
 
     return (
-        <form class="mx-auto gap-5 grid">
+        <form className="mx-auto gap-5 grid">
             <div className='grid grid-cols-2 gap-6 items-start'>
                 <section className='grid gap-5'>
 

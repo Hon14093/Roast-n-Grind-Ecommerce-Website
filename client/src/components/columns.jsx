@@ -25,16 +25,16 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
         header: "Tên Sản Phẩm"
     },
     {
-        accessorKey: "roast_lvl",
+        accessorKey: "Roast_Level.roast_lvl",
         header: "Độ Rang"
     },
     {
-        accessorKey: "weight_name",
-        header: "Cân Nặng"
+        accessorKey: "Aroma.aroma_name",
+        header: "Hương Vị"
     },
     {
-        accessorKey: "price",
-        header: "Giá Tiền"
+        accessorKey: "Product_Type.type_name",
+        header: "Loại Sản Phẩm"
     },
     {
         id: "actions",

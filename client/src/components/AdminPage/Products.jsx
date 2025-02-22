@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Breadcrumb,
@@ -27,9 +27,26 @@ import { DataTable } from '../data-table.jsx'
 import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/useProductActions.js'
 import { DetailsModal, EditModal } from '../modals/product/ProductModals.jsx'
-
+import axios from 'axios'
 
 function Products() {
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const [data, setData] = useState([]);
+
+    const getData = async (e) => {
+        axios.get('http://localhost:5000/api/products/details')
+        .then(result => {
+            setData(result.data.products);
+            console.log(result.data.products);
+        })
+        .catch(result => console.log(result))
+    }
+
+    // setTimeout(() => console.log(data), 1000);
+
     // replace this with actual async getData() function
     const test_data = [
         {
@@ -91,7 +108,7 @@ function Products() {
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen,
-    } = useProductActions(test_data);
+    } = useProductActions(data);
 
     return (
         <SidebarInset>
@@ -141,7 +158,7 @@ function Products() {
                             onEdit: handleEdit,
                             onDelete: handleDelete
                         })} 
-                        data={test_data} 
+                        data={data} 
                     />
 
                     <DetailsModal 
