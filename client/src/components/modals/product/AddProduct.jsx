@@ -4,17 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Separator } from '@/components/ui/separator'
 import { uploadImage } from '@/hooks/Cloudinary'
 
 
-export function EditForm({ product }) {
-    // id, name, description, image, roast, type, aroma
 
-    // existing image la image_url (product.image_url) trong table product, ma ong code function de upload len cloudinary r lay cai url do ve truoc di
-    // xong cai do thi luu vo csdl luon
-    const existingImage = "https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png?auto=format&q=75&url=https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png&w=1400"
-    const [preview, setPreview] = useState(existingImage);
+export function AddForm() {
+    const [preview, setPreview] = useState(null);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -25,31 +20,65 @@ export function EditForm({ product }) {
             }
             reader.readAsDataURL(file);
         }
-        // if needed, the way to restore from uploaeded image 
-        // is to setPreview(existingImage) again
+    }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('picture');
+        const file = fileInput.files[0];
+        const productName = document.getElementById('product_name').value;
+        const productDescription = document.getElementById('product_des').value;
+
+        if (file && productName && productDescription) {
+            try {
+                const imageUrl = await uploadImage(file);
+                console.log('Uploaded image URL:', imageUrl);
+
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: productName,
+                        description: productDescription,
+                        imageUrl: imageUrl,
+                    }),
+                });
+
+                if (response.ok) {
+                    console.log('Product added successfully');
+                } else {
+                    console.error('Failed to add product');
+                }
+            } catch (error) {
+                console.error('Error uploading image or adding product:', error);
+            }
+        } else {
+            console.error('Please fill in all fields and select an image');
+        }
     }
 
     return (
-        <form className="mx-auto gap-5 grid">
+        <form className="mx-auto gap-5 grid" onSubmit={handleSubmit}>
             <div className='grid grid-cols-2 gap-6 items-start'>
                 <section className='grid gap-5'>
-
                     <article className="grid w-full items-center gap-1.5">
                         <Label htmlFor="product_id">ID sản phẩm</Label>
                         <Input 
                             id="product_id" 
                             placeholder="ID sản phẩm" 
-                            defaultValue={product.product_id}
                             disabled
                         />
                     </article>
 
+                    
                     <article className="grid w-full items-center gap-1.5">
                         <Label htmlFor="product_name">Tên sản phẩm</Label>
                         <Input 
                             id="product_name" 
                             placeholder="Tên sản phẩm" 
-                            defaultValue={product.product_name}
                         />
                     </article>
 
@@ -58,22 +87,18 @@ export function EditForm({ product }) {
                         <Textarea 
                             id="product_des" 
                             placeholder="Miêu tả" 
-                            defaultValue={product.description}
                         />
                     </article>
 
                 </section>
                 
-                {/* <Separator orientation="vertical" className="w-1" /> */}
-
-                {/* Phin, ong  */}
                 <section>
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="picture">Hình ảnh sản phẩm</Label>
                         <Input 
                             id="picture" 
                             type="file" 
-                            accept="image/"
+                            accept="image/*"
                             onChange={handleImageChange} 
                             className='-py-1' 
                         />
@@ -91,8 +116,7 @@ export function EditForm({ product }) {
                 </section>
             </div>
 
-
-            <Button>Lưu thay đổi</Button>
+            <Button type="submit">Thêm sản phẩm</Button>
         </form>
     )
 }

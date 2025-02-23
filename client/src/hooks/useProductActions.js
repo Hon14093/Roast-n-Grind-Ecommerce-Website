@@ -4,36 +4,40 @@ export function useProductActions(products) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const handleViewDetails = (productId) => {
-        // code has not been reviewed, the function of such codes is unknown :)
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
-        
-        // setSelectedProduct('001');
         setIsDetailsModalOpen(true);
     };
 
     const handleEdit = (productId) => {
-        // code has not been reviewed, the function of such codes is unknown :)
         const product = products.find((p) => p.id === productId);
         setSelectedProduct(product);
         setIsEditModalOpen(true);
     };
 
+    const handleAdd = () => {
+        setSelectedProduct(null);
+        setIsAddModalOpen(true);
+    };
+
     const handleDelete = async (productId) => {
-        // 
-        console.log('Delete')
+        console.log('Delete');
     };
 
     return {
         selectedProduct,
         isDetailsModalOpen,
         isEditModalOpen,
+        isAddModalOpen,
         handleViewDetails,
         handleEdit,
+        handleAdd,
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen,
+        setIsAddModalOpen,
     };
 }

@@ -7,7 +7,7 @@ import {
     DialogTitle
 } from "@/components/ui/dialog";
 import { EditForm } from './EditForm';
-
+import { AddForm } from './AddProduct';
 export function DetailsModal({ product, open, onClose }) {
     if (!product) return null;
 
@@ -45,12 +45,12 @@ export function EditModal({ product, open, onClose }) {
 
 export function AddModal({ open, onClose }) {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onClose}> 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Thêm sản phẩm</DialogTitle>
                     <DialogDescription className='text-base text-black'>
-                        Add
+                        <AddForm></AddForm>
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>

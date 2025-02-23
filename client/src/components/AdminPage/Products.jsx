@@ -26,7 +26,7 @@ import { Plus } from 'lucide-react'
 import { DataTable } from '../data-table.jsx'
 import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/useProductActions.js'
-import { DetailsModal, EditModal } from '../modals/product/ProductModals.jsx'
+import { DetailsModal, EditModal, AddModal } from '../modals/product/ProductModals.jsx'
 
 
 function Products() {
@@ -91,6 +91,8 @@ function Products() {
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen,
+        isAddModalOpen,
+        setIsAddModalOpen,
     } = useProductActions(test_data);
 
     return (
@@ -127,7 +129,7 @@ function Products() {
                         <div className='font-bold text-2xl'>
                             Danh sách sản phẩm
                         </div>
-                        <Button variant='outline' className='ml-auto'>
+                        <Button variant='outline' className='ml-auto' onClick={() => setIsAddModalOpen(true)}>
                             <Plus />
                             Thêm sản phẩm
                         </Button>
@@ -154,6 +156,11 @@ function Products() {
                         product={selectedProduct}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                    />
+                    
+                    <AddModal 
+                        open={isAddModalOpen}
+                        onClose={() => setIsAddModalOpen(false)}
                     />
 
                 </CardContent>
