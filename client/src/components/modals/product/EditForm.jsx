@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
-
+import { uploadImage } from '@/hooks/cloudinary'
 export function EditForm({ product }) {
     // id, name, description, image, roast, type, aroma
 
+    // existing image la image_url (product.image_url) trong table product, ma ong code function de upload len cloudinary r lay cai url do ve truoc di
+    // xong cai do thi luu vo csdl luon
     const existingImage = "https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png?auto=format&q=75&url=https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png&w=1400"
     const [preview, setPreview] = useState(existingImage);
 
@@ -26,7 +28,7 @@ export function EditForm({ product }) {
     }
 
     return (
-        <form class="mx-auto gap-5 grid">
+        <form className="mx-auto gap-5 grid">
             <div className='grid grid-cols-2 gap-6 items-start'>
                 <section className='grid gap-5'>
 
@@ -62,6 +64,7 @@ export function EditForm({ product }) {
                 
                 {/* <Separator orientation="vertical" className="w-1" /> */}
 
+                {/* Phin, ong  */}
                 <section>
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="picture">Hình ảnh sản phẩm</Label>
