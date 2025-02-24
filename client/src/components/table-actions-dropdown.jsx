@@ -29,7 +29,7 @@ export function TableActionsDropdown({ onViewDetails, onEdit, onDelete}) {
                     Sửa
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={onDelete}>
+                <DropdownMenuItem onClick={onDelete} className='text-red-600'>
                     Xóa
                 </DropdownMenuItem>
             </DropdownMenuContent>

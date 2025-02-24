@@ -11,6 +11,7 @@ export const getAllProductsDetails = async () => {
             product_id: true,
             product_name: true,
             description: true,
+            image_url: true,
             Roast_Level: {
                 select: {
                     roast_lvl: true,
