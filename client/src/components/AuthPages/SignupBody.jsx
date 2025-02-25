@@ -1,29 +1,32 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignupBody() {
-    const [account_name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [phone, setPhone] = useState();
-    const [password, setPassword] = useState();
+    const [account_name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
-    // const data = {name, phone, email, password};
 
     const handleSubmitSignup = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/auth/register', {account_name, email, phone, password})
-        .then(result => {
-            console.log(result);
-            navigate('/');
-        })
-        .catch(result => console.log(result))
-
-    }
+        axios.post('http://localhost:5000/api/auth/register', { account_name, email, phone, password })
+            .then(() => {
+                toast.success('Đăng ký thành công!');
+                navigate('/');
+            })
+            .catch(error => {
+                toast.error('Đăng ký thất bại. Vui lòng thử lại.');
+                console.log(error);
+            });
+    };
 
     return (
         <section className='bg-blue-100 w-full flex h-screen'>
+            <ToastContainer />
             <article className='w-1/2'>
                 <div id='loginBG'></div>
             </article>
@@ -37,26 +40,26 @@ function SignupBody() {
 
                         <form onSubmit={handleSubmitSignup} className="mt-8 space-y-6">
                             <div>
-                                <input placeholder='Họ và Tên' 
-                                    className='input-primary block w-full' 
+                                <input placeholder='Họ và Tên'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input placeholder='Số Điện Thoại' 
-                                    className='input-primary block w-full' 
+                                <input placeholder='Số Điện Thoại'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setPhone(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input type="email" placeholder='Email' 
-                                    className='input-primary block w-full' 
+                                <input type="email" placeholder='Email'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input type="password" placeholder='Mật Khẩu' 
-                                    className='input-primary block w-full' 
+                                <input type="password" placeholder='Mật Khẩu'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
@@ -67,7 +70,7 @@ function SignupBody() {
 
                         <div className='font-mono mt-4 text-[14px] flex flex-col text-center gap-2'>
                             <p>
-                                Đã có tài khoản? 
+                                Đã có tài khoản?
                                 <Link to="/login" className='underline hover:no-underline hover:text-bgColor pl-2'>Đăng nhập</Link>
                             </p>
                         </div>
@@ -75,7 +78,7 @@ function SignupBody() {
                 </div>
             </article>
         </section>
-    )
+    );
 }
 
-export default SignupBody
+export default SignupBody;

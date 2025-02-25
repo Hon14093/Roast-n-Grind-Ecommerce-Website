@@ -11,54 +11,62 @@ import { uploadImage } from '@/hooks/Cloudinary'
 export function AddForm() {
     const [preview, setPreview] = useState(null);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const fileInput = document.getElementById('picture');
         const file = fileInput.files[0];
         const productName = document.getElementById('product_name').value;
         const productDescription = document.getElementById('product_des').value;
-
-        if (file && productName && productDescription) {
-            try {
-                const imageUrl = await uploadImage(file);
-                console.log('Uploaded image URL:', imageUrl);
-
-                const response = await fetch('/api/products', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name: productName,
-                        description: productDescription,
-                        imageUrl: imageUrl,
-                    }),
-                });
-
-                if (response.ok) {
-                    console.log('Product added successfully');
-                } else {
-                    console.error('Failed to add product');
-                }
-            } catch (error) {
-                console.error('Error uploading image or adding product:', error);
-            }
-        } else {
-            console.error('Please fill in all fields and select an image');
+    
+        if (!file || !productName || !productDescription) {
+            console.error("Vui lòng điền đủ thông tin và chọn ảnh!");
+            return;
         }
-    }
+    
+        try {
+            const imageUrl = await uploadImage(file);
+            if (!imageUrl) {
+                console.error("Không thể tải ảnh lên Cloudinary!");
+                return;
+            }
+    
+            console.log("URL ảnh đã tải lên:", imageUrl);
+    
+            const response = await fetch("/api/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: productName,
+                    description: productDescription,
+                    imageUrl: imageUrl,
+                }),
+            });
+    
+            if (response.ok) {
+                console.log("Thêm sản phẩm thành công!");
+            } else {
+                console.error("Thêm sản phẩm thất bại!");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải ảnh lên hoặc thêm sản phẩm:", error);
+        }
+    };
+    
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            setPreview(null);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
 
     return (
         <form className="mx-auto gap-5 grid" onSubmit={handleSubmit}>
@@ -73,7 +81,6 @@ export function AddForm() {
                         />
                     </article>
 
-                    
                     <article className="grid w-full items-center gap-1.5">
                         <Label htmlFor="product_name">Tên sản phẩm</Label>
                         <Input 
@@ -89,7 +96,6 @@ export function AddForm() {
                             placeholder="Miêu tả" 
                         />
                     </article>
-
                 </section>
                 
                 <section>
