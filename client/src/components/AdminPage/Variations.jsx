@@ -23,38 +23,72 @@ import {
 } from "@/components/ui/card"
 import { Plus, PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
+import { variationColumns } from '../columns.jsx'
 import { DataTable } from '../data-table.jsx'
-import { productColumns } from '../columns.jsx'
-import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
-import { DetailsModal, EditModal } from '../modals/product/ProductModals.jsx'
+import { useVariationActions } from '@/hooks/table-actions/useVariationActions.js'
+import { DetailsModal, EditModal } from '../modals/variation/VariationModals.jsx'
 import axios from 'axios'
 
-function Products() {
-    useEffect(() => {
-        getData();
-    }, []);
+export default function Variations() {
 
-    const [data, setData] = useState([]);
+    const temp_data = [
+        {
+            Product: {
+                product_name: 'Cà phê 1'
+            },
+            Weight_Option: {
+                weight_name: '200g'
+            },
+            product_price: 100000,
+            qty_in_stock: 100
+        },
+        {
+            Product: {
+                product_name: 'Cà phê 1'
+            },
+            Weight_Option: {
+                weight_name: '500g'
+            },
+            product_price: 230000,
+            qty_in_stock: 148
+        },
+        {
+            Product: {
+                product_name: 'Cà phê 1'
+            },
+            Weight_Option: {
+                weight_name: '1000g'
+            },
+            product_price: 490000,
+            qty_in_stock: 191
+        },
+    ]
 
-    const getData = async (e) => {
-        axios.get('http://localhost:5000/api/products/details')
-        .then(result => {
-            setData(result.data.products);
-            console.log(result.data.products);
-        })
-        .catch(result => console.log(result))
-    }
+    const temp_data_1 = [
+        {
+            product_name: 'Cà phê 1',
+            weight_name: '200g',
+            product_price: 100000,
+            qty_in_stock: 98
+        },
+        {
+            product_name: 'Cà phê 1',
+            weight_name: '200g',
+            product_price: 100000,
+            qty_in_stock: 98
+        }
+    ]
 
     const {
-        selectedProduct,
+        selectedVariation,
         isDetailsModalOpen,
         isEditModalOpen,
         handleViewDetails,
         handleEdit,
         handleDelete,
         setIsDetailsModalOpen,
-        setIsEditModalOpen,
-    } = useProductActions(data);
+        setIsEditModalOpen
+    } = useVariationActions(temp_data_1)
 
     return (
         <SidebarInset>
@@ -77,7 +111,15 @@ function Products() {
                             <BreadcrumbSeparator className="hidden md:block" />
 
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Sản phẩm</BreadcrumbPage>
+                                <BreadcrumbLink href="/admin/products">
+                                    Sản phẩm
+                                </BreadcrumbLink>
+                            </BreadcrumbItem>
+
+                            <BreadcrumbSeparator className="hidden md:block" />
+
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Biến thể</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -88,43 +130,36 @@ function Products() {
                 <CardHeader>
                     <div className='flex'>
                         <div className='font-bold text-2xl'>
-                            Danh sách sản phẩm
+                            Danh sách biến thể sản phẩm
                         </div>
 
                         <div className='ml-auto'>
-                            <Link to='/admin/products/variations'>
-                                <Button variant='outline' className='mr-3'>
-                                    <PackagePlus />
-                                    Biến thể
-                                </Button>
-                            </Link>
-
                             <Button variant='outline' >
                                 <Plus />
-                                Thêm sản phẩm
+                                Thêm biến thể
                             </Button>
                         </div>
                     </div>                    
                 </CardHeader>
 
                 <CardContent>
-                    <DataTable 
-                        columns={productColumns({
+                    <DataTable
+                        columns={variationColumns({
                             onViewDetails: handleViewDetails,
                             onEdit: handleEdit,
                             onDelete: handleDelete
                         })} 
-                        data={data} 
+                        data={temp_data} 
                     />
 
                     <DetailsModal 
-                        product={selectedProduct}
+                        variation={selectedVariation}
                         open={isDetailsModalOpen}
                         onClose={() => setIsDetailsModalOpen(false)}
                     />
 
                     <EditModal 
-                        product={selectedProduct}
+                        variation={selectedVariation}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
                     />
@@ -132,9 +167,6 @@ function Products() {
                 </CardContent>
             </Card>
         </SidebarInset>
-
         
-    );
+    )
 }
-
-export default Products

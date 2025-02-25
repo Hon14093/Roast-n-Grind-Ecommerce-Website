@@ -22,6 +22,8 @@ export function DataTable({ columns, data }) {
         getCoreRowModel: getCoreRowModel()
     })
 
+    console.log(columns)
+
     return (
         <div className="rounded-md border">
             <Table>

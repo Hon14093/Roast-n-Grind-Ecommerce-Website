@@ -19,6 +19,72 @@ export const accountColumns = [
     },
 ]
 
+export const variationColumns1 = [
+    {
+        accessorKey: "product_name",
+        header: "Tên sản phẩm"
+    },
+    {
+        accessorKey: "weight_name",
+        header: "Cân nặng"
+    },
+    {
+        accessorKey: "product_price",
+        header: "Giá"
+    },
+    {
+        accessorKey: "qty_in_stock",
+        header: "Số Lượng"
+    },
+    // {
+    //     id: "actions",
+    //     cell: ({ row }) => {
+    //         const variation = row.original;
+
+    //         return (
+    //             <TableActionsDropdown 
+    //                 onViewDetails={() => onViewDetails(variation.variation_id)}
+    //                 onEdit={() => onEdit(variation.variation_id)}
+    //                 onDelete={() => onDelete(variation.variation_id)}
+    //             />
+    //         )
+    //     }
+    // }
+]
+
+export const variationColumns = ({ onViewDetails, onEdit, onDelete }) => [
+    {
+        accessorKey: "Product.product_name",
+        header: "Tên sản phẩm"
+    },
+    {
+        accessorKey: "Weight_Option.weight_name",
+        header: "Cân nặng"
+    },
+    {
+        accessorKey: "product_price",
+        header: "Giá"
+    },
+    {
+        accessorKey: "qty_in_stock",
+        header: "Số Lượng"
+    },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const variation = row.original;
+
+            return (
+                <TableActionsDropdown 
+                    onViewDetails={() => onViewDetails(variation.pw_id)}
+                    onEdit={() => onEdit(variation.pw_id)}
+                    onDelete={() => onDelete(variation.pw_id)}
+                />
+            )
+        }
+    }
+]
+
 export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     {
         accessorKey: "product_name",
@@ -44,16 +110,10 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
 
             return (
                 <TableActionsDropdown 
-                    onViewDetails={() => onViewDetails(product.id)}
-                    onEdit={() => onEdit(product.id)}
-                    onDelete={() => onDelete(product.id)}
+                    onViewDetails={() => onViewDetails(product.product_id)}
+                    onEdit={() => onEdit(product.product_id)}
+                    onDelete={() => onDelete(product.product_id)}
                 />
-
-                // <TableActionsDropdown 
-                //     onViewDetails={viewDetails}
-                //     onEdit={editItem}
-                //     onDelete={deleteItem}
-                // />
             )
         }
     }
