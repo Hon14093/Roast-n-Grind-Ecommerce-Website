@@ -18,7 +18,6 @@ export function useVariationActions(variations) {
     };
 
     const handleDelete = async (Id) => {
-        // 
         console.log('Delete')
     };
 

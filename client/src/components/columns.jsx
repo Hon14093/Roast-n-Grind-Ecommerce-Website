@@ -1,5 +1,6 @@
 import { TableActionsDropdown } from "./table-actions-dropdown";
 
+// this account columns is not finished
 export const accountColumns = [
     {
         accessorKey: "name",
@@ -17,39 +18,6 @@ export const accountColumns = [
         accessorKey: "password",
         header: "Password"
     },
-]
-
-export const variationColumns1 = [
-    {
-        accessorKey: "product_name",
-        header: "Tên sản phẩm"
-    },
-    {
-        accessorKey: "weight_name",
-        header: "Cân nặng"
-    },
-    {
-        accessorKey: "product_price",
-        header: "Giá"
-    },
-    {
-        accessorKey: "qty_in_stock",
-        header: "Số Lượng"
-    },
-    // {
-    //     id: "actions",
-    //     cell: ({ row }) => {
-    //         const variation = row.original;
-
-    //         return (
-    //             <TableActionsDropdown 
-    //                 onViewDetails={() => onViewDetails(variation.variation_id)}
-    //                 onEdit={() => onEdit(variation.variation_id)}
-    //                 onDelete={() => onDelete(variation.variation_id)}
-    //             />
-    //         )
-    //     }
-    // }
 ]
 
 export const variationColumns = ({ onViewDetails, onEdit, onDelete }) => [
@@ -85,23 +53,27 @@ export const variationColumns = ({ onViewDetails, onEdit, onDelete }) => [
     }
 ]
 
+// {
+//     "product_id": "76aaf7d5-7701-42bd-9744-3938ec989be8",
+//     "product_name": "Cà phê 1",
+//     "description": "I'm coffee 1",
+//     "image_url": "https://shop.phase-connect.com/cdn/shop/files/luminewcoffee_1776x1184.png?v=1715241054",
+//     "Roast_Level": {
+//         "roast_lvl": "Rang nhẹ"
+//     },
+//     "Product_Type": {
+//         "type_name": "Hỗn hợp"
+//     },
+//     "Aroma": {
+//         "aroma_name": "Hương trái cây"
+//     }
+// }
+
 export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
-    {
-        accessorKey: "product_name",
-        header: "Tên Sản Phẩm"
-    },
-    {
-        accessorKey: "Roast_Level.roast_lvl",
-        header: "Độ Rang"
-    },
-    {
-        accessorKey: "Aroma.aroma_name",
-        header: "Hương Vị"
-    },
-    {
-        accessorKey: "Product_Type.type_name",
-        header: "Loại Sản Phẩm"
-    },
+    { accessorKey: "product_name", header: "Tên Sản Phẩm" },
+    { accessorKey: "Roast_Level.roast_lvl", header: "Độ Rang" },
+    { accessorKey: "Aroma.aroma_name", header: "Hương Vị" },
+    { accessorKey: "Product_Type.type_name", header: "Loại Sản Phẩm" },
     {
         id: "actions",
         cell: ({ row }) => {

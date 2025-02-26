@@ -64,21 +64,6 @@ export default function Variations() {
         },
     ]
 
-    const temp_data_1 = [
-        {
-            product_name: 'Cà phê 1',
-            weight_name: '200g',
-            product_price: 100000,
-            qty_in_stock: 98
-        },
-        {
-            product_name: 'Cà phê 1',
-            weight_name: '200g',
-            product_price: 100000,
-            qty_in_stock: 98
-        }
-    ]
-
     const {
         selectedVariation,
         isDetailsModalOpen,
@@ -88,7 +73,7 @@ export default function Variations() {
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen
-    } = useVariationActions(temp_data_1)
+    } = useVariationActions(temp_data)
 
     return (
         <SidebarInset>

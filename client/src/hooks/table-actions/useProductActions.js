@@ -18,7 +18,6 @@ export function useProductActions(products) {
     };
 
     const handleDelete = async (productId) => {
-        // 
         console.log('Delete')
     };
 

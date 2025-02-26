@@ -40,7 +40,6 @@ export function EditModal({ product, open, onClose }) {
                     {/* <DialogDescription className='text-base text-black'>
                         <EditForm product={product} />
                     </DialogDescription> */}
-                    
                 </DialogHeader>
 
                 <div className='text-base text-darkOlive'>
