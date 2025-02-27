@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+
 import {
     Command,
     CommandEmpty,
@@ -17,26 +18,26 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-
-const frameworks = [
-    { value: "react", label: "React" },
-    { value: "vue", label: "Vue" },
-    { value: "angular", label: "Angular" },
-    { value: "svelte", label: "Svelte" },
-];
+import { uploadImage } from '@/hooks/Cloudinary/cloudinary'
 
 const aromas = [
-    { value: "react", label: "React" },
-    { value: "vue", label: "Vue" },
-    { value: "angular", label: "Angular" },
-    { value: "svelte", label: "Svelte" },
-]
-const types = []
-const roast_lvls = []
+    { value: "chocolate", label: "Chocolate" },
+    { value: "vanilla", label: "Vanilla" },
+];
+const types = [
+    { value: "arabica", label: "Arabica" },
+    { value: "robusta", label: "Robusta" },
+];
+const roast_lvls = [
+    { value: "light", label: "Light Roast" },
+    { value: "dark", label: "Dark Roast" },
+];
+
 
 export function AddForm() {
     const placeholderImage = "https://beautyrepublicfdl.com/wp-content/uploads/2020/06/placeholder-image.jpg";
     const [preview, setPreview] = useState(placeholderImage);
+    const [imageFile, setImageFile] = useState(null);
 
     const [aromaOpen, setAromaOpen] = useState(false);
     const [typeOpen, setTypeOpen] = useState(false);
@@ -45,7 +46,7 @@ export function AddForm() {
     const [aromaValue, setAromaValue] = useState('');
     const [typeValue, setTypeValue] = useState('');
     const [roastValue, setRoastValue] = useState('');
-    
+
     const selectedAroma = aromas.find((aroma) => aroma.value === aromaValue);
     const selectedType = types.find((type) => type.value === typeValue);
     const selectedRoast = roast_lvls.find((roast) => roast.value === roastValue);
@@ -53,16 +54,22 @@ export function AddForm() {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setImageFile(file);
             const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            }
+            reader.onloadend = () => setPreview(reader.result);
             reader.readAsDataURL(file);
         }
-    }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const imageUrl = await uploadImage(imageFile); // Lấy URL ảnh
+        console.log("Ảnh đã upload:", imageUrl);
+    };
 
     return (
-        <form className="mx-auto gap-5 grid">
+        <form className="mx-auto gap-5 grid" onSubmit={handleSubmit}>
             <div className='grid grid-cols-2 gap-6 items-start'>
                 <section className='grid gap-5'>
 
@@ -106,7 +113,7 @@ export function AddForm() {
                                         key={aroma.value}
                                         value={aroma.value}
                                         onSelect={(currentValue) => {
-                                            setAromaValue(currentValue === value ? "" : currentValue);
+                                            setAromaValue(currentValue === aromaValue ? "" : currentValue);
                                             setAromaOpen(false);
                                         }}
                                         >
@@ -144,7 +151,7 @@ export function AddForm() {
                                         key={type.value}
                                         value={type.value}
                                         onSelect={(currentValue) => {
-                                            setTypeValue(currentValue === value ? "" : currentValue);
+                                            setTypeValue(currentValue === typeValue ? "" : currentValue);
                                             setTypeOpen(false);
                                         }}
                                         >
@@ -182,7 +189,7 @@ export function AddForm() {
                                         key={roast.value}
                                         value={roast.value}
                                         onSelect={(currentValue) => {
-                                            setRoastValue(currentValue === value ? "" : currentValue);
+                                            setRoastValue(currentValue === roastValue ? "" : currentValue);
                                             setRoastOpen(false);
                                         }}
                                         >
