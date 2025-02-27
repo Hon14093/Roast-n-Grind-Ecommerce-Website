@@ -27,24 +27,15 @@ import { DataTable } from '../data-table.jsx'
 import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
 import { DetailsModal, EditModal, DeleteModal, AddModal } from '../modals/product/ProductModals.jsx'
-import axios from 'axios'
+
+import { getProductData } from '@/hooks/productAPI.jsx'
 
 function Products() {
     useEffect(() => {
-        getData();
+        getProductData(setData)
     }, []);
-
+    
     const [data, setData] = useState([]);
-
-    const getData = async (e) => {
-        axios.get('http://localhost:5000/api/products/details')
-        .then(result => {
-            setData(result.data.products);
-            console.log(result.data.products);
-        })
-        .catch(result => console.log(result))
-    }
-
     const {
         selectedProduct,
         isDetailsModalOpen,
