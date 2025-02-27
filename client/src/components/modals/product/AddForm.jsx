@@ -106,7 +106,7 @@ export function AddForm() {
                                         key={aroma.value}
                                         value={aroma.value}
                                         onSelect={(currentValue) => {
-                                            setAromaValue(currentValue === value ? "" : currentValue);
+                                            setAromaValue(currentValue === aromaValue ? "" : currentValue);
                                             setAromaOpen(false);
                                         }}
                                         >
@@ -144,7 +144,7 @@ export function AddForm() {
                                         key={type.value}
                                         value={type.value}
                                         onSelect={(currentValue) => {
-                                            setTypeValue(currentValue === value ? "" : currentValue);
+                                            setTypeValue(currentValue === typeValue ? "" : currentValue);
                                             setTypeOpen(false);
                                         }}
                                         >
@@ -182,7 +182,7 @@ export function AddForm() {
                                         key={roast.value}
                                         value={roast.value}
                                         onSelect={(currentValue) => {
-                                            setRoastValue(currentValue === value ? "" : currentValue);
+                                            setRoastValue(currentValue === roastValue ? "" : currentValue);
                                             setRoastOpen(false);
                                         }}
                                         >
@@ -221,7 +221,6 @@ export function AddForm() {
                     </div>
                 </section>
             </div>
-
 
             <Button>Lưu thay đổi</Button>
         </form>
