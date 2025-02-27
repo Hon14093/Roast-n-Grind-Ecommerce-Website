@@ -26,13 +26,14 @@ import { Button } from '../ui/button.jsx'
 import { variationColumns } from '../columns.jsx'
 import { DataTable } from '../data-table.jsx'
 import { useVariationActions } from '@/hooks/table-actions/useVariationActions.js'
-import { DetailsModal, EditModal } from '../modals/variation/VariationModals.jsx'
+import { DetailsModal, EditModal, DeleteModal } from '../modals/variation/VariationModals.jsx'
 import axios from 'axios'
 
 export default function Variations() {
 
     const temp_data = [
         {
+            pw_id: 1,
             Product: {
                 product_name: 'Cà phê 1'
             },
@@ -43,6 +44,7 @@ export default function Variations() {
             qty_in_stock: 100
         },
         {
+            pw_id: 2,
             Product: {
                 product_name: 'Cà phê 1'
             },
@@ -53,6 +55,7 @@ export default function Variations() {
             qty_in_stock: 148
         },
         {
+            pw_id: 3,
             Product: {
                 product_name: 'Cà phê 1'
             },
@@ -68,11 +71,13 @@ export default function Variations() {
         selectedVariation,
         isDetailsModalOpen,
         isEditModalOpen,
+        isDeleteModalOpen,
         handleViewDetails,
         handleEdit,
         handleDelete,
         setIsDetailsModalOpen,
-        setIsEditModalOpen
+        setIsEditModalOpen,
+        setIsDeleteModalOpen
     } = useVariationActions(temp_data)
 
     return (
@@ -147,6 +152,12 @@ export default function Variations() {
                         variation={selectedVariation}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                    />
+
+                    <DeleteModal
+                        variation={selectedVariation}
+                        open={isDeleteModalOpen}
+                        onClose={() => setIsDeleteModalOpen(false)}
                     />
 
                 </CardContent>

@@ -37,26 +37,26 @@ function SignupBody() {
 
                         <form onSubmit={handleSubmitSignup} className="mt-8 space-y-6">
                             <div>
-                                <input placeholder='Họ và Tên' 
-                                    className='input-primary block w-full' 
+                                <input placeholder='Họ và Tên'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input placeholder='Số Điện Thoại' 
-                                    className='input-primary block w-full' 
+                                <input placeholder='Số Điện Thoại'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setPhone(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input type="email" placeholder='Email' 
-                                    className='input-primary block w-full' 
+                                <input type="email" placeholder='Email'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div>
-                                <input type="password" placeholder='Mật Khẩu' 
-                                    className='input-primary block w-full' 
+                                <input type="password" placeholder='Mật Khẩu'
+                                    className='input-primary block w-full'
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
@@ -67,7 +67,7 @@ function SignupBody() {
 
                         <div className='font-mono mt-4 text-[14px] flex flex-col text-center gap-2'>
                             <p>
-                                Đã có tài khoản? 
+                                Đã có tài khoản?
                                 <Link to="/login" className='underline hover:no-underline hover:text-bgColor pl-2'>Đăng nhập</Link>
                             </p>
                         </div>
@@ -78,4 +78,4 @@ function SignupBody() {
     )
 }
 
-export default SignupBody
+export default SignupBody;

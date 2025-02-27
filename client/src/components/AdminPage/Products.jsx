@@ -21,12 +21,12 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Plus, PackagePlus } from 'lucide-react'
+import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { productColumns } from '../columns.jsx'
 import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
-import { DetailsModal, EditModal } from '../modals/product/ProductModals.jsx'
+import { DetailsModal, EditModal, DeleteModal, AddModal } from '../modals/product/ProductModals.jsx'
 import axios from 'axios'
 
 function Products() {
@@ -49,11 +49,13 @@ function Products() {
         selectedProduct,
         isDetailsModalOpen,
         isEditModalOpen,
+        isDeleteModalOpen,
         handleViewDetails,
         handleEdit,
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen,
+        setIsDeleteModalOpen
     } = useProductActions(data);
 
     return (
@@ -99,10 +101,7 @@ function Products() {
                                 </Button>
                             </Link>
 
-                            <Button variant='outline' >
-                                <Plus />
-                                Thêm sản phẩm
-                            </Button>
+                            <AddModal />
                         </div>
                     </div>                    
                 </CardHeader>
@@ -129,11 +128,15 @@ function Products() {
                         onClose={() => setIsEditModalOpen(false)}
                     />
 
+                    <DeleteModal
+                        product={selectedProduct}
+                        open={isDeleteModalOpen}
+                        onClose={() => setIsDeleteModalOpen(false)}
+                    />   
+
                 </CardContent>
             </Card>
         </SidebarInset>
-
-        
     );
 }
 

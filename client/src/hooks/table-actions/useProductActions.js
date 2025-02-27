@@ -4,6 +4,7 @@ export function useProductActions(products) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
 
     const handleViewDetails = (productId) => {
         const product = products.find((p) => p.product_id === productId);
@@ -25,10 +26,12 @@ export function useProductActions(products) {
         selectedProduct,
         isDetailsModalOpen,
         isEditModalOpen,
+        isDeleteModalOpen,
         handleViewDetails,
         handleEdit,
         handleDelete,
         setIsDetailsModalOpen,
         setIsEditModalOpen,
+        setIsDeleteModalOpen
     };
 }
