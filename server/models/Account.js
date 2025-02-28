@@ -8,12 +8,14 @@ const prisma = new PrismaClient();
 //     password: '11111'
 // }
 
+// working
 export const createAccount = async (data) => {
     return await prisma.account.create({
         data: data
     });
 }
 
+// working
 export const findAccountByEmail = async (email) => {
     return await prisma.account.findUnique({
         where: {

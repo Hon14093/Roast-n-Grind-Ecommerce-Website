@@ -49,6 +49,11 @@ function Products() {
         setIsDeleteModalOpen
     } = useProductActions(data);
 
+    const handleEditSuccess = () => {
+        // if the edit is successful, we need to refresh the data
+        getProductData(setData);
+    }
+
     return (
         <SidebarInset>
             {/* Don't really need to worry about the header */}
@@ -117,6 +122,7 @@ function Products() {
                         product={selectedProduct}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                        onSubmitSuccess={handleEditSuccess}
                     />
 
                     <DeleteModal

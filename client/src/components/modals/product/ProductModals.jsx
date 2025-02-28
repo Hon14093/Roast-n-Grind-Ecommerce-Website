@@ -34,7 +34,7 @@ export function DetailsModal({ product, open, onClose }) {
     )
 }
 
-export function EditModal({ product, open, onClose }) {
+export function EditModal({ product, open, onClose, onSubmitSuccess }) {
     if (!product) return null;
 
     return (
@@ -48,7 +48,7 @@ export function EditModal({ product, open, onClose }) {
                 </DialogHeader>
 
                 <div className='text-base text-darkOlive'>
-                    <EditForm product={product} />
+                    <EditForm product={product} onClose={onClose} onSubmitSuccess={onSubmitSuccess} />
                 </div>
             </DialogContent>
         </Dialog>

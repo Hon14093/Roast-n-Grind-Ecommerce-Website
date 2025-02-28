@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { deleteProduct } from "../productAPI";
 
 export function useProductActions(products) {
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -19,6 +20,7 @@ export function useProductActions(products) {
     };
 
     const handleDelete = async (productId) => {
+        deleteProduct(productId);
         console.log('Delete')
     };
 
