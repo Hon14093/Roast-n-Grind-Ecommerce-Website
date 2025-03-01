@@ -35,7 +35,7 @@ export default function Variations() {
         {
             pw_id: 1,
             Product: {
-                product_name: 'Cà phê 1'
+                product_name: 'Custom Roast Coffee Beans - Kaneko Lumi Inspired'
             },
             Weight_Option: {
                 weight_name: '200g'
@@ -46,7 +46,7 @@ export default function Variations() {
         {
             pw_id: 2,
             Product: {
-                product_name: 'Cà phê 1'
+                product_name: 'Custom Roast Coffee Beans - Kaneko Lumi Inspired'
             },
             Weight_Option: {
                 weight_name: '500g'
@@ -57,7 +57,7 @@ export default function Variations() {
         {
             pw_id: 3,
             Product: {
-                product_name: 'Cà phê 1'
+                product_name: 'Custom Roast Coffee Beans - Kaneko Lumi Inspired'
             },
             Weight_Option: {
                 weight_name: '1000g'

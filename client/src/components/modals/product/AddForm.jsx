@@ -229,7 +229,7 @@ export function AddForm() {
                 </section>
             </div>
 
-            <Button>Lưu thay đổi</Button>
+            <Button>Thêm sản phẩm</Button>
         </form>
     )
 }

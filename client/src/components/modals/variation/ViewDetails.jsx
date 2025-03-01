@@ -15,6 +15,11 @@ export function ViewDetails({ variation }) {
                 </div>
 
                 <div className='flex'>
+                    <h3 className='font-semibold pr-2'>Cân nặng: </h3>
+                    <p>{variation.Weight_Option.weight_name}</p>
+                </div>
+
+                <div className='flex'>
                     <h3 className='font-semibold pr-2'>Giá sản phẩm: </h3>
                     <p>{variation.product_price} VNĐ</p>
                 </div>

@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Separator } from '@/components/ui/separator'
 import { editProduct } from '@/hooks/productAPI'
+import { uploadImage } from '@/hooks/Cloudinary/cloudinary';
 
 const aromas = [
     { value: "chocolate", label: "Chocolate" },
@@ -54,7 +54,7 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
     const existingImage = "https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png?auto=format&q=75&url=https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png&w=1400"
     const [preview, setPreview] = useState(existingImage);
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -62,6 +62,13 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
                 setPreview(reader.result);
             }
             reader.readAsDataURL(file);
+
+            try {
+                const imageResult = await uploadImage(e, file)
+                console.log("Image result:", imageResult);
+            } catch (error) {
+                console.error("Upload image failed:", error);
+            }
         }
         // if needed, the way to restore from uploaeded image 
         // is to setPreview(existingImage) again
@@ -72,10 +79,11 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
         const data = {
             product_name,
             description,
+            // image_url
         }
+
         const result = await editProduct(product.product_id, data);
         if (result) {
-            // console.log('Edit success');
             onSubmitSuccess();
             onClose();
         }
@@ -127,12 +135,12 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
                                     aria-expanded={aromaOpen}
                                     className="w-[200px] justify-between"
                                 >
-                                {selectedAroma ? selectedAroma.label : "Select aroma..."}
+                                {selectedAroma ? selectedAroma.label : "Chọn mùi hương..."}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[200px] p-0">
                                 <Command>
-                                <CommandInput placeholder="Search framework..." />
+                                <CommandInput placeholder="Tìm kiếm..." />
                                 <CommandList>
                                     <CommandEmpty>No aroma found.</CommandEmpty>
                                     <CommandGroup>
@@ -165,12 +173,12 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
                                     aria-expanded={typeOpen}
                                     className="w-[200px] justify-between"
                                 >
-                                {selectedType ? selectedType.label : "Select type..."}
+                                {selectedType ? selectedType.label : "Chọn loại..."}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[200px] p-0">
                                 <Command>
-                                <CommandInput placeholder="Search framework..." />
+                                <CommandInput placeholder="Tìm kiếm..." />
                                 <CommandList>
                                     <CommandEmpty>No type found.</CommandEmpty>
                                     <CommandGroup>
@@ -203,12 +211,12 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
                                     aria-expanded={roastOpen}
                                     className="w-[200px] justify-between"
                                 >
-                                {selectedRoast ? selectedRoast.label : "Select type..."}
+                                {selectedRoast ? selectedRoast.label : "Chọn độ rang..."}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[200px] p-0">
                                 <Command>
-                                <CommandInput placeholder="Search framework..." />
+                                <CommandInput placeholder="Tìm kiếm..." />
                                 <CommandList>
                                     <CommandEmpty>No level found.</CommandEmpty>
                                     <CommandGroup>
