@@ -49,7 +49,7 @@ function Products() {
         setIsDeleteModalOpen
     } = useProductActions(data);
 
-    const handleEditSuccess = () => {
+    const handleSubmitSuccess = () => {
         // if the edit is successful, we need to refresh the data
         getProductData(setData);
     }
@@ -97,7 +97,7 @@ function Products() {
                                 </Button>
                             </Link>
 
-                            <AddModal />
+                            <AddModal onSubmitSuccess={handleSubmitSuccess} />
                         </div>
                     </div>                    
                 </CardHeader>
@@ -122,7 +122,7 @@ function Products() {
                         product={selectedProduct}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
-                        onSubmitSuccess={handleEditSuccess}
+                        onSubmitSuccess={handleSubmitSuccess}
                     />
 
                     <DeleteModal

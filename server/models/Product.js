@@ -29,6 +29,9 @@ export const getAllProductsDetails = async () => {
                 }
             },
         },
+        orderBy: {
+            product_name: 'asc',
+        },
     });
 }
 

@@ -1,55 +1,26 @@
 import { useState } from 'react'
-
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { uploadImage } from '@/hooks/Cloudinary/cloudinary'
+import { uploadImage1 } from '@/hooks/Cloudinary/cloudinary'
+import { addProduct } from '@/hooks/productAPI';
 
-const aromas = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "vanilla", label: "Vanilla" },
-];
-const types = [
-    { value: "arabica", label: "Arabica" },
-    { value: "robusta", label: "Robusta" },
-];
-const roast_lvls = [
-    { value: "light", label: "Light Roast" },
-    { value: "dark", label: "Dark Roast" },
-];
+import AromaComboBox from '../../combobox/AromaCombobox';
+import ProductTypeComboBox from '../../combobox/ProductTypeComobox';
+import RoastLevelComboBox from '../../combobox/RoastLevelCombobox';
 
-
-export function AddForm() {
+export function AddForm({ onSubmitSuccess }) {
     const placeholderImage = "https://beautyrepublicfdl.com/wp-content/uploads/2020/06/placeholder-image.jpg";
     const [preview, setPreview] = useState(placeholderImage);
     const [imageFile, setImageFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const [aromaOpen, setAromaOpen] = useState(false);
-    const [typeOpen, setTypeOpen] = useState(false);
-    const [roastOpen, setRoastOpen] = useState(false);
-
+    const [productName, setProductName] = useState('');
+    const [description, setDescription] = useState('');
     const [aromaValue, setAromaValue] = useState('');
     const [typeValue, setTypeValue] = useState('');
     const [roastValue, setRoastValue] = useState('');
-
-    const selectedAroma = aromas.find((aroma) => aroma.value === aromaValue);
-    const selectedType = types.find((type) => type.value === typeValue);
-    const selectedRoast = roast_lvls.find((roast) => roast.value === roastValue);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -63,9 +34,30 @@ export function AddForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
+        try {
+            const imageUpload = await uploadImage1(imageFile);
+
+            const product = {
+                product_name: productName,
+                description: description,
+                image_url: imageUpload,
+                aroma_id: aromaValue,
+                type_id: typeValue,
+                roast_id: roastValue,
+            };
+
+            const addProductRes = await addProduct(product);
+            if (addProductRes.data.success) {
+                if (onSubmitSuccess) onSubmitSuccess();
+            }
+            console.log("Add product response:", addProductRes);
+
+        } catch (error) {
+            console.error("Error adding product:", error);            
+        }
     
-        const imageUrl = await uploadImage(imageFile); // Lấy URL ảnh
-        console.log("Ảnh đã upload:", imageUrl);
     };
 
     return (
@@ -78,6 +70,7 @@ export function AddForm() {
                         <Input 
                             id="product_name" 
                             placeholder="Tên sản phẩm" 
+                            onChange={(e) => setProductName(e.target.value)}
                         />
                     </article>
 
@@ -86,122 +79,15 @@ export function AddForm() {
                         <Textarea 
                             id="product_des" 
                             placeholder="Miêu tả" 
+                            onChange={(e) => setDescription(e.target.value)}
                         />
                     </article>
 
-                    <article className="grid w-full items-center gap-1.5">
-                        <Label htmlFor="aroma">Mùi hương</Label>
-                        <Popover id="aroma" open={aromaOpen} onOpenChange={setAromaOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={aromaOpen}
-                                    className="w-[200px] justify-between"
-                                >
-                                {selectedAroma ? selectedAroma.label : "Select aroma..."}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                <CommandInput placeholder="Search framework..." />
-                                <CommandList>
-                                    <CommandEmpty>No aroma found.</CommandEmpty>
-                                    <CommandGroup>
-                                    {aromas.map((aroma) => (
-                                        <CommandItem
-                                        key={aroma.value}
-                                        value={aroma.value}
-                                        onSelect={(currentValue) => {
-                                            setAromaValue(currentValue === aromaValue ? "" : currentValue);
-                                            setAromaOpen(false);
-                                        }}
-                                        >
-                                        {aroma.label}
-                                        </CommandItem>
-                                    ))}
-                                    </CommandGroup>
-                                </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
-                    </article>
+                    <AromaComboBox value={aromaValue} onChange={setAromaValue} />
 
-                    <article className="grid w-full items-center gap-1.5">
-                        <Label htmlFor="type">Loại cà phê</Label>
-                        <Popover id="type" open={typeOpen} onOpenChange={setTypeOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={typeOpen}
-                                    className="w-[200px] justify-between"
-                                >
-                                {selectedType ? selectedType.label : "Select type..."}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                <CommandInput placeholder="Search framework..." />
-                                <CommandList>
-                                    <CommandEmpty>No type found.</CommandEmpty>
-                                    <CommandGroup>
-                                    {types.map((type) => (
-                                        <CommandItem
-                                        key={type.value}
-                                        value={type.value}
-                                        onSelect={(currentValue) => {
-                                            setTypeValue(currentValue === typeValue ? "" : currentValue);
-                                            setTypeOpen(false);
-                                        }}
-                                        >
-                                        {type.label}
-                                        </CommandItem>
-                                    ))}
-                                    </CommandGroup>
-                                </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
-                    </article>
+                    <ProductTypeComboBox value={typeValue} onChange={setTypeValue} />
 
-                    <article className="grid w-full items-center gap-1.5">
-                        <Label htmlFor="roast">Độ rang</Label>
-                        <Popover id="roast" open={roastOpen} onOpenChange={setRoastOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={roastOpen}
-                                    className="w-[200px] justify-between"
-                                >
-                                {selectedRoast ? selectedRoast.label : "Select type..."}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                <CommandInput placeholder="Search framework..." />
-                                <CommandList>
-                                    <CommandEmpty>No level found.</CommandEmpty>
-                                    <CommandGroup>
-                                    {roast_lvls.map((roast) => (
-                                        <CommandItem
-                                        key={roast.value}
-                                        value={roast.value}
-                                        onSelect={(currentValue) => {
-                                            setRoastValue(currentValue === roastValue ? "" : currentValue);
-                                            setRoastOpen(false);
-                                        }}
-                                        >
-                                        {roast.label}
-                                        </CommandItem>
-                                    ))}
-                                    </CommandGroup>
-                                </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
-                    </article>
+                    <RoastLevelComboBox value={roastValue} onChange={setRoastValue} />
 
                 </section>
 
@@ -229,7 +115,9 @@ export function AddForm() {
                 </section>
             </div>
 
-            <Button>Thêm sản phẩm</Button>
+            <Button type="Submit" disabled={loading}>
+                {loading ? "Đang xử lý..." : "Thêm sản phẩm"}
+            </Button>
         </form>
     )
 }

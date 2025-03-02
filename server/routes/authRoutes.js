@@ -4,7 +4,7 @@ import { validateToken, validateAdmin } from '../middleware/authMiddleware.js';
 
 const router =  express.Router();
 
-router.post('/register', validateToken, register);
+router.post('/register', register);
 
 router.post('/login', login);
 
