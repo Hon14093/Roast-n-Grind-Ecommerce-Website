@@ -31,8 +31,8 @@ export default function RoastLevelComboBox({ value, onChange }) {
                         <CommandItem
                             key={roast.roast_id}
                             onSelect={() => {
-                            onChange(roast.roast_id);
-                            setOpen(false);
+                                onChange(roast.roast_id);
+                                setOpen(false);
                             }}
                         >
                             <Check className={`mr-2 h-4 w-4 ${value === roast.roast_id ? "opacity-100" : "opacity-0"}`} />

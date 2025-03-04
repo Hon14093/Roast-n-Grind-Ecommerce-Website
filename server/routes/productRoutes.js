@@ -3,6 +3,7 @@ import {
     returnAllProducts, 
     returnAllProductsDetails,
     addProduct,
+    addProductVariation,
     updateProductInfo,
     returnAllAromas,
     returnAllOptions,
@@ -25,6 +26,7 @@ router.get('/types', returnAllTypes);
 router.get('/roasts', returnAllRoastLevels);
 
 router.post('/create', addProduct);
+router.post('/create-variation', addProductVariation);
 
 router.put('/delete/:product_id', deleteProductWithID);
 router.put('/update/:product_id', updateProductInfo);

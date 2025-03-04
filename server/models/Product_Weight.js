@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const getAllWeights = async () => {
+export const getAllProductWeights = async () => {
     return await prisma.product_Weight.findMany();
 }
 
+// working
 export const getAllProductVariations = async () => {
     return await prisma.product_Weight.findMany({
         include: {
@@ -14,13 +15,8 @@ export const getAllProductVariations = async () => {
     });
 };
 
-
-export const createWeight = async (weight) => {
-    return await prisma.product_Weight.create({
-        data: {
-            weight
-        }
-    });
+export const createProductWeight = async (data) => {
+    return await prisma.product_Weight.create({ data });
 }
 
 export const deleteWeight = async (weight_id) => {

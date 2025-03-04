@@ -2,7 +2,10 @@ import { getAllRoastLevels } from "../models/Roast_Level.js";
 import { getAllTypes } from "../models/Product_Type.js";
 import { getAllOptions } from "../models/Weight_Option.js";
 import { getAllAromas } from "../models/Aroma.js";
-import { getAllProductVariations } from "../models/Product_Weight.js";
+import { 
+    getAllProductVariations,
+    createProductWeight
+} from "../models/Product_Weight.js";
 import { 
     getAllProducts, 
     getAllProductsDetails,
@@ -11,7 +14,6 @@ import {
     updateProduct,
     deleteProduct,
 } from "../models/Product.js";
-
 
 export const returnAllProducts = async (req,res) => {
     try {
@@ -139,6 +141,21 @@ export const returnAllOptions = async (req,res) => {
     try {
         const options = await getAllOptions();
         res.status(200).json({ options });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const addProductVariation = async (req,res) => {
+    try {
+        const data = req.body;
+        const variation = await createProductWeight(data);
+        res.status(200).json({ 
+            success: 1,
+            message: "Variation added successfully",
+            variation: variation
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });

@@ -21,7 +21,6 @@ export const getDetailedVariations = async (setData) => {
     }
 }
 
-
 export const addProduct = async (product) => {
     try {
         const result = await axios.post('http://localhost:5000/api/products/create', product);
@@ -30,6 +29,16 @@ export const addProduct = async (product) => {
         console.log(error);
     }
 }
+
+export const addProductVariation = async (variation) => {
+    try {
+        const result = await axios.post('http://localhost:5000/api/products/create-variation', variation);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 export const editProduct = async (product_id, data) => {
     try {

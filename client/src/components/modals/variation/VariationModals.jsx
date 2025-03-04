@@ -1,16 +1,20 @@
 import React from 'react'
 import { 
     Dialog,
+    DialogTrigger,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog";
-import { CircleX } from 'lucide-react';
+import { CircleX, Plus } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { EditForm } from './EditForm';
+import { AddForm } from './AddForm';
 import { ViewDetails } from './ViewDetails';
 import { Confirmation } from './Confirmation';
+import { useState } from "react";
 
 export function DetailsModal({ variation, open, onClose }) {
     if (!variation) return null;
@@ -53,15 +57,34 @@ export function EditModal({ variation, open, onClose }) {
     )
 }
 
-export function AddModal({ open, onClose }) {
+export function AddModal({ onSubmitSuccess }) {
+    const [open, setOpen] = useState(false);
+        
+    const handleSubmitSucess = () => {
+        onSubmitSuccess();
+        setOpen(false);
+    }
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant='outline' onClick={() => setOpen(true)}>
+                    <Plus />
+                    Thêm biến thể
+                </Button>
+            </DialogTrigger>
+
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Thêm sản phẩm</DialogTitle>
+                    <DialogTitle>Thêm biến thể</DialogTitle>
                     <DialogDescription className='text-base text-black'>
+
                     </DialogDescription>
                 </DialogHeader>
+
+                <div className='text-base text-darkOlive'>
+                    <AddForm onSubmitSuccess={handleSubmitSucess} />
+                </div>
             </DialogContent>
         </Dialog>
     )

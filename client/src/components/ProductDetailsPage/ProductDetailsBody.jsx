@@ -37,21 +37,20 @@ export function ProductDetailsBody() {
                                 <span className="text-red-500">Out of Stock</span>}
                         </span>
 
-                        <p className="mt-2 text-gray-600">{product.description}</p>
+                        <p className="mt-2 text-darkOlive">{product.description}</p>
 
-                        <h2 className="text-lg font-semibold mt-4">Chọn kích thước</h2>
                         {hasVariations && (
                             <>
-                                <h2 className="text-lg font-semibold mt-4">Select Weight</h2>
+                                <h2 className="text-lg font-semibold mt-4">Chọn kích thước</h2>
                                 <div className="mt-2 space-x-2">
                                     {product.variations.map((variation) => (
                                         <button
                                             key={variation.weight_id}
                                             onClick={() => setSelectedWeight(variation)}
-                                            className={`px-4 py-2 border rounded-md ${
-                                                selectedWeight.weight_id === variation.weight_id
+                                            className={`px-4 py-2 border rounded-md 
+                                                ${selectedWeight.weight_id === variation.weight_id
                                                     ? "bg-darkOlive text-ivory"
-                                                    : "bg-gray-200 text-darkOlive"
+                                                    : "bg-second_bg_color text-darkOlive"
                                             }`}
                                         >
                                             {variation.weight_name}
@@ -62,7 +61,8 @@ export function ProductDetailsBody() {
                         )}
 
                         <button 
-                            className={`w-full mt-4 big-action-button ${hasVariations ? "text-ivory" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
+                            className={`w-full mt-5 big-action-button
+                                ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
                             onClick={() => hasVariations && console.log("Order button clicked for", product.product_id, "Weight:", selectedWeight?.weight_name)}
                             disabled={!hasVariations}
                         >

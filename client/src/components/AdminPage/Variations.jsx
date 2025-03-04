@@ -26,7 +26,7 @@ import { Button } from '../ui/button.jsx'
 import { variationColumns } from '../columns.jsx'
 import { DataTable } from '../data-table.jsx'
 import { useVariationActions } from '@/hooks/table-actions/useVariationActions.js'
-import { DetailsModal, EditModal, DeleteModal } from '../modals/variation/VariationModals.jsx'
+import { DetailsModal, AddModal, EditModal, DeleteModal } from '../modals/variation/VariationModals.jsx'
 import axios from 'axios'
 
 export default function Variations() {
@@ -80,6 +80,11 @@ export default function Variations() {
         setIsDeleteModalOpen
     } = useVariationActions(temp_data)
 
+    const handleSubmitSuccess = () => {
+            // if the edit is successful, we need to refresh the data
+            // getProductData(setData);
+        }
+
     return (
         <SidebarInset>
             {/* Don't really need to worry about the header */}
@@ -124,10 +129,7 @@ export default function Variations() {
                         </div>
 
                         <div className='ml-auto'>
-                            <Button variant='outline' >
-                                <Plus />
-                                Thêm biến thể
-                            </Button>
+                            <AddModal onSubmitSuccess={handleSubmitSuccess}/>
                         </div>
                     </div>                    
                 </CardHeader>

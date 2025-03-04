@@ -9,7 +9,7 @@ import { getWeights } from "@/hooks/productAPI";
 export default function WeightComboBox({ value, onChange }) {
     useEffect(() => {
         getWeights(setWeights);
-    })
+    }, [])
 
     const [open, setOpen] = useState(false);
     const [weightOptions, setWeights] = useState([]);
@@ -31,8 +31,8 @@ export default function WeightComboBox({ value, onChange }) {
                         <CommandItem
                             key={weight.weight_id}
                             onSelect={() => {
-                            onChange(weight.weight_id);
-                            setOpen(false);
+                                onChange(weight.weight_id);
+                                setOpen(false);
                             }}
                         >
                             <Check className={`mr-2 h-4 w-4 ${value === weight.weight_id ? "opacity-100" : "opacity-0"}`} />
