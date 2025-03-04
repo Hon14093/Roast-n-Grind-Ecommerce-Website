@@ -36,6 +36,7 @@ function Products() {
     }, []);
     
     const [data, setData] = useState([]);
+    
     const {
         selectedProduct,
         isDetailsModalOpen,

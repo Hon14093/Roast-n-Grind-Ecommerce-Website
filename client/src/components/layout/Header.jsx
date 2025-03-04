@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import logoWhite from '../../images/white.png'
 import logoBlack from '../../images/orange.png'
 
-function Header() {
+function Header({ darkBG = true }) {
     const [scrollDirection, setScrollDirection] = useState(null);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isTop, setIsTop] = useState(true);
@@ -32,9 +32,11 @@ function Header() {
 
     }, [lastScrollTop]);
 
+    // ${isTop ? 'clearBG' : 'coloredBG'}
     return (
         <header className={`
-            ${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} ${isTop ? 'clearBG' : 'coloredBG'}
+            ${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} 
+            ${darkBG ? (isTop ? 'clearBG' : 'coloredBG') : 'coloredBG'}
             client-header
             `
         }>

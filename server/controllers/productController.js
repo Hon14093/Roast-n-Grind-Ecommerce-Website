@@ -2,9 +2,11 @@ import { getAllRoastLevels } from "../models/Roast_Level.js";
 import { getAllTypes } from "../models/Product_Type.js";
 import { getAllOptions } from "../models/Weight_Option.js";
 import { getAllAromas } from "../models/Aroma.js";
+import { getAllProductVariations } from "../models/Product_Weight.js";
 import { 
     getAllProducts, 
     getAllProductsDetails,
+    getDetailedVariations,
     createProduct,
     updateProduct,
 } from "../models/Product.js";
@@ -24,6 +26,42 @@ export const returnAllProductsDetails = async (req,res) => {
     try {
         const products = await getAllProductsDetails();
         res.status(200).json({products});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const returnDetailedVaritions = async (req, res) => {
+    try {
+        const detailedVariations = await getDetailedVariations();
+
+        const formattedProducts = detailedVariations.map(product => ({
+            product_id: product.product_id,
+            product_name: product.product_name,
+            description: product.description,
+            image_url: product.image_url,
+            roast_level: product.Roast_Level?.roast_lvl || "Unknown",
+            type_name: product.Product_Type?.type_name || "Unknown",
+            aroma_name: product.Aroma?.aroma_name || "Unknown",
+            variations: product.Product_Weight.map(weight => ({
+                weight_id: weight.Weight_Option.weight_id,
+                weight_name: weight.Weight_Option.weight_name,
+                price: weight.product_price,
+                stock: weight.qty_in_stock,
+            }))
+        }));
+
+        res.status(200).json({formattedProducts})
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ error: "Failed to fetch products" });
+    }
+}
+
+export const returnAllProductVariations = async (req,res) => {
+    try {
+        const variations = await getAllProductVariations();
+        res.status(200).json({ variations });
     } catch (error) {
         console.log(error);
     }

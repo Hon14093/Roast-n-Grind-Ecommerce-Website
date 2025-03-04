@@ -5,24 +5,9 @@ import logoWhite from '../../images/white.png'
 function FeaturedProductsSection() {
     return (
         <article className='relative z-[1] text-[48px]'>
-            {/* BREW PERFECTION,
-            <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-                <Carousel>
-                    <img src="https://cdn.sanity.io/images/4t60hegj/production/18721882ff8c9b0e8f97e7abf15777e3df020bb6-3000x3000.png?auto=format&q=75&url=https://cdn.sanity.io/images/4t60hegj/production/18721882ff8c9b0e8f97e7abf15777e3df020bb6-3000x3000.png&w=1400" alt="..." />
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..." />
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
-                </Carousel>
-            </div>   */}
-            
-
             <div class="text-ivory body-font">
 
-                <div className='pt-14'>
-                    
-                    {/* <h1 className='pt-7 pb-2 px-12 text-7xl font-greatVibes italic w-fit mx-auto rounded-3xl bg-darkOlive'>
-                        Featured Products 
-                    </h1> */}
-                    
+                <div className='pt-14'>                    
                     <h1 className='ribbon-heading font-greatVibes italic text-7xl'>
                         <span>Sản</span>
                         <span className='ml-10'>Phẩm</span>
@@ -33,7 +18,7 @@ function FeaturedProductsSection() {
                 </div>
 
                 
-                <div class="container px-5 pb-20 pt-8 mx-auto">
+                <div class="container px-5 pb-20 pt-8 mx-auto bg-ivory">
                     <div class="flex flex-wrap -mt-4 -mb-2">
                         
                         <button class="md:w-1/3 p-2">

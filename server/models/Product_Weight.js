@@ -5,6 +5,16 @@ export const getAllWeights = async () => {
     return await prisma.product_Weight.findMany();
 }
 
+export const getAllProductVariations = async () => {
+    return await prisma.product_Weight.findMany({
+        include: {
+            Product: true,
+            Weight_Option: true,
+        }
+    });
+};
+
+
 export const createWeight = async (weight) => {
     return await prisma.product_Weight.create({
         data: {

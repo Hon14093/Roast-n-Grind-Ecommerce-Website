@@ -1,16 +1,17 @@
 import React from 'react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
+import ShopBody from '@/components/ShopPage/ShopBody'
 
-function LoginPage() {
+function ShopPage() {
     return (
         <>
-            <div className='text-black'>
+            <div className='text-darkOlive bg-ivory'>
 
-                <Header />
+                <Header darkBG={false} />
 
-                <main>
-                
+                <main className='px-10 relative pt-20'>
+                    <ShopBody />
                 </main>
 
                 <Footer />
@@ -20,4 +21,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default ShopPage

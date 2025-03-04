@@ -18,9 +18,9 @@ export function EditForm({ product, onClose, onSubmitSuccess }) {
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState();
 
-    const [aromaValue, setAromaValue] = useState('');
-    const [typeValue, setTypeValue] = useState('');
-    const [roastValue, setRoastValue] = useState('');
+    const [aromaValue, setAromaValue] = useState(product.aroma_id);
+    const [typeValue, setTypeValue] = useState(product.type_id);
+    const [roastValue, setRoastValue] = useState(product.roast_id);
 
     const existingImage = product.image_url;
     const [preview, setPreview] = useState(existingImage);

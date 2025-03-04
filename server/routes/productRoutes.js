@@ -7,12 +7,16 @@ import {
     returnAllAromas,
     returnAllOptions,
     returnAllTypes,
-    returnAllRoastLevels
+    returnAllRoastLevels,
+    returnAllProductVariations,
+    returnDetailedVaritions
 } from '../controllers/productController.js';
 
 const router = express.Router();
 
 router.get('/all', returnAllProducts);
+router.get('/detailed-variations', returnDetailedVaritions) // return products with their weight options
+router.get('/variations', returnAllProductVariations); // not sure
 router.get('/details', returnAllProductsDetails);
 router.get('/aromas', returnAllAromas);
 router.get('/weights', returnAllOptions);

@@ -5,7 +5,7 @@ import LoginBody from '../components/AuthPages/LoginBody'
 function LoginPage() {
     return (
         <>
-            <div className='text-black'>
+            <div className='text-darkOlive'>
 
                 <Header />
 

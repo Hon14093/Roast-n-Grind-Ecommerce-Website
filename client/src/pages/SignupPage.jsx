@@ -5,7 +5,7 @@ import SignupBody from '../components/AuthPages/SignupBody'
 function SignupPage() {
     return (
         <>
-            <div className='text-black'>
+            <div className='text-darkOlive'>
 
                 <Header />
 

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
+import ShopPage from './pages/ShopPage';
 import AboutUsPage from './pages/AboutUsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -25,6 +26,7 @@ function App() {
             <Routes>
                 {/* Customer UI */}
                 <Route path='/' element={<HomePage />} />
+                <Route path='/shop' element={<ShopPage />} />
                 <Route path='/about' element={<AboutUsPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />
