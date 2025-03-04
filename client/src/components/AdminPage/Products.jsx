@@ -31,11 +31,11 @@ import { DetailsModal, EditModal, DeleteModal, AddModal } from '../modals/produc
 import { getProductData } from '@/hooks/productAPI.jsx'
 
 function Products() {
+    const [data, setData] = useState([]);
+
     useEffect(() => {
         getProductData(setData)
     }, []);
-    
-    const [data, setData] = useState([]);
     
     const {
         selectedProduct,

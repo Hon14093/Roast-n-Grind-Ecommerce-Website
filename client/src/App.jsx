@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -27,6 +28,7 @@ function App() {
                 {/* Customer UI */}
                 <Route path='/' element={<HomePage />} />
                 <Route path='/shop' element={<ShopPage />} />
+                <Route path='/product/:product_id' element={<ProductDetailsPage />} />
                 <Route path='/about' element={<AboutUsPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/signup' element={<SignupPage />} />

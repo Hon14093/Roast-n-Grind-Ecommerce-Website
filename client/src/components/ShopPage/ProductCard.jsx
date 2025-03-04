@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
     return (
         <Card 
             className=" bg-second_bg_color cursor-pointer hover:shadow-lg transition"
-            onClick={() => navigate(`/product/${product.product_id}`)}
+            onClick={() => navigate(`/product/${product.product_id}`, { state: { product } })}
         >
             <CardContent className="p-4">
                 <img
