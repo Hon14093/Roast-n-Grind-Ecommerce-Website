@@ -9,7 +9,8 @@ import {
     returnAllTypes,
     returnAllRoastLevels,
     returnAllProductVariations,
-    returnDetailedVaritions
+    returnDetailedVaritions,
+    deleteProductWithID
 } from '../controllers/productController.js';
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.get('/roasts', returnAllRoastLevels);
 
 router.post('/create', addProduct);
 
+router.put('/delete/:product_id', deleteProductWithID);
 router.put('/update/:product_id', updateProductInfo);
 
 

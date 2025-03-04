@@ -20,8 +20,12 @@ export function useProductActions(products) {
     };
 
     const handleDelete = async (productId) => {
-        deleteProduct(productId);
-        console.log('Delete')
+        try {
+            const deleteProductRes = await deleteProduct(productId);
+            console.log(deleteProductRes)            
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     return {

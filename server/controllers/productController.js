@@ -9,6 +9,7 @@ import {
     getDetailedVariations,
     createProduct,
     updateProduct,
+    deleteProduct,
 } from "../models/Product.js";
 
 
@@ -101,6 +102,23 @@ export const updateProductInfo = async (req,res) => {
         });
     } catch (error) {
         console.error("Error updating product:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const deleteProductWithID = async (req,res) => {
+    try {
+        const { product_id } = req.params;
+
+        const deletedProduct = await deleteProduct(product_id);
+
+        res.status(200).json({
+            success: 1,
+            message: 'Product deleted successfully',
+            deleteProduct: deletedProduct
+        })
+    } catch (error) {
+        console.log('Error deleting product: ', error)
         return res.status(500).json({ message: "Internal server error" });
     }
 }
