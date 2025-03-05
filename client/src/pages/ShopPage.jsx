@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import ShopBody from '@/components/ShopPage/ShopBody'
+import Cart from '@/components/layout/Cart'
 
 function ShopPage() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleCart = () => {
+        setIsOpen(!isOpen);
+    };
+
     return (
         <>
             <div className='text-darkOlive bg-ivory'>
-
-                <Header darkBG={false} />
+            
+                <Cart isOpen={isOpen} toggleCart={toggleCart} />
+                <Header darkBG={false} toggleCart={toggleCart}/>
 
                 <main className='px-10 relative pt-20'>
                     <ShopBody />
@@ -16,7 +24,6 @@ function ShopPage() {
 
                 <Footer />
             </div>
-        
         </>
     )
 }

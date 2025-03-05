@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom'
 import logoWhite from '../../images/white.png'
 import logoBlack from '../../images/orange.png'
 
-function Header({ darkBG = true }) {
+function Header({ darkBG = true, toggleCart }) {
     const [scrollDirection, setScrollDirection] = useState(null);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isTop, setIsTop] = useState(true);
+
+    // mock data
+    const cartItemsCount = 3;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -79,9 +82,12 @@ function Header({ darkBG = true }) {
 
                     </Link>
 
-                    <button to="/login" className='group top-right-button p-2 bg-white rounded-full flex gap-1 items-center'>
+                    <button 
+                        onClick={toggleCart}
+                        className='group top-right-button p-2 bg-white rounded-full flex gap-1 items-center'
+                    >
                         <p className='px-1'>Cart</p>
-                        <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory">0</p>
+                        <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory">{cartItemsCount}</p>
                     </button>
                 </section>   
 

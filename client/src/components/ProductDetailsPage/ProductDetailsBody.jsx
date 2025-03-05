@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "../ui/button";
 
 export function ProductDetailsBody() {
     const location = useLocation();
@@ -10,7 +8,6 @@ export function ProductDetailsBody() {
 
     const hasVariations = product.variations.length > 0;
     const [selectedWeight, setSelectedWeight] = useState(hasVariations ? product.variations[0] : null);
-
 
     if (!product) {
         return <p className="text-center mt-10 text-red-500">Product not found</p>;
@@ -63,10 +60,13 @@ export function ProductDetailsBody() {
                         <button 
                             className={`w-full mt-5 big-action-button
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
-                            onClick={() => hasVariations && console.log("Order button clicked for", product.product_id, "Weight:", selectedWeight?.weight_name)}
+                            onClick={() => {
+                                hasVariations && console.log("Order button clicked for", product.product_id, "Weight:", selectedWeight?.weight_name);
+                                
+                            }}
                             disabled={!hasVariations}
                         >
-                            {hasVariations ? "Order Now" : "Out of Stock"}
+                            {hasVariations ? "Thêm vào giỏ hàng" : "Out of Stock"}
                         </button>
                     </section>
 
