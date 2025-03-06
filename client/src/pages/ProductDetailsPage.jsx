@@ -1,15 +1,23 @@
 import React from 'react'
+import { useState } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { ProductDetailsBody } from '@/components/ProductDetailsPage/ProductDetailsBody'
-import ShoppingCart from '@/components/layout/ShoppingCart'
+import Cart from '@/components/layout/Cart'
 
 function ProductDetailsPage() {
+    const [isOpen, setIsOpen] = useState(false);
+    
+    const toggleCart = () => {
+        setIsOpen(!isOpen);
+    };
+    
     return (
         <>
             <div className='text-darkOlive bg-ivory'>
 
-                <Header darkBG={false} />
+                <Cart isOpen={isOpen} toggleCart={toggleCart} />
+                <Header darkBG={false} toggleCart={toggleCart}/>
 
                 <main className='px-10 relative pt-20 z-10'>
                     <ProductDetailsBody />
@@ -18,9 +26,7 @@ function ProductDetailsPage() {
                 <Footer />
 
             </div>        
-            <div className='inset-0 z-50'>
-                <ShoppingCart />
-            </div>
+            
         </>
     )
 }

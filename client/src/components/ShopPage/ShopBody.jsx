@@ -12,25 +12,28 @@ import { getDetailedVariations } from '@/hooks/productAPI.jsx'
 //     "aroma_name": "Hương trái cây",
 //     "variations": [
 //         {
+//             "pw_id": "269f13a6-3423-41e9-9ae0-16052269fcc6",
 //             "weight_id": 1,
 //             "weight_name": "250g",
 //             "price": 49.999,
 //             "stock": 99
 //         },
 //         {
+//             "pw_id": "c3292e51-4da9-4c3f-9a52-9153caf4fcb8",
 //             "weight_id": 2,
 //             "weight_name": "500g",
 //             "price": 79.999,
 //             "stock": 99
 //         },
 //         {
+//             "pw_id": "f8c0fdea-1c2d-45e9-86ac-26ef8652a0c1",
 //             "weight_id": 3,
 //             "weight_name": "1000g",
 //             "price": 149.999,
 //             "stock": 99
 //         }
 //     ]
-// }
+// },
 
 function ShopBody() {
     const [products, setProducts] = useState([]);

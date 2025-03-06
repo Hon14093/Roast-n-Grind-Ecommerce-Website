@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import ShopBody from '@/components/ShopPage/ShopBody'
@@ -9,7 +9,7 @@ function ShopPage() {
 
     const toggleCart = () => {
         setIsOpen(!isOpen);
-    };
+    };    
 
     return (
         <>

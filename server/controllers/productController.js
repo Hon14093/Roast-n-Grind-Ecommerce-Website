@@ -47,6 +47,7 @@ export const returnDetailedVaritions = async (req, res) => {
             type_name: product.Product_Type?.type_name || "Unknown",
             aroma_name: product.Aroma?.aroma_name || "Unknown",
             variations: product.Product_Weight.map(weight => ({
+                pw_id: weight.pw_id,
                 weight_id: weight.Weight_Option.weight_id,
                 weight_name: weight.Weight_Option.weight_name,
                 price: weight.product_price,
@@ -64,6 +65,20 @@ export const returnDetailedVaritions = async (req, res) => {
 export const returnAllProductVariations = async (req,res) => {
     try {
         const variations = await getAllProductVariations();
+        
+        const formattedProducts = variations.map(product => ({
+            pwd_id: product.pw_id,
+            product_id: product.Product.product_id,
+            product_name: product.Product.product_name,
+            description: product.Product.description,
+            image_url: product.Product.image_url,
+
+            roast_level: product.Product.Roast_Level?.roast_lvl || "Unknown",
+            type_name: product.Product.Product_Type?.type_name || "Unknown",
+            aroma_name: product.Product.Aroma?.aroma_name || "Unknown",
+
+
+        }))
         res.status(200).json({ variations });
     } catch (error) {
         console.log(error);

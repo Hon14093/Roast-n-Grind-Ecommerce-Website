@@ -9,7 +9,25 @@ export const getAllProductWeights = async () => {
 export const getAllProductVariations = async () => {
     return await prisma.product_Weight.findMany({
         include: {
-            Product: true,
+            Product: {
+                include: {
+                    Roast_Level: {
+                        select: {
+                            roast_lvl: true,
+                        }
+                    },
+                    Aroma: {
+                        select: {
+                            aroma_name: true
+                        }
+                    },
+                    Product_Type: {
+                        select: {
+                            type_name: true
+                        }
+                    }
+                }
+            },
             Weight_Option: true,
         }
     });

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export function ProductDetailsBody() {
     const location = useLocation();
-    const navigate = useNavigate();
     const product = location.state?.product;
+
+    const { updateCart } = useCart();
 
     const hasVariations = product.variations.length > 0;
     const [selectedWeight, setSelectedWeight] = useState(hasVariations ? product.variations[0] : null);
@@ -12,6 +14,21 @@ export function ProductDetailsBody() {
     if (!product) {
         return <p className="text-center mt-10 text-red-500">Product not found</p>;
     }
+
+    const handleAddToCart = () => {
+        if (!selectedWeight) return;
+
+        updateCart({
+            product_id: product.product_id,
+            product_name: product.product_name,
+            weight_id: selectedWeight.weight_id,
+            weight_name: selectedWeight.weight_name,
+            price: selectedWeight.price,
+            image_url: product.image_url,
+            quantity: 1, // Default quantity
+        });
+        // alert('Product added to cart!');
+    };
 
     return (
         <div className="text-darkOlive">
@@ -61,8 +78,9 @@ export function ProductDetailsBody() {
                             className={`w-full mt-5 big-action-button
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
                             onClick={() => {
-                                hasVariations && console.log("Order button clicked for", product.product_id, "Weight:", selectedWeight?.weight_name);
-                                
+                                if (hasVariations) {
+                                handleAddToCart(); // Call handleAddToCart with selectedWeight
+                                }
                             }}
                             disabled={!hasVariations}
                         >

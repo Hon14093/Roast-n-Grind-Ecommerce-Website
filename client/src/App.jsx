@@ -8,8 +8,8 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-
 import AdminPage from './pages/AdminPage';
+import { CartProvider } from './components/context/CartContext';
 
 function App() {
     const [isAdmin, setIsAdmin] = useState(false);
@@ -23,20 +23,22 @@ function App() {
     return (
         <>
         
-        <Router>
-            <Routes>
-                {/* Customer UI */}
-                <Route path='/' element={<HomePage />} />
-                <Route path='/shop' element={<ShopPage />} />
-                <Route path='/product/:product_id' element={<ProductDetailsPage />} />
-                <Route path='/about' element={<AboutUsPage />} />
-                <Route path='/login' element={<LoginPage />} />
-                <Route path='/signup' element={<SignupPage />} />
+        <CartProvider>
+            <Router>
+                <Routes>
+                    {/* Customer UI */}
+                    <Route path='/' element={<HomePage />} />
+                    <Route path='/shop' element={<ShopPage />} />
+                    <Route path='/product/:product_id' element={<ProductDetailsPage />} />
+                    <Route path='/about' element={<AboutUsPage />} />
+                    <Route path='/login' element={<LoginPage />} />
+                    <Route path='/signup' element={<SignupPage />} />
 
-                {/* Admin UI */}
-                <Route path='/admin/*' element={<AdminPage />} />
-            </Routes>
-        </Router>
+                    {/* Admin UI */}
+                    <Route path='/admin/*' element={<AdminPage />} />
+                </Routes>
+            </Router>
+        </CartProvider>
         
         </>
     )

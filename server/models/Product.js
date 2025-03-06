@@ -57,10 +57,13 @@ export const getDetailedVariations = async () => {
                 }
             },
             Product_Weight: {
-                include: {
+                select: {
+                    pw_id: true,
+                    product_price: true,
+                    qty_in_stock: true,
                     Weight_Option: true
                 }
-            }
+            },
         },
         orderBy: {
             product_name: 'asc',
