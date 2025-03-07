@@ -1,32 +1,75 @@
 import React, { useState } from 'react'
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Separator } from '@/components/ui/separator'
+import { editProduct } from '@/hooks/productAPI'
+import { uploadImage, uploadImage1 } from '@/hooks/Cloudinary/cloudinary';
 
-export function EditForm({ product }) {
+import AromaComboBox from '../../combobox/AromaCombobox';
+import ProductTypeComboBox from '../../combobox/ProductTypeComobox';
+import RoastLevelComboBox from '../../combobox/RoastLevelCombobox';
+
+export function EditForm({ product, onClose, onSubmitSuccess }) {
     // id, name, description, image, roast, type, aroma
+    const [product_name, setProduct_name] = useState();
+    const [description, setDescription] = useState();
+    const [image_url, setImageURL] = useState();
+    const [loading, setLoading] = useState(false);
+    const [imageFile, setImageFile] = useState();
 
-    const existingImage = "https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png?auto=format&q=75&url=https://cdn.sanity.io/images/4t60hegj/production/55b151b7762f891d2bb4beeba49073902e550078-3000x3000.png&w=1400"
+    const [aromaValue, setAromaValue] = useState(product.aroma_id);
+    const [typeValue, setTypeValue] = useState(product.type_id);
+    const [roastValue, setRoastValue] = useState(product.roast_id);
+
+    const existingImage = product.image_url;
     const [preview, setPreview] = useState(existingImage);
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
+            setImageFile(file);
             const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            }
+            reader.onloadend = () => setPreview(reader.result);
             reader.readAsDataURL(file);
         }
-        // if needed, the way to restore from uploaeded image 
-        // is to setPreview(existingImage) again
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const imageUpload = await uploadImage1(imageFile);
+
+            const new_product = {
+                product_name: product_name,
+                description: description,
+                image_url: imageUpload,
+                aroma_id: aromaValue,
+                type_id: typeValue,
+                roast_id: roastValue,
+            };
+
+            console.log("Edit product data:", new_product);
+
+            const result = await editProduct(product.product_id, new_product);
+            if (result.data.success) {
+                onSubmitSuccess();
+                onClose();
+            }
+            console.log("Edit product result:", result);
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+        
     }
 
     return (
-        <form className="mx-auto gap-5 grid">
+        <form onSubmit={handleSubmit} className="mx-auto gap-5 grid">
             <div className='grid grid-cols-2 gap-6 items-start'>
                 <section className='grid gap-5'>
 
@@ -46,6 +89,7 @@ export function EditForm({ product }) {
                             id="product_name" 
                             placeholder="Tên sản phẩm" 
                             defaultValue={product.product_name}
+                            onChange={(e) => setProduct_name(e.target.value)}
                         />
                     </article>
 
@@ -55,12 +99,17 @@ export function EditForm({ product }) {
                             id="product_des" 
                             placeholder="Miêu tả" 
                             defaultValue={product.description}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
                     </article>
 
+                    <AromaComboBox value={aromaValue} onChange={setAromaValue} />
+                    
+                    <ProductTypeComboBox value={typeValue} onChange={setTypeValue} />
+
+                    <RoastLevelComboBox value={roastValue} onChange={setRoastValue} />
+
                 </section>
-                
-                {/* <Separator orientation="vertical" className="w-1" /> */}
 
                 <section>
                     <div className="grid w-full items-center gap-1.5">
@@ -86,8 +135,10 @@ export function EditForm({ product }) {
                 </section>
             </div>
 
+            <Button type="submit" disabled={loading}>
+                {loading ? "Đang cập nhật..." : "Cập nhật"}
+            </Button>
 
-            <Button>Lưu thay đổi</Button>
         </form>
     )
 }

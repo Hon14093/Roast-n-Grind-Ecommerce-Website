@@ -32,11 +32,12 @@ import { DetailsModal, EditModal, DeleteModal, AddModal } from '../modals/produc
 import { getProductData } from '@/hooks/productAPI.jsx'
 
 function Products() {
+    const [data, setData] = useState([]);
+
     useEffect(() => {
         getProductData(setData)
     }, []);
     
-    const [data, setData] = useState([]);
     const {
         selectedProduct,
         isDetailsModalOpen,
@@ -49,6 +50,11 @@ function Products() {
         setIsEditModalOpen,
         setIsDeleteModalOpen
     } = useProductActions(data);
+
+    const handleSubmitSuccess = () => {
+        // if the edit is successful, we need to refresh the data
+        getProductData(setData);
+    }
 
     return (
         <SidebarInset>
@@ -93,7 +99,7 @@ function Products() {
                                 </Button>
                             </Link>
 
-                            <AddModal />
+                            <AddModal onSubmitSuccess={handleSubmitSuccess} />
                         </div>
                     </div>                    
                 </CardHeader>
@@ -118,6 +124,7 @@ function Products() {
                         product={selectedProduct}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                        onSubmitSuccess={handleSubmitSuccess}
                     />
 
                     <DeleteModal

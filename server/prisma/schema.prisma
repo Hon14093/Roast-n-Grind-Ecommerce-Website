@@ -129,7 +129,7 @@ model Payment_Method {
 model Product {
   product_id      String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   product_name    String            @db.VarChar(50)
-  description     String?           @db.VarChar(200)
+  description     String?           @db.VarChar(1000)
   image_url       String            @db.VarChar(200)
   roast_id        Int
   type_id         Int

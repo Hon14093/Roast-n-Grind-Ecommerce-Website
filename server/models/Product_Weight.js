@@ -1,30 +1,62 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const getAllWeights = async () => {
+export const getAllProductWeights = async () => {
     return await prisma.product_Weight.findMany();
 }
 
-export const createWeight = async (weight) => {
-    return await prisma.product_Weight.create({
-        data: {
-            weight
-        }
+// working
+export const getAllProductVariations = async () => {
+    return await prisma.product_Weight.findMany({
+        include: {
+            Product: {
+                include: {
+                    Roast_Level: {
+                        select: {
+                            roast_lvl: true,
+                        }
+                    },
+                    Aroma: {
+                        select: {
+                            aroma_name: true
+                        }
+                    },
+                    Product_Type: {
+                        select: {
+                            type_name: true
+                        }
+                    }
+                }
+            },
+            Weight_Option: true,
+        },
+        orderBy: [
+            {
+                Product: {
+                    product_name: 'asc',
+                },
+            },
+            {
+                product_price: 'asc',
+            },
+        ]
     });
+};
+
+export const createProductWeight = async (data) => {
+    return await prisma.product_Weight.create({ data });
 }
 
 export const deleteWeight = async (weight_id) => {
     return await prisma.product_Weight.delete({
         where: { weight_id }
-    });
+    }); 
 }
 
-export const updateWeight = async (weight_id, weight) => {
+export const updateProductWeight = async (pw_id, data) => {
     return await prisma.product_Weight.update({
-        where: { weight_id },
-        data: {
-            weight
-        }
+        where: { pw_id },
+        data
     });
 }
 

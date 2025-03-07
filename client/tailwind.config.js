@@ -73,6 +73,9 @@ export default {
     				ring: 'hsl(var(--sidebar-ring))'
     			}
     		},
+			backgroundColor: {
+				darkOlive: '#2d392a',
+			},
     		fontFamily: {
     			greatVibes: [
     				'Great Vibes',

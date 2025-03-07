@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { 
     Dialog,
     DialogTrigger,
@@ -34,7 +34,7 @@ export function DetailsModal({ product, open, onClose }) {
     )
 }
 
-export function EditModal({ product, open, onClose }) {
+export function EditModal({ product, open, onClose, onSubmitSuccess }) {
     if (!product) return null;
 
     return (
@@ -48,22 +48,29 @@ export function EditModal({ product, open, onClose }) {
                 </DialogHeader>
 
                 <div className='text-base text-darkOlive'>
-                    <EditForm product={product} />
+                    <EditForm product={product} onClose={onClose} onSubmitSuccess={onSubmitSuccess} />
                 </div>
             </DialogContent>
         </Dialog>
     )
 }
 
-export function AddModal() {
+export function AddModal({ onSubmitSuccess }) {
+    const [open, setOpen] = useState(false);
+    
+    const handleSubmitSucess = () => {
+        onSubmitSuccess();
+        setOpen(false);
+    }
     return (
-        <Dialog>
-            <DialogTrigger>
-                <Button variant='outline'>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant='outline' onClick={() => setOpen(true)}>
                     <Plus />
                     Thêm sản phẩm
                 </Button>
             </DialogTrigger>
+
             <DialogContent className='w-[1000px] max-w-none'>
                 <DialogHeader>
                     <DialogTitle>Thêm sản phẩm</DialogTitle>
@@ -71,8 +78,9 @@ export function AddModal() {
 
                     </DialogDescription>
                 </DialogHeader>
+
                 <div className='text-base text-darkOlive'>
-                    <AddForm />
+                    <AddForm onSubmitSuccess={handleSubmitSucess} />
                 </div>
             </DialogContent>
         </Dialog>

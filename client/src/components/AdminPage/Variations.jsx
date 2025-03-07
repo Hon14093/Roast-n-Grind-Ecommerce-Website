@@ -26,46 +26,15 @@ import { Button } from '../ui/button.jsx'
 import { variationColumns } from '../columns.jsx'
 import { DataTable } from '../data-table.jsx'
 import { useVariationActions } from '@/hooks/table-actions/useVariationActions.js'
-import { DetailsModal, EditModal, DeleteModal } from '../modals/variation/VariationModals.jsx'
-import axios from 'axios'
+import { DetailsModal, AddModal, EditModal, DeleteModal } from '../modals/variation/VariationModals.jsx'
+import { getAllVariations } from '@/hooks/productAPI.jsx'
 
 export default function Variations() {
+    const [data, setData] = useState([]);
 
-    const temp_data = [
-        {
-            pw_id: 1,
-            Product: {
-                product_name: 'Cà phê 1'
-            },
-            Weight_Option: {
-                weight_name: '200g'
-            },
-            product_price: 100000,
-            qty_in_stock: 100
-        },
-        {
-            pw_id: 2,
-            Product: {
-                product_name: 'Cà phê 1'
-            },
-            Weight_Option: {
-                weight_name: '500g'
-            },
-            product_price: 230000,
-            qty_in_stock: 148
-        },
-        {
-            pw_id: 3,
-            Product: {
-                product_name: 'Cà phê 1'
-            },
-            Weight_Option: {
-                weight_name: '1000g'
-            },
-            product_price: 490000,
-            qty_in_stock: 191
-        },
-    ]
+    useEffect(() => {
+        getAllVariations(setData);
+    }, [])
 
     const {
         selectedVariation,
@@ -78,7 +47,12 @@ export default function Variations() {
         setIsDetailsModalOpen,
         setIsEditModalOpen,
         setIsDeleteModalOpen
-    } = useVariationActions(temp_data)
+    } = useVariationActions(data)
+
+    const handleSubmitSuccess = () => {
+        // if the edit is successful, we need to refresh the data
+        getAllVariations(setData);
+    }
 
     return (
         <SidebarInset>
@@ -124,10 +98,7 @@ export default function Variations() {
                         </div>
 
                         <div className='ml-auto'>
-                            <Button variant='outline' >
-                                <Plus />
-                                Thêm biến thể
-                            </Button>
+                            <AddModal onSubmitSuccess={handleSubmitSuccess}/>
                         </div>
                     </div>                    
                 </CardHeader>
@@ -139,7 +110,7 @@ export default function Variations() {
                             onEdit: handleEdit,
                             onDelete: handleDelete
                         })} 
-                        data={temp_data} 
+                        data={data} 
                     />
 
                     <DetailsModal 
@@ -152,6 +123,7 @@ export default function Variations() {
                         variation={selectedVariation}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                        onSubmitSuccess={handleSubmitSuccess}
                     />
 
                     <DeleteModal

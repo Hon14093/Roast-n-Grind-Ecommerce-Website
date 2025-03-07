@@ -14,8 +14,8 @@ function LoginBody() {
         .then(result => {
             console.log(result);
             // navigate('/');
-            if (result.is_admin) {
-                navigate('/Admin');
+            if (result.data.is_admin) {
+                navigate('/admin');
             } else {
                 navigate('/');
             }

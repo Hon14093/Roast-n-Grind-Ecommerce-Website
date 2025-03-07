@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logoWhite from '../../images/white.png'
 import logoBlack from '../../images/orange.png'
+import { useCart } from '../context/CartContext';
 
-function Header() {
+function Header({ darkBG = true, toggleCart }) {
     const [scrollDirection, setScrollDirection] = useState(null);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isTop, setIsTop] = useState(true);
+    const { getTotalItems } = useCart();
+    const totalItems = getTotalItems();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,9 +35,11 @@ function Header() {
 
     }, [lastScrollTop]);
 
+    // ${isTop ? 'clearBG' : 'coloredBG'}
     return (
         <header className={`
-            ${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} ${isTop ? 'clearBG' : 'coloredBG'}
+            ${scrollDirection === 'down' ? 'hiddenTrans' : 'visibleTrans'} 
+            ${darkBG ? (isTop ? 'clearBG' : 'coloredBG') : 'coloredBG'}
             client-header
             `
         }>
@@ -70,24 +75,25 @@ function Header() {
 
                 {/* account and cart section */}
                 <section className='flex items-center gap-4 text-darkOlive'>
-                    <Link to="/login" className='p-2 bg-ivory rounded-full'>
+                    <Link to="/login" className='p-2 bg-white rounded-full'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
 
                     </Link>
 
-                    <button to="/login" className='group top-right-button p-2 bg-ivory rounded-full flex gap-1 items-center'>
+                    <button 
+                        onClick={toggleCart}
+                        className='group top-right-button p-2 bg-white rounded-full flex gap-1 items-center'
+                    >
                         <p className='px-1'>Cart</p>
-                        <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory">0</p>
+                        {totalItems > 0 && (
+                            <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory" id='cart-button'>
+                                {totalItems}
+                            </p>
+                        )}
                     </button>
                 </section>   
-
-                {/* <a class="group text-pink-500 transition-all duration-300 ease-in-out" href="#">
-                    <span class="bg-left-bottom bg-gradient-to-r from-pink-500 to-pink-500 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                        This text gets 'underlined' on hover
-                    </span>
-                </a> */}
 
             </div>
         </header>
