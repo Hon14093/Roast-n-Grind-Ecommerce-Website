@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export function ViewDetails({ discount }) {
     // Example data of discount:
@@ -18,7 +19,25 @@ export function ViewDetails({ discount }) {
                     },
                     {
                             "product_id": "76aaf7d5-7701-42bd-9744-3938ec989be8",
-                            "product_name": "Cà phê 2"
+                    }
+                    
+                    ViewDetails.propTypes = {
+                        discount: PropTypes.shape({
+                            discount_id: PropTypes.string.isRequired,
+                            discount_code: PropTypes.string.isRequired,
+                            description: PropTypes.string.isRequired,
+                            start_date: PropTypes.string.isRequired,
+                            end_date: PropTypes.string.isRequired,
+                            discount_percentage: PropTypes.number.isRequired,
+                            status: PropTypes.string.isRequired,
+                            applied_products: PropTypes.arrayOf(
+                                PropTypes.shape({
+                                    product_id: PropTypes.string.isRequired,
+                                    product_name: PropTypes.string.isRequired,
+                                })
+                            ).isRequired,
+                        }).isRequired,
+                    };
                     }
             ]
     }
