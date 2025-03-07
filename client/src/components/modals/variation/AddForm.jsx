@@ -3,8 +3,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import WeightComboBox from '@/components/combobox/WeightCombobox';
 import ProductCombobox from '@/components/combobox/ProductCombobox';
-import { addProductVariation } from '@/hooks/productAPI';
 import { Button } from '@/components/ui/button';
+import { addProductVariation } from '@/hooks/productAPI';
 
 export function AddForm({ onSubmitSuccess }) {
     const [loading, setLoading] = useState(false);

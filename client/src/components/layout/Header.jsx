@@ -2,20 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logoWhite from '../../images/white.png'
 import logoBlack from '../../images/orange.png'
+import { useCart } from '../context/CartContext';
 
 function Header({ darkBG = true, toggleCart }) {
     const [scrollDirection, setScrollDirection] = useState(null);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isTop, setIsTop] = useState(true);
-    const [itemNumber, setItemNumber] = useState();
-
-    useEffect(() => {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            setItemNumber(JSON.parse(savedCart).items.length)
-        }
-        // console.log(JSON.parse(savedCart).items)
-    })
+    const { getTotalItems } = useCart();
+    const totalItems = getTotalItems();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -93,7 +87,11 @@ function Header({ darkBG = true, toggleCart }) {
                         className='group top-right-button p-2 bg-white rounded-full flex gap-1 items-center'
                     >
                         <p className='px-1'>Cart</p>
-                        <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory" id='cart-button'>{itemNumber}</p>
+                        {totalItems > 0 && (
+                            <p className=" border-[1.5px] rounded-full size-6 border-darkOlive group-hover:border-ivory" id='cart-button'>
+                                {totalItems}
+                            </p>
+                        )}
                     </button>
                 </section>   
 

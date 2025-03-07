@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
 
 export function ProductDetailsBody() {
     const location = useLocation();
     const product = location.state?.product;
+    const [grind, setGrind] = useState(false);
+    const [qty, setQty] = useState(1);
 
     const { updateCart } = useCart();
 
@@ -25,10 +29,27 @@ export function ProductDetailsBody() {
             weight_name: selectedWeight.weight_name,
             price: selectedWeight.price,
             image_url: product.image_url,
-            quantity: 1, // Default quantity
+            grind: grind,
+            quantity: qty,
         });
         // alert('Product added to cart!');
     };
+
+    const handleQuantityChange = (e) => {
+        let value = parseInt(e.target.value, 10);
+
+        if (isNaN(value)) {
+            value = 1;
+        }
+
+        if (value < 1) {
+            value = 1;
+        } else if (value > 10) {
+            value = 10;
+        }
+
+        setQty(value);
+    }
 
     return (
         <div className="text-darkOlive">
@@ -74,12 +95,28 @@ export function ProductDetailsBody() {
                             </>
                         )}
 
+                        <section className="flex mt-4 gap-5 items-center">
+                            <h2 className="text-lg font-semibold ">Số lượng:</h2>
+                            <Input 
+                                type="number" 
+                                className='max-w-20 border border-darkOlive' 
+                                value={qty}
+                                onChange={handleQuantityChange}
+                                min="1" max="10"
+                            />
+                        </section>
+
+                        <section className="flex mt-4 gap-4 items-center">
+                            <h2 className="text-lg font-semibold ">Xay cà phê?</h2>
+                            <Checkbox onClick={() => setGrind(true)} className='size-6'/>
+                        </section>
+
                         <button 
                             className={`w-full mt-5 big-action-button
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
                             onClick={() => {
                                 if (hasVariations) {
-                                handleAddToCart(); // Call handleAddToCart with selectedWeight
+                                    handleAddToCart(); 
                                 }
                             }}
                             disabled={!hasVariations}

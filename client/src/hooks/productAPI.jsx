@@ -100,6 +100,16 @@ export const getAllVariations = async (setData) => {
     }
 }
 
+export const editVariation = async (pw_id, data) => {
+    try {
+        console.log(data)
+        const result = await axios.put(`http://localhost:5000/api/products/variations/update/${pw_id}`, data);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // Roast Level ------------------------------
 export const getRoastLevels = async (setData) => {
     try {

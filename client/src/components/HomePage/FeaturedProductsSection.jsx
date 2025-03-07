@@ -7,14 +7,19 @@ function FeaturedProductsSection() {
         <article className='relative z-[1] text-[48px]'>
             <div class="text-ivory body-font">
 
-                <div className='pt-14'>                    
-                    <h1 className='ribbon-heading font-greatVibes italic text-7xl'>
+                {/* <div className='pt-10 flex justify-center bg-ivory popular'>
+                    <h1 className='font-greatVibes italic text-7xl bg-darkOlive pt-7 pb-4 px-16 border rounded-full'>
                         <span>Sản</span>
                         <span className='ml-10'>Phẩm</span>
                         <span className='ml-10'>Phổ</span>
                         <span className='ml-10'>Biến</span>
                     </h1>
+                </div> */}
 
+                <div className='pt-10 bg-ivory popular'>
+                    <h1 className=''>
+                        SẨN PHẨM PHỔ BIẾN
+                    </h1>
                 </div>
 
                 

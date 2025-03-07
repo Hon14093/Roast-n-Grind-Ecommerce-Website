@@ -29,7 +29,17 @@ export const getAllProductVariations = async () => {
                 }
             },
             Weight_Option: true,
-        }
+        },
+        orderBy: [
+            {
+                Product: {
+                    product_name: 'asc',
+                },
+            },
+            {
+                product_price: 'asc',
+            },
+        ]
     });
 };
 
@@ -40,15 +50,13 @@ export const createProductWeight = async (data) => {
 export const deleteWeight = async (weight_id) => {
     return await prisma.product_Weight.delete({
         where: { weight_id }
-    });
+    }); 
 }
 
-export const updateWeight = async (weight_id, weight) => {
+export const updateProductWeight = async (pw_id, data) => {
     return await prisma.product_Weight.update({
-        where: { weight_id },
-        data: {
-            weight
-        }
+        where: { pw_id },
+        data
     });
 }
 

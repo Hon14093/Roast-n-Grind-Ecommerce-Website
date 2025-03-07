@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 export default function RoastLevelComboBox({ value, onChange }) { 
     useEffect(() => {
         getRoastLevels(setRoastLevels);
-    })
+    },[])
 
     const [open, setOpen] = useState(false);
     const [roastLevels, setRoastLevels] = useState([]);

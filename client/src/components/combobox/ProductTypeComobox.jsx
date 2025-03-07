@@ -9,7 +9,7 @@ import { getTypes } from "@/hooks/productAPI";
 export default function ProductTypeComboBox({ value, onChange }) {
     useEffect(() => {
         getTypes(setProductTypes);
-    })
+    },[])
 
     const [open, setOpen] = useState(false);
     const [productTypes, setProductTypes] = useState([]);

@@ -216,8 +216,8 @@ input[type='email'], input[type='password'], .input-primary {
   border-radius: 15px;
   font-family: Courier Prime, Courier, monospace;
   font-size: 14px;
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
   padding: 0 20px;
   @apply focus:outline-none hover:bg-ivory hover:text-crimsonRed hover:border-crimsonRed duration-300
 }
@@ -262,6 +262,26 @@ input[type='email'], input[type='password'], .input-primary {
 .ribbon-heading::after {
   right: -110px;
   transform: scaleX(-1);
+}
+
+.popular h1 {
+  text-align: center;
+  font-size:30px; font-weight:300; color:#222; letter-spacing:1px;
+  text-transform: uppercase;
+
+  display: grid;
+  grid-template-columns: 1fr max-content 1fr;
+  grid-template-rows: 27px 0;
+  grid-gap: 20px;
+  align-items: center;
+}
+
+.popular h1:before, .popular h1:after {
+  content: " ";
+  display: block,;
+  border-bottom: 1px solid #c50000;
+  border-top: 1px solid #c50000;
+  height: 5px;
 }
 
 ::-webkit-scrollbar {

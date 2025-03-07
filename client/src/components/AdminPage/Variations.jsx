@@ -123,6 +123,7 @@ export default function Variations() {
                         variation={selectedVariation}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
+                        onSubmitSuccess={handleSubmitSuccess}
                     />
 
                     <DeleteModal

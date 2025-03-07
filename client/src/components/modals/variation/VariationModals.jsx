@@ -35,7 +35,7 @@ export function DetailsModal({ variation, open, onClose }) {
     )
 }
 
-export function EditModal({ variation, open, onClose }) {
+export function EditModal({ variation, open, onClose, onSubmitSuccess }) {
     if (!variation) return null;
 
     return (
@@ -50,7 +50,7 @@ export function EditModal({ variation, open, onClose }) {
                 </DialogHeader>
 
                 <div className='text-base text-darkOlive'>
-                    <EditForm variation={variation} />
+                    <EditForm variation={variation} onClose={onClose} onSubmitSuccess={onSubmitSuccess} />
                 </div>
             </DialogContent>
         </Dialog>

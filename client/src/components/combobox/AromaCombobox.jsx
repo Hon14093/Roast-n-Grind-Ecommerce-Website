@@ -16,7 +16,7 @@ import { getAromas } from "@/hooks/productAPI";
 export default function AromaComboBox({ value, onChange }) {
     useEffect(() => {
         getAromas(setAromas);
-    })
+    },[])
 
     const [open, setOpen] = useState(false);
     const [aromas, setAromas] = useState([]);

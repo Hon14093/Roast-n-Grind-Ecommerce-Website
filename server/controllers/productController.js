@@ -4,7 +4,8 @@ import { getAllOptions } from "../models/Weight_Option.js";
 import { getAllAromas } from "../models/Aroma.js";
 import { 
     getAllProductVariations,
-    createProductWeight
+    createProductWeight,
+    updateProductWeight
 } from "../models/Product_Weight.js";
 import { 
     getAllProducts, 
@@ -151,7 +152,7 @@ export const returnAllAromas = async (req,res) => {
     }
 }
 
-// weight option -------------------------------------------------
+// product weight -------------------------------------------------
 export const returnAllOptions = async (req,res) => {
     try {
         const options = await getAllOptions();
@@ -174,6 +175,30 @@ export const addProductVariation = async (req,res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const updateVariation = async (req,res) => {
+    try {
+        console.log("req.params:", req.params)
+        const { pw_id } = req.params;
+        const data = req.body;
+        console.log(data);
+        
+        if (!pw_id) {
+            return res.status(400).json({ message: 'Variation ID is required' });
+        }
+
+        const updatedVariation = await updateProductWeight(pw_id, data);
+
+        return res.status(200).json({ 
+            success: 1,
+            message: 'Variation updated successfully',
+            updated_variation: updatedVariation,
+        });
+    } catch (error) {
+        console.error("Error updating variation:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
