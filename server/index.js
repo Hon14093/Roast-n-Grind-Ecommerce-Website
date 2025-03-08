@@ -1,23 +1,15 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors'
-import authRoutes from './routes/authRoutes.js'
-import productRoutes from './routes/productRoutes.js'
-import imageUpload from './controllers/imageUpload.js'
-
-dotenv.config();
-
+const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const ordersRouter = require('./routes/orders');
 
-// middleware
-app.use(cors());
+// Middleware
 app.use(express.json());
 
-app.use('/api/auth', authRoutes); 
-app.use('/api/products', productRoutes);
-app.use('/image/', imageUpload);
+// Routes
+app.use('/api/orders', ordersRouter);
 
+// Khởi động server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log('Server is running on port ' + PORT);
-})
+    console.log(`Server running on port ${PORT}`);
+});

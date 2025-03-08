@@ -90,3 +90,25 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
         }
     }
 ]
+
+export const orderColumns = ({ onViewDetails, onEdit, onDelete }) => [
+    { accessorKey: "order_id", header: "Mã đơn hàng" },
+    { accessorKey: "order_date", header: "Ngày đặt hàng" },
+    { accessorKey: "total_price", header: "Tổng giá" },
+    { accessorKey: "status", header: "Trạng thái" },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const order = row.original;
+
+            return (
+                <TableActionsDropdown 
+                    onViewDetails={() => onViewDetails(order.order_id)}
+                    onEdit={() => onEdit(order.order_id)}
+                    onDelete={() => onDelete(order.order_id)}
+                />
+            )
+        }
+    }
+]
+
