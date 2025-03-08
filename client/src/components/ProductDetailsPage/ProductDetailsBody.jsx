@@ -68,7 +68,7 @@ export function ProductDetailsBody() {
 
                         <span className="text-4xl font-serifs mt-4">
                             {hasVariations ? 
-                                `$${selectedWeight.price.toFixed(2)}` : 
+                                `${selectedWeight.price} vnđ` : 
                                 <span className="text-red-500">Out of Stock</span>}
                         </span>
 

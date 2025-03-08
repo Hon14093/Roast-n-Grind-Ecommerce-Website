@@ -3,14 +3,17 @@ import { X } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useCart } from "../context/CartContext"
 import { Separator } from "../ui/separator"
 import { ScrollArea } from "../ui/scroll-area"
 import { Input } from "../ui/input"
 import { Trash2 } from "lucide-react"
+import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
 
 export default function Cart({ isOpen, toggleCart }) {
     const { cartItems, updateQuantity, removeFromCart } = useCart();
+    const { user } = useAuth();
+    const subTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
@@ -56,9 +59,8 @@ export default function Cart({ isOpen, toggleCart }) {
                                         <span>
                                             Tổng tiền:
                                         </span>
-
                                         <span className="ml-auto">
-                                            
+                                            {subTotal} vnđ
                                         </span>
                                     </article>
 
@@ -66,9 +68,8 @@ export default function Cart({ isOpen, toggleCart }) {
                                         <span>
                                             Phí vận chuyển:
                                         </span>
-
                                         <span className="ml-auto">
-                                            20,000 vnđ
+                                            {subTotal < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
                                         </span>
                                     </article>
                                 </div>
