@@ -292,3 +292,36 @@ export const clearCart = async (token) => {
     }
 }
 
+//Discount ............................................
+export const fetchDiscounts = async () => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/discounts');
+        return result.data.discounts;
+    } catch (error) {
+        console.error("Error fetching discounts:", error);
+    }
+}
+export const createDiscount = async (discount) => {
+    try {
+        const result = await axios.post('http://localhost:5000/api/discounts/create', discount);
+        return result.data.discount;
+    } catch (error) {
+        console.error("Error creating discount:", error);
+    }
+}
+export const deleteDiscount = async (discount_id) => {
+    try {
+        const result = await axios.delete(`http://localhost:5000/api/discounts/delete/${discount_id}`);
+        return result;
+    } catch (error) {
+        console.error("Error deleting discount:", error);
+    }
+}
+export const updateDiscount = async (discount_id, data) => {
+    try {
+        const result = await axios.put(`http://localhost:5000/api/discounts/update/${discount_id}`, data);
+        return result;
+    } catch (error) {
+        console.error("Error updating discount:", error);
+    }
+}
