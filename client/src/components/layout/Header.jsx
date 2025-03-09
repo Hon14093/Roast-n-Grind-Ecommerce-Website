@@ -70,7 +70,7 @@ function Header({ darkBG = true, toggleCart }) {
                             <a className='navAnchor'>Liên Hệ</a>
                         </li>
                         <li className='navList group'>
-                            <a className='navAnchor'>FAQ</a>
+                            <a className='navAnchor' onClick={() => console.log(isLoggedIn)}>FAQ</a>
                         </li>
                     </ul>
                 </section>
@@ -78,15 +78,14 @@ function Header({ darkBG = true, toggleCart }) {
                 {/* account and cart section */}
                 <section className='flex items-center gap-4 text-darkOlive'>
                     {isLoggedIn ? (
-                        <Link to="/login" className='p-2 bg-white rounded-full' onClick={() => console.log(user)}>
+                        <Link to="/account" className='p-2 bg-white rounded-full'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
 
                         </Link>
                     ) : (
-                        // <p>hello</p>
-                        <Link to="/account" className='p-2 bg-white rounded-full'>
+                        <Link to="/login" className='p-2 bg-white rounded-full'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>

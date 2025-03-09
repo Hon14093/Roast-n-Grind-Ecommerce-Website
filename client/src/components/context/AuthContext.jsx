@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -13,27 +14,23 @@ export const AuthProvider = ({ children }) => {
             try {
                 const decodedToken = jwtDecode(storedToken); 
                 setUser(decodedToken);
+                setIsLoggedIn(true)
             } catch (error) {
                 console.error('Error decoding token:', error);
                 localStorage.removeItem('jwtToken');
             }
+        } else {
+            setIsLoggedIn(false)
         }
         setLoading(false);
     }, []);
-
-    const login1 = (data) => {
-        setUser(data.account_id);
-        setIsLoggedIn(true);
-        setIsAdmin(data.account.is_admin);
-        localStorage.setItem('jwtToken', data.token);
-        localStorage.setItem('id', data.account_id);
-    };
 
     const login = (token) => {
         localStorage.setItem('jwtToken', token);
         try {
             const decodedToken = jwtDecode(token);
             setUser(decodedToken);
+            setIsLoggedIn(true);
         } catch (error) {
             console.error('Error decoding token:', error);
             localStorage.removeItem('jwtToken');
@@ -43,10 +40,12 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('jwtToken');
         setUser(null);
+        setIsLoggedIn(false);
     };
 
     const value = {
         user,
+        isLoggedIn,
         login,
         logout,
         loading,

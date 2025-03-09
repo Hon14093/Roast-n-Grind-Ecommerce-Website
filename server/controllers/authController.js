@@ -32,10 +32,19 @@ export const register = async (req,res) => {
         const newAccount = await createAccount(req.body);
         console.log(newAccount);
 
+        const token = jwt.sign(
+            {
+                account_id: newAccount.account_id,
+                is_admin: false
+            },
+            jwtSecret,
+            { expiresIn: '1d' } // Token expiry time
+        );
+
         return res.status(201).json({
             status: 1,
             message: 'Account created successfully!',
-            account_id: newAccount.account_id
+            token
         })
 
     } catch (error) {
@@ -80,8 +89,6 @@ export const login = async (req,res) => {
             status: 1,
             message: 'Login successful',
             token,
-            account_id: account.account_id,
-            is_admin: account.is_admin
         })
 
     } catch (error) {

@@ -24,6 +24,7 @@ export function ProductDetailsBody() {
 
         updateCart({
             product_id: product.product_id,
+            pw_id: selectedWeight.pw_id,
             product_name: product.product_name,
             weight_id: selectedWeight.weight_id,
             weight_name: selectedWeight.weight_name,

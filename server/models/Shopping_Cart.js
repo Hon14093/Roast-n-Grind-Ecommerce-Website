@@ -19,7 +19,7 @@ export const getAllShoppingCarts = async () => {
 
 export const getShoppingCartByUserId = async (userId) => {
     return await prisma.shopping_Cart.findMany({
-        where: { user_id: userId }
+        where: { account_id: userId }
     });
 }
 
