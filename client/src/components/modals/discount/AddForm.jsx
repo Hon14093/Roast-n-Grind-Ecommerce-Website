@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -119,3 +120,8 @@ export function AddForm({ onSubmit, isLoading }) {
         </form>
     );
 }
+
+AddForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+};

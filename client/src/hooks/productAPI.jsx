@@ -153,6 +153,74 @@ export const deleteOrder = async (order_id) => {
         console.error("Error deleting order:", error);
     }
 }
+export const createOrder = async (order) => {
+    try {
+        const result = await axios.post('http://localhost:5000/api/orders/create', order);
+        return result.data.order; // Giả sử API trả về { order: {...} }
+    } catch (error) {
+        console.error("Error creating order:", error);
+        throw error; // Ném lỗi để xử lý ở nơi gọi
+    }
+};
+
+// Lấy danh sách trạng thái đơn hàng (Order_Status)
+export const getOrderStatuses = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/orders/statuses');
+        setData(result.data.statuses); // Giả sử API trả về { statuses: [...] }
+    } catch (error) {
+        console.error("Error fetching order statuses:", error);
+    }
+};
+// Lấy danh sách phương thức vận chuyển (Shipping_Method)
+export const getShippingMethods = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/orders/shipping-methods');
+        setData(result.data.methods); // Giả sử API trả về { methods: [...] }
+    } catch (error) {
+        console.error("Error fetching shipping methods:", error);
+    }
+};
+
+// Lấy danh sách tài khoản (Account)
+export const getAccounts = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/accounts');
+        setData(result.data.accounts); // Giả sử API trả về { accounts: [...] }
+    } catch (error) {
+        console.error("Error fetching accounts:", error);
+    }
+};
+// Quản lý Order_Details
+export const addOrderDetail = async (orderDetail) => {
+    try {
+        const result = await axios.post('http://localhost:5000/api/orders/details/create', orderDetail);
+        return result.data.detail; // Giả sử API trả về { detail: {...} }
+    } catch (error) {
+        console.error("Error adding order detail:", error);
+        throw error;
+    }
+};
+
+export const updateOrderDetail = async (order_detail_id, data) => {
+    try {
+        const result = await axios.put(`http://localhost:5000/api/orders/details/update/${order_detail_id}`, data);
+        return result.data.detail;
+    } catch (error) {
+        console.error("Error updating order detail:", error);
+        throw error;
+    }
+};
+export const deleteOrderDetail = async (order_detail_id) => {
+    try {
+        const result = await axios.delete(`http://localhost:5000/api/orders/details/delete/${order_detail_id}`);
+        return result;
+        
+    } catch (error) {
+        console.error("Error deleting order detail:", error);
+        throw error;
+    }
+};
 // User ............................................
 export const getUsers = async (setData) => {
     try {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
@@ -121,4 +122,19 @@ export function EditForm({ discount, onSubmit, isLoading }) {
             </Button>
         </form>
     );
-}
+};
+
+EditForm.propTypes = {
+    discount: PropTypes.shape({
+        discount_id: PropTypes.string.isRequired,
+        discount_code: PropTypes.string.isRequired,
+        discount_value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        max_discount_amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        min_order_amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        start_date: PropTypes.string,
+        end_date: PropTypes.string,
+        is_active: PropTypes.bool,
+    }).isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+};   

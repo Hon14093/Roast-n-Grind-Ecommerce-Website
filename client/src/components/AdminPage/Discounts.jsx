@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { updateDiscount } from '@/hooks/productAPI'; // Adjust the import path as necessary
 import { useDiscountActions } from '@/hooks/table-actions/useDiscountsActions';
 import { AddForm } from '@/components/modals/discount/AddForm';
 import { EditForm } from '@/components/modals/discount/EditForm';

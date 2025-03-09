@@ -167,3 +167,69 @@ export function DeleteModal({ product, open, onClose }) {
         </Dialog>
     )
 }
+
+
+export function OrderDetailsForm({ productWeights, onSubmit, onClose }) {
+    const [detail, setDetail] = useState({
+        pw_id: '',
+        quantity: 1,
+        subtotal: 0,
+        is_ground: false,
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const selectedProduct = productWeights.find((pw) => pw.pw_id === detail.pw_id);
+        const subtotal = selectedProduct ? selectedProduct.product_price * detail.quantity : 0;
+        onSubmit({ ...detail, subtotal });
+    };
+
+    return (
+        <Dialog open onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Thêm chi tiết đơn hàng</DialogTitle>
+                </DialogHeader>
+                <form className="grid gap-5" onSubmit={handleSubmit}>
+                    <article className="grid w-full items-center gap-1.5">
+                        <Label htmlFor="pw_id">Sản phẩm</Label>
+                        <select
+                            id="pw_id"
+                            value={detail.pw_id}
+                            onChange={(e) => setDetail({ ...detail, pw_id: e.target.value })}
+                        >
+                            <option value="">Chọn sản phẩm</option>
+                            {productWeights.map((pw) => (
+                                <option key={pw.pw_id} value={pw.pw_id}>
+                                    {pw.Product.product_name} - {pw.product_price} VNĐ
+                                </option>
+                            ))}
+                        </select>
+                    </article>
+
+                    <article className="grid w-full items-center gap-1.5">
+                        <Label htmlFor="quantity">Số lượng</Label>
+                        <Input
+                            id="quantity"
+                            type="number"
+                            value={detail.quantity}
+                            onChange={(e) => setDetail({ ...detail, quantity: parseInt(e.target.value) || 1 })}
+                        />
+                    </article>
+
+                    <article className="grid w-full items-center gap-1.5">
+                        <Label htmlFor="is_ground">Xay sẵn</Label>
+                        <Input
+                            id="is_ground"
+                            type="checkbox"
+                            checked={detail.is_ground}
+                            onChange={(e) => setDetail({ ...detail, is_ground: e.target.checked })}
+                        />
+                    </article>
+
+                    <Button type="submit">Thêm</Button>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}

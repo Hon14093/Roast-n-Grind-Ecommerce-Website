@@ -16,7 +16,13 @@ export function useOrderActions(orders) {
         setIsEditModalOpen(true);
     };
     const handleDelete = async (orderId) => {
-        console.log("Delete");
+        const order = orders.find((o) => o.order_id === orderId);
+        if (order) {
+            console.log(`Deleting order with ID: ${orderId}`);
+            // Add your delete logic here
+        } else {
+            console.log(`Order with ID: ${orderId} not found`);
+        }
     };
     return {
         selectedOrder,
