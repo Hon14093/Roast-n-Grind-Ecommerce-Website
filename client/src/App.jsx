@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 import { CartProvider } from './components/context/CartContext';
 import { AuthProvider } from './components/context/AuthContext';
@@ -37,6 +38,7 @@ function App() {
                         <Route path='/login' element={<LoginPage />} />
                         <Route path='/signup' element={<SignupPage />} />
                         <Route path='/account' element={<AccountPage />} />
+                        <Route path='/checkout' element={<CheckoutPage />} />
 
                         {/* Admin UI */}
                         <Route path='/admin/*' element={<AdminPage />} />

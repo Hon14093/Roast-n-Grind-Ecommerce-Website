@@ -63,6 +63,8 @@ model Cart_Details {
   is_ground      Boolean?       @default(false)
   Shopping_Cart  Shopping_Cart  @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, map: "fk_cart_details_1")
   Product_Weight Product_Weight @relation(fields: [pw_id], references: [pw_id], onDelete: Cascade, map: "fk_cart_details_2")
+
+  @@unique([cart_id, pw_id], map: "unique_cart_id_pw_id")
 }
 
 model Country {

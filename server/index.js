@@ -15,8 +15,8 @@ const PORT = process.env.PORT || 5000;
 // middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+// app.use(bodyParser.json({ limit: "10mb" }));
+// app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 app.use('/api/auth', authRoutes); 
 app.use('/api/products', productRoutes);

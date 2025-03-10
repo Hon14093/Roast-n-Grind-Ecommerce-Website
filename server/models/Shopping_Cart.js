@@ -18,7 +18,7 @@ export const getAllShoppingCarts = async () => {
 }
 
 export const getShoppingCartByUserId = async (userId) => {
-    return await prisma.shopping_Cart.findMany({
+    return await prisma.shopping_Cart.findFirst({
         where: { account_id: userId }
     });
 }

@@ -9,37 +9,45 @@ import { Input } from "../ui/input"
 import { Trash2 } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 import { useCart } from "../context/CartContext"
-import { addCartDetails, getCartByAccountId } from "@/hooks/cartAPI"
+import { addCartDetails, getCartByAccountId, removeCartDetail } from "@/hooks/cartAPI"
+import { useNavigate } from "react-router-dom"
 
 export default function Cart({ isOpen, toggleCart }) {
-    const { cartItems, updateQuantity, removeFromCart } = useCart();
     const { user } = useAuth();
-    const Total = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const { cartItems, updateQuantity, removeFromCart } = useCart();
+    const navigate = useNavigate();
 
+    // const totalPrice = Array.isArray(cartItems) && cartItems.length > 0
+    // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    // : 0;
+
+    const totalPrice = (cartItems.length === 0)
+        ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+        : 0;
+    
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
             updateQuantity(product_id, weight_id, newQuantity);
         }
-    }; 
+    };
     
-    // things needed to add: quantity, cart_id, pw_id, item_subtotal, is_ground
     const handleOrder = async () => {
         try {
-            const cart = await getCartByAccountId(user.account_id);
-            // console.log(cart.cart_id)
-
+            console.log(cartItems)
             const cartDetailsData = cartItems.map(item => ({
-                cart_id: cart.cart_id,
+                cart_id: user.cart_id,
                 quantity: item.quantity,
                 pw_id: item.pw_id,
                 item_subtotal: item.price * item.quantity,
                 is_ground: item.grind
             }));
 
-            console.log(cartDetailsData)
-
             const response = await addCartDetails(cartDetailsData);
-            console.log("Cart details added successfully: ", response);
+            if (response) {
+                navigate('/checkout');
+                console.log(response);
+            }
+
         } catch (error) {
             console.log(error)
         }
@@ -53,7 +61,7 @@ export default function Cart({ isOpen, toggleCart }) {
             )}
 
             {/* Slide out card */}
-            <div
+            <div 
                 className={`fixed right-0 top-0 z-50 h-full w-full lg:w-[35%] transform transition-transform duration-300 ease-in-out  ${
                 isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
@@ -84,7 +92,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Tổng tiền:
                                         </span>
                                         <span className="ml-auto">
-                                            {Total} vnđ
+                                            {totalPrice} vnđ
                                         </span>
                                     </article>
 
@@ -93,7 +101,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Phí vận chuyển:
                                         </span>
                                         <span className="ml-auto">
-                                            {Total < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
+                                            {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
                                         </span>
                                     </article>
                                 </div>
@@ -140,7 +148,10 @@ export default function Cart({ isOpen, toggleCart }) {
 
                                             <div className="h-full ml-auto">
                                                 <button 
-                                                    onClick={() => removeFromCart(item.product_id, item.weight_id)} 
+                                                    onClick={() => {
+                                                        removeFromCart(item.product_id, item.weight_id);
+                                                        removeCartDetail(user.cart_id, item.pw_id);
+                                                    }} 
                                                     className="h-full my-auto">
                                                     <Trash2 size={25} className="text-crimsonRed" />
                                                 </button>
