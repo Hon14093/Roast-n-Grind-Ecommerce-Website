@@ -59,6 +59,8 @@ model Cart_Details {
   quantity       Int
   cart_id        String         @db.Uuid
   pw_id          String         @db.Uuid
+  item_subtotal  Float          @db.Real
+  is_ground      Boolean?       @default(false)
   Shopping_Cart  Shopping_Cart  @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, map: "fk_cart_details_1")
   Product_Weight Product_Weight @relation(fields: [pw_id], references: [pw_id], onDelete: Cascade, map: "fk_cart_details_2")
 }
@@ -168,6 +170,8 @@ model Product_Weight {
   Order_Details Order_Details[]
   Product       Product         @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_to_weight")
   Weight_Option Weight_Option   @relation(fields: [weight_id], references: [weight_id], onDelete: Cascade, map: "fk_weight_to_product")
+
+  @@unique([product_id, weight_id], map: "unique_product_weight")
 }
 
 model Review {

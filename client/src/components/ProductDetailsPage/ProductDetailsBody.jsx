@@ -24,6 +24,7 @@ export function ProductDetailsBody() {
 
         updateCart({
             product_id: product.product_id,
+            pw_id: selectedWeight.pw_id,
             product_name: product.product_name,
             weight_id: selectedWeight.weight_id,
             weight_name: selectedWeight.weight_name,
@@ -68,7 +69,7 @@ export function ProductDetailsBody() {
 
                         <span className="text-4xl font-serifs mt-4">
                             {hasVariations ? 
-                                `$${selectedWeight.price.toFixed(2)}` : 
+                                `${selectedWeight.price} vnđ` : 
                                 <span className="text-red-500">Out of Stock</span>}
                         </span>
 

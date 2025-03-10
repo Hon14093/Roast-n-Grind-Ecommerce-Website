@@ -3,20 +3,47 @@ import { X } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useCart } from "../context/CartContext"
 import { Separator } from "../ui/separator"
 import { ScrollArea } from "../ui/scroll-area"
 import { Input } from "../ui/input"
 import { Trash2 } from "lucide-react"
+import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
+import { addCartDetails, getCartByAccountId } from "@/hooks/cartAPI"
 
 export default function Cart({ isOpen, toggleCart }) {
     const { cartItems, updateQuantity, removeFromCart } = useCart();
+    const { user } = useAuth();
+    const Total = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
             updateQuantity(product_id, weight_id, newQuantity);
         }
-    };
+    }; 
+    
+    // things needed to add: quantity, cart_id, pw_id, item_subtotal, is_ground
+    const handleOrder = async () => {
+        try {
+            const cart = await getCartByAccountId(user.account_id);
+            // console.log(cart.cart_id)
+
+            const cartDetailsData = cartItems.map(item => ({
+                cart_id: cart.cart_id,
+                quantity: item.quantity,
+                pw_id: item.pw_id,
+                item_subtotal: item.price * item.quantity,
+                is_ground: item.grind
+            }));
+
+            console.log(cartDetailsData)
+
+            const response = await addCartDetails(cartDetailsData);
+            console.log("Cart details added successfully: ", response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className="relative w-full overflow-hidden z-[99]">
@@ -56,9 +83,8 @@ export default function Cart({ isOpen, toggleCart }) {
                                         <span>
                                             Tổng tiền:
                                         </span>
-
                                         <span className="ml-auto">
-                                            
+                                            {Total} vnđ
                                         </span>
                                     </article>
 
@@ -66,14 +92,13 @@ export default function Cart({ isOpen, toggleCart }) {
                                         <span>
                                             Phí vận chuyển:
                                         </span>
-
                                         <span className="ml-auto">
-                                            20,000 vnđ
+                                            {Total < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
                                         </span>
                                     </article>
                                 </div>
 
-                                <button className="big-action-button w-full text-ivory">
+                                <button className="big-action-button w-full text-ivory" onClick={handleOrder}>
                                     Đặt hàng
                                 </button>
 

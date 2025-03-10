@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios'
 
 function LoginBody() {
-
+    const { user, login, logout} = useAuth();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
@@ -13,7 +14,9 @@ function LoginBody() {
         axios.post('http://localhost:5000/api/auth/login', {email, password})
         .then(result => {
             console.log(result);
-            // navigate('/');
+            // login function from auth context
+            login(result.data.token);
+
             if (result.data.is_admin) {
                 navigate('/admin');
             } else {

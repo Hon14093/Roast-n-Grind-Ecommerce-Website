@@ -17,6 +17,7 @@ export function CartProvider({ children }) {
     // Update localStorage when cartItems change
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify({ items: cartItems }));
+        console.log(cartItems)
     }, [cartItems]);
 
     const updateCart = (newItem) => {

@@ -9,7 +9,10 @@ import AboutUsPage from './pages/AboutUsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AdminPage from './pages/AdminPage';
+import AccountPage from './pages/AccountPage';
+
 import { CartProvider } from './components/context/CartContext';
+import { AuthProvider } from './components/context/AuthContext';
 
 function App() {
     const [isAdmin, setIsAdmin] = useState(false);
@@ -22,23 +25,25 @@ function App() {
     
     return (
         <>
-        
-        <CartProvider>
-            <Router>
-                <Routes>
-                    {/* Customer UI */}
-                    <Route path='/' element={<HomePage />} />
-                    <Route path='/shop' element={<ShopPage />} />
-                    <Route path='/product/:product_id' element={<ProductDetailsPage />} />
-                    <Route path='/about' element={<AboutUsPage />} />
-                    <Route path='/login' element={<LoginPage />} />
-                    <Route path='/signup' element={<SignupPage />} />
+        <AuthProvider>
+            <CartProvider>
+                <Router>
+                    <Routes>
+                        {/* Customer UI */}
+                        <Route path='/' element={<HomePage />} />
+                        <Route path='/shop' element={<ShopPage />} />
+                        <Route path='/product/:product_id' element={<ProductDetailsPage />} />
+                        <Route path='/about' element={<AboutUsPage />} />
+                        <Route path='/login' element={<LoginPage />} />
+                        <Route path='/signup' element={<SignupPage />} />
+                        <Route path='/account' element={<AccountPage />} />
 
-                    {/* Admin UI */}
-                    <Route path='/admin/*' element={<AdminPage />} />
-                </Routes>
-            </Router>
-        </CartProvider>
+                        {/* Admin UI */}
+                        <Route path='/admin/*' element={<AdminPage />} />
+                    </Routes>
+                </Router>
+            </CartProvider>
+        </AuthProvider>
         
         </>
     )

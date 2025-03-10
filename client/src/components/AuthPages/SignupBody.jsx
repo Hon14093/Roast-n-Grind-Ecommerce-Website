@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios'
 
 function SignupBody() {
@@ -7,6 +8,7 @@ function SignupBody() {
     const [email, setEmail] = useState();
     const [phone, setPhone] = useState();
     const [password, setPassword] = useState();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     // const data = {name, phone, email, password};
@@ -16,6 +18,7 @@ function SignupBody() {
         axios.post('http://localhost:5000/api/auth/register', {account_name, email, phone, password})
         .then(result => {
             console.log(result);
+            login(result.data.token);
             navigate('/');
         })
         .catch(result => console.log(result))
