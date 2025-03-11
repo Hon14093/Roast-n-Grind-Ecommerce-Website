@@ -35,17 +35,17 @@ model Account_Payment_Method {
 }
 
 model Address {
-  address_id    String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  unit_number   String         @db.VarChar(10)
-  street_number String         @db.VarChar(100)
-  address_line1 String         @db.VarChar(100)
-  address_line2 String?        @db.VarChar(100)
-  city          String         @db.VarChar(50)
-  region        String?        @db.VarChar(50)
-  postal_code   String         @db.VarChar(10)
-  country_id    Int
-  Country       Country        @relation(fields: [country_id], references: [country_id], onDelete: Cascade, map: "fk_country")
-  User_Address  User_Address[]
+  address_id   String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  address_line String         @db.VarChar(100)
+  ward         String         @db.VarChar(100)
+  district     String         @db.VarChar(100)
+  city_id      Int
+  first_name   String         @db.VarChar(30)
+  last_name    String         @db.VarChar(30)
+  postal_code  String         @db.VarChar(20)
+  City         City           @relation(fields: [city_id], references: [city_id], onDelete: Cascade, map: "fk_city")
+  Order        Order[]
+  User_Address User_Address[]
 }
 
 model Aroma {
@@ -68,9 +68,8 @@ model Cart_Details {
 }
 
 model Country {
-  country_id   Int       @id @default(autoincrement())
-  country_name String    @db.VarChar(50)
-  Address      Address[]
+  country_id   Int    @id @default(autoincrement())
+  country_name String @db.VarChar(50)
 }
 
 model Discount {
@@ -99,9 +98,11 @@ model Order {
   account_id      String          @db.Uuid
   shipping_id     Int
   status_id       Int
-  discount_id     String          @db.Uuid
+  discount_id     String?         @db.Uuid
+  address_id      String          @db.Uuid
   Account         Account         @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_order")
-  Discount        Discount        @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fk_discount")
+  Discount        Discount?       @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fk_discount")
+  Address         Address         @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_order_address")
   Shipping_Method Shipping_Method @relation(fields: [shipping_id], references: [shipping_id], onDelete: Cascade, map: "fk_shipping")
   Order_Status    Order_Status    @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "fk_status")
   Order_Details   Order_Details[]
@@ -202,12 +203,11 @@ model Shopping_Cart {
 }
 
 model User_Address {
-  ua_id       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  is_defeault Boolean @default(false)
-  account_id  String  @db.Uuid
-  address_id  String  @db.Uuid
-  Account     Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_to_address")
-  Address     Address @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_address_to_account")
+  ua_id      String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account_id String  @db.Uuid
+  address_id String  @db.Uuid
+  Account    Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_to_address")
+  Address    Address @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_address_to_account")
 }
 
 model Weight_Option {
@@ -235,4 +235,10 @@ model Roast_Level {
   roast_id  Int       @id(map: "category_pkey") @default(autoincrement())
   roast_lvl String    @db.VarChar(50)
   Product   Product[]
+}
+
+model City {
+  city_id   Int       @id @default(autoincrement())
+  city_name String    @db.VarChar(60)
+  Address   Address[]
 }

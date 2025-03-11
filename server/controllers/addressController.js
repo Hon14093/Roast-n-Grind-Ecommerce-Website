@@ -1,0 +1,70 @@
+import { getAllCities } from "../models/City.js";
+import { 
+    getUserAddressesByUserId,
+    createUserAddress
+} from "../models/User_Address.js"
+import { createAddress, deleteAddress } from "../models/Address.js";
+
+export const returnAllCities = async (req,res) => {
+    try {
+        const cities = await getAllCities();
+        res.status(201).json({
+            cities
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+
+}
+
+export const returnAllAddressesByAccountId = async (req,res) => {
+    try {
+        const { account_id } = req.params;
+        const addresses = await getUserAddressesByUserId(account_id);
+        res.status(201).json({
+            addresses
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+}
+
+// this will create an address first then use the address_id
+// to create a user_address entity
+export const addAddressByAccountId = async (req,res) => {
+    try {
+        const { account_id } = req.params;
+        const data = req.body;
+        const newAddress = await createAddress(data);
+
+        const usData = {
+            account_id: account_id,
+            address_id: newAddress.address_id
+        }
+        const newUA = await createUserAddress(usData);
+        res.status(201).json({
+            success: 1,
+            newUA
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+}
+
+export const removeAddress = async (req,res) => {
+    try {
+        const { address_id } = req.params;
+        console.log('The param: ', address_id)
+        const deletedAddress = await deleteAddress(address_id);
+        res.status(201).json({
+            success: 1,
+            deletedAddress
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+}

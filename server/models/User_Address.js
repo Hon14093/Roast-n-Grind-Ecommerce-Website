@@ -1,11 +1,24 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const createUserAddress = async (data) => { // Create a new user address
-    return await prisma.user_Address.create({
-        data: data
+export const getUserAddressesByUserId = async (userId) => { // Get all user addresses by user ID
+    return await prisma.user_Address.findMany({
+        include: {
+            Address: {
+                include: {
+                    City: true
+                }
+            }
+            
+        },
+        where: { account_id: userId }
     });
 }
+
+export const createUserAddress = async (data) => { // Create a new user address
+    return await prisma.user_Address.create({ data });
+}
+
 
 export const findUserAddressById = async (id) => { // Find a user address by ID
     return await prisma.user_Address.findUnique({
@@ -17,11 +30,6 @@ export const getAllUserAddresses = async () => { // Get all user addresses
     return await prisma.user_Address.findMany();
 }
 
-export const getUserAddressesByUserId = async (userId) => { // Get all user addresses by user ID
-    return await prisma.user_Address.findMany({
-        where: { user_id: userId }
-    });
-}
 
 export const updateUserAddress = async (id, data) => { // Update a user address
     return await prisma.user_Address.update({
