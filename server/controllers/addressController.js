@@ -3,7 +3,7 @@ import {
     getUserAddressesByUserId,
     createUserAddress
 } from "../models/User_Address.js"
-import { createAddress, deleteAddress } from "../models/Address.js";
+import { createAddress, deleteAddress, updateAddress } from "../models/Address.js";
 
 export const returnAllCities = async (req,res) => {
     try {
@@ -57,11 +57,26 @@ export const addAddressByAccountId = async (req,res) => {
 export const removeAddress = async (req,res) => {
     try {
         const { address_id } = req.params;
-        console.log('The param: ', address_id)
         const deletedAddress = await deleteAddress(address_id);
         res.status(201).json({
             success: 1,
             deletedAddress
+        })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+}
+
+export const editAddress = async (req,res) => {
+    try {
+        const { address_id } = req.params;
+        const data = req.body;
+        console.log(data)
+        const updatedAddress = await updateAddress(address_id, data);
+        res.status(201).json({
+            success: 1,
+            updatedAddress
         })
     } catch (error) {
         res.status(500).json({ error: error.message });

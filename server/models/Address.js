@@ -12,3 +12,10 @@ export const deleteAddress = async (address_id) => {
         }
     })
 }
+
+export const updateAddress = async (address_id, data) => {
+    return prisma.address.update({
+        where: { address_id },
+        data
+    })
+}

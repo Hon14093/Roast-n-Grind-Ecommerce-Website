@@ -15,10 +15,10 @@ import { Input } from '@/components/ui/input';
 import { useState } from "react";
 import { Edit } from 'lucide-react';
 import CityComboBox from '@/components/combobox/CityCombobox';
-import { createAddressFromUser, deleteAddress } from '@/hooks/addressAPI';
+import { createAddressFromUser, deleteAddress, updateAddress } from '@/hooks/addressAPI';
 import { useAuth } from '@/components/context/AuthContext';
 
-export const AddAddress = ({onSubmitSuccess}) => {
+export const AddAddress = ({ onSubmitSuccess }) => {
     const [open, setOpen] = useState(false);
     const { user } = useAuth();
 
@@ -148,16 +148,51 @@ export const AddAddress = ({onSubmitSuccess}) => {
     )
 }
 
-export const EditAddress = () => {
-    const [open, setOpen] = useState(false);
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [addressLine, setAddressLine] = useState('');
-    const [ward, setWard] = useState(''); // phường
-    const [district, setDistict] = useState(''); // quận or huyện
-    const [postalCode, setPostalCode] = useState('');
-    const [city, setCity] = useState(''); // this is city id
+export const EditAddress = ({ address, onSubmitSuccess }) => {
+    const [open, setOpen] = useState(false);
+    // console.log(address)
+
+    const [firstName, setFirstName] = useState(address.first_name);
+    const [lastName, setLastName] = useState(address.last_name);
+    const [addressLine, setAddressLine] = useState(address.address_line);
+    const [ward, setWard] = useState(address.ward); // phường
+    const [district, setDistict] = useState(address.district); // quận or huyện
+    const [postalCode, setPostalCode] = useState(address.postal_code);
+    const [city, setCity] = useState(address.City.city_id); // this is city id
+
+    // const [firstName, setFirstName] = useState(address.address.first_name);
+    // const [lastName, setLastName] = useState(address.address.last_name);
+    // const [addressLine, setAddressLine] = useState(address.address.address_line);
+    // const [ward, setWard] = useState(address.address.ward); // phường
+    // const [district, setDistict] = useState(address.address.district); // quận or huyện
+    // const [postalCode, setPostalCode] = useState(address.address.postal_code);
+    // const [city, setCity] = useState(address.address.City.city_id); // this is city id
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const data = {
+                first_name: firstName,
+                last_name: lastName,
+                address_line: addressLine,
+                ward: ward,
+                district: district,
+                postal_code: postalCode,
+                city_id: city
+            }
+
+            const result = await updateAddress(address.address_id, data)
+            if (result.success) {
+                onSubmitSuccess();
+                setOpen(false);
+            }
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -175,7 +210,7 @@ export const EditAddress = () => {
                     </DialogDescription>
                 </DialogHeader>
 
-                <form className="space-y-6 lg:col-span-2">
+                <form onSubmit={handleSubmit} className="space-y-6 lg:col-span-2">
                     <div className="space-y-4">
                         <article className='flex gap-4 w-full'>
                             <div className="grid gap-2 w-1/2">
@@ -184,6 +219,7 @@ export const EditAddress = () => {
                                     id="lastName" name="lastName" 
                                     className='border-darkOlive' 
                                     onChange={(e) => setLastName(e.target.value)}
+                                    defaultValue={lastName}
                                     required 
                                 />
                             </div>
@@ -193,6 +229,7 @@ export const EditAddress = () => {
                                     id="firstName" name="firstName" 
                                     className='border-darkOlive' 
                                     onChange={(e) => setFirstName(e.target.value)}
+                                    defaultValue={firstName}
                                     required 
                                 />
                             </div>
@@ -204,26 +241,29 @@ export const EditAddress = () => {
                                 id="address" name="address" 
                                 className='border-darkOlive' 
                                 onChange={(e) => setAddressLine(e.target.value)}
+                                defaultValue={addressLine}
                                 required 
                             />
                         </div>
                         
                         <div className="grid gap-2 sm:grid-cols-2">
                             <div>
-                                <Label htmlFor="city">Phường</Label>
+                                <Label htmlFor="ward">Phường</Label>
                                 <Input 
-                                    id="city" name="city" 
+                                    id="ward" name="ward" 
                                     className='border-darkOlive' 
                                     onChange={(e) => setWard(e.target.value)}
+                                    defaultValue={ward}
                                     required 
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="state">Quận / Huyện</Label>
+                                <Label htmlFor="district">Quận / Huyện</Label>
                                 <Input 
-                                    id="state" name="state" 
+                                    id="district" name="district" 
                                     className='border-darkOlive' 
                                     onChange={(e) => setDistict(e.target.value)}
+                                    defaultValue={district}
                                     required 
                                 />
                             </div>
@@ -235,6 +275,7 @@ export const EditAddress = () => {
                                     id="zipCode" name="zipCode" 
                                     className='border-darkOlive' 
                                     onChange={(e) => setPostalCode(e.target.value)}
+                                    defaultValue={postalCode}
                                     required 
                                 />
                             </div>
@@ -244,7 +285,7 @@ export const EditAddress = () => {
                         </div>
                     </div>
                     <Button type="submit" className="w-full bg-darkOlive text-ivory">
-                        Place Order
+                        Cập nhật địa chỉ
                     </Button>
                 </form>
             </DialogContent>

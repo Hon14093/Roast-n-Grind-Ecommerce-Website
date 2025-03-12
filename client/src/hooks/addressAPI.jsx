@@ -29,10 +29,18 @@ export const createAddressFromUser = async (account_id, data) => {
 
 export const deleteAddress = async (address_id) => {
     try {
-        console.log('Address: ', address_id)
         const response = await axios.delete(`http://localhost:5000/api/address/delete/${address_id}`)
         return response.data;
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const updateAddress = async (address_id, data) => {
+    try {
+        const response = await axios.put(`http://localhost:5000/api/address/update/${address_id}`, data);
+        return response.data
+    } catch (error) {
+        console.log(error)
     }
 }

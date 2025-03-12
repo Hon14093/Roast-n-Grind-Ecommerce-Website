@@ -10,12 +10,9 @@ import { Label } from "../ui/label"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import visaLogo from '../../images/visa.png'
 
-import { getAddressesByAccountId } from '@/hooks/addressAPI'
-import { useAuth } from '../context/AuthContext'
-
 export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
     const { cartItems } = useCart();
-    const totalPrice = (cartItems.length === 0)
+    const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
@@ -89,29 +86,20 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
                         </div>
                     ))}
 
-                    <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-4'/>
-
-                    <div>
-                        <article className="flex">
-                            <span>
-                                Tổng tiền:
-                            </span>
-                            <span className="ml-auto pr-3">
-                                {totalPrice} vnđ
-                            </span>
-                        </article>
-
-                        <article className="flex">
-                            <span>
-                                Phí vận chuyển:
-                            </span>
-                            <span className="ml-auto pr-3">
-                                {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
-                            </span>
-                        </article>
-                    </div>
-
                 </ScrollArea>
+
+                <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-4'/>
+                
+                <div>
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Thành tiền:
+                        </span>
+                        <span className="ml-auto pr-3">
+                            {totalPrice} vnđ
+                        </span>
+                    </article>
+                </div>
 
             </section>
         </div>
