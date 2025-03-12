@@ -9,22 +9,23 @@ import cartRoutes from './routes/cartRoutes.js'
 import imageUpload from './controllers/imageUpload.js'
 
 dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 5000;
+const ordersRouter = require('./routes/orders');
 
-// middleware
-app.use(cors());
+// Middleware
 app.use(express.json());
 // app.use(bodyParser.json({ limit: "10mb" }));
 // app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
+
+// Routes
+app.use('/api/orders', ordersRouter);
+
+app.use('/api/auth', authRoutes); 
+// Routes
+app.use('/api/orders', ordersRouter);
 app.use('/api/auth', authRoutes); 
 app.use('/api/products', productRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/image/', imageUpload);
-
-app.listen(PORT, () => {
-    console.log('Server is running on port ' + PORT);
-})
