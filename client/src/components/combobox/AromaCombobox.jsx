@@ -32,23 +32,23 @@ export default function AromaComboBox({ value, onChange }) {
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-2">
                     <Command>
-                    <CommandInput placeholder="Search aroma..." />
-                    <CommandList>
-                        {aromas.map((aroma) => (
-                        <CommandItem
-                            key={aroma.aroma_id}
-                            onSelect={() => {
-                            onChange(aroma.aroma_id);
-                            setOpen(false);
-                            }}
-                        >
-                            <Check
-                            className={`mr-2 h-4 w-4 ${value === aroma.aroma_id ? "opacity-100" : "opacity-0"}`}
-                            />
-                            {aroma.aroma_name}
-                        </CommandItem>
-                        ))}
-                    </CommandList>
+                        <CommandInput placeholder="Search aroma..." />
+                        <CommandList>
+                            {aromas.map((aroma) => (
+                            <CommandItem
+                                key={aroma.aroma_id}
+                                onSelect={() => {
+                                onChange(aroma.aroma_id);
+                                setOpen(false);
+                                }}
+                            >
+                                <Check
+                                className={`mr-2 h-4 w-4 ${value === aroma.aroma_id ? "opacity-100" : "opacity-0"}`}
+                                />
+                                {aroma.aroma_name}
+                            </CommandItem>
+                            ))}
+                        </CommandList>
                     </Command>
                 </PopoverContent>
             </Popover>

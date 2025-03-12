@@ -11,6 +11,7 @@ export const getProductData = async (setData) => {
     }
 }
 
+// used in shop page
 export const getDetailedVariations = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/products/detailed-variations');

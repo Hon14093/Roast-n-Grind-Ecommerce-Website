@@ -38,6 +38,7 @@ export const getAllProductsDetails = async () => {
     });
 }
 
+// used in shop page
 export const getDetailedVariations = async () => {
     return await prisma.product.findMany({
         include: {

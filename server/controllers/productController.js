@@ -35,6 +35,7 @@ export const returnAllProductsDetails = async (req,res) => {
     }
 }
 
+// used in shop page
 export const returnDetailedVaritions = async (req, res) => {
     try {
         const detailedVariations = await getDetailedVariations();
