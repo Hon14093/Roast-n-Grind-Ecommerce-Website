@@ -120,6 +120,15 @@ export const getRoastLevels = async (setData) => {
     }
 }
 //Order ............................................
+export const getOrderDetails = async (order_id, setData) => {
+    try {
+        const result = await axios.get(`http://localhost:5000/api/orders/details/${order_id}`);
+        setData(result.data.details);
+    } catch (error) {
+        console.error("Error fetching order details:", error);
+    }
+}
+
 export const getAllOrders = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/orders');

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { getOrderDetails } from '@/hooks/productAPI'
+import { getOrderDetails } from "@/hooks/productAPI";
 
 export function ViewDetails({ order }) {
     const [details, setDetails] = useState([]);
