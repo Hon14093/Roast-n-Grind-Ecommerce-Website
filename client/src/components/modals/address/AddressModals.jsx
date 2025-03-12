@@ -161,14 +161,6 @@ export const EditAddress = ({ address, onSubmitSuccess }) => {
     const [postalCode, setPostalCode] = useState(address.postal_code);
     const [city, setCity] = useState(address.City.city_id); // this is city id
 
-    // const [firstName, setFirstName] = useState(address.address.first_name);
-    // const [lastName, setLastName] = useState(address.address.last_name);
-    // const [addressLine, setAddressLine] = useState(address.address.address_line);
-    // const [ward, setWard] = useState(address.address.ward); // phường
-    // const [district, setDistict] = useState(address.address.district); // quận or huyện
-    // const [postalCode, setPostalCode] = useState(address.address.postal_code);
-    // const [city, setCity] = useState(address.address.City.city_id); // this is city id
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
