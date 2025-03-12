@@ -11,10 +11,9 @@ import { Checkbox } from '../ui/checkbox'
 import { getAddressesByAccountId } from '@/hooks/addressAPI'
 import { useAuth } from '../context/AuthContext'
 
-export default function AddressDetails({ currentStep, nextStep }) {
+export default function AddressDetails({ addressId, setSelectedAddressId, nextStep }) {
     const { user } = useAuth();
     const { cartItems } = useCart();
-    const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [addresses, setAddresses] = useState([]);
 
     const totalPrice = (cartItems.length === 0)
@@ -28,6 +27,14 @@ export default function AddressDetails({ currentStep, nextStep }) {
     useEffect(() => {
         getAddressesByAccountId(user.account_id ,setAddresses);
     })
+
+    const isAddressChecked = () => {
+        if (addressId) {
+            nextStep();
+        } else {
+            alert('Hãy chọn địa chỉ giao hàng');
+        }
+    }
     
     return (
         <div className='grid grid-cols-12 gap-4'>
@@ -44,7 +51,7 @@ export default function AddressDetails({ currentStep, nextStep }) {
                         >
                             <Checkbox
                                 id={`address-${address.Address.address_id}`}
-                                checked={selectedAddressId === address.Address.address_id}
+                                checked={addressId === address.Address.address_id}
                                 onCheckedChange={(checked) => {
                                     if (checked) {
                                         setSelectedAddressId(address.Address.address_id);
@@ -78,7 +85,7 @@ export default function AddressDetails({ currentStep, nextStep }) {
                 </div>
 
                 <div className='pt-5'>
-                    <Button className='bg-darkOlive border-darkOlive border-2 w-full hover:bg-ivory hover:text-darkOlive' onClick={nextStep} disabled={currentStep === 3}>
+                    <Button className='bg-darkOlive border-darkOlive border-2 w-full hover:bg-ivory hover:text-darkOlive' onClick={isAddressChecked}>
                         Tiếp theo
                     </Button>
                 </div>

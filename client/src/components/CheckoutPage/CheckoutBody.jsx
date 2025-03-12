@@ -3,20 +3,18 @@ import { Progress } from '../ui/progress'
 import { Button } from '../ui/button'
 import logoBlack from '../../images/orange.png'
 import AddressDetails from './AddressDetails'
+import ChoosePayment from './ChoosePayment'
+import OrderSummary from './OrderSummary'
 import { useAuth } from '../context/AuthContext'
 
 export default function CheckoutBody() {
     const { user } = useAuth();
     const [step, setStep] = useState(1);
-    
-    
-    const nextStep = () => {
-        if (step < 3) setStep(step + 1);
-    }
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [pm_id, setPm_id] = useState(null);
 
-    const prevStep = () => {
-        if (step > 1) setStep(step - 1);
-    }
+    const nextStep = () => { if (step < 3) setStep(step + 1); }
+    const prevStep = () => { if (step > 1) setStep(step - 1); }
 
     return (
         <div className="p-4">
@@ -42,6 +40,10 @@ export default function CheckoutBody() {
                         <Button onClick={prevStep} disabled={step === 1}>Back</Button>
                         <Button onClick={nextStep} disabled={step === 3}>Next</Button>
                     </div> */}
+
+                    <Button onClick={() => console.log(pm_id)}>
+                        Test
+                    </Button>
                 </article>
             </section>
             
@@ -49,11 +51,26 @@ export default function CheckoutBody() {
             <div className="p-4 rounded-lg">
                 {step === 1 && 
                     <AddressDetails 
-                        currentStep={step} 
+                        addressId={selectedAddressId}
+                        setSelectedAddressId={setSelectedAddressId}
                         nextStep={nextStep} 
                 />}
-                {step === 2 && <Button onClick={prevStep} disabled={step === 1}>Back</Button>}
-                {step === 3 && <p>Review Your Order</p>}
+
+                {step === 2 && 
+                    <ChoosePayment 
+                        pm_id={pm_id}
+                        setPm_id={setPm_id}
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                    />}
+                    
+                {step === 3 && 
+                    <OrderSummary 
+                        addressId={selectedAddressId}
+                        pm_id={pm_id}
+                        prevStep={prevStep}
+                    />
+                }
             </div>
         </div>
     )
