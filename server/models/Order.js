@@ -61,20 +61,3 @@ export const getOrderByUserIDAndStatus = async (user_id, status) => {
     });
 }
 
-
-const { PrismaClient } = require('@prisma/client');
-
-exports.getAllOrders = async (req, res) => {
-    try {
-        const orders = await prisma.order.findMany({
-            include: {
-                Order_Status: true, // Lấy thông tin trạng thái
-                Order_Details: true, // Lấy chi tiết đơn hàng
-                Account: true // Lấy thông tin tài khoản
-            }
-        });
-        res.json({ orders });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
