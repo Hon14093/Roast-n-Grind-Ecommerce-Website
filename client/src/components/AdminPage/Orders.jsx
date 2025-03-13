@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useOrderActions } from '@/hooks/table-actions/useOrderActions';
 import { AddForm } from '@/components/modals/orders/AddForm';
 import { EditForm } from '@/components/modals/orders/EditForm';

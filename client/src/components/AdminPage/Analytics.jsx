@@ -1,4 +1,3 @@
-import React from "react";
 import { useAnalyticsActions } from "@/hooks/table-actions/useAnalyticsActions";
 import { AnalyticsDetailModal } from "@/components/modals/analytics/AnalyticsDetailModal";
 import { Bar } from "react-chartjs-2";
