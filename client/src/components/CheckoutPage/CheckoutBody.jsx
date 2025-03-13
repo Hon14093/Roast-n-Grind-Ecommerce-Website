@@ -8,7 +8,6 @@ import OrderSummary from './OrderSummary'
 import { useAuth } from '../context/AuthContext'
 
 export default function CheckoutBody() {
-    const { user } = useAuth();
     const [step, setStep] = useState(1);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [pm_id, setPm_id] = useState(null);
@@ -34,16 +33,7 @@ export default function CheckoutBody() {
                         <span className={step >= 3 ? "text-primary" : "text-gray-500"}>Tổng kết đơn hàng</span>
                     </div>
                     
-                    <Progress value={(step / 3) * 100} className="my-4" />
-        
-                    {/* <div className="mt-4 flex justify-between">
-                        <Button onClick={prevStep} disabled={step === 1}>Back</Button>
-                        <Button onClick={nextStep} disabled={step === 3}>Next</Button>
-                    </div> */}
-
-                    <Button onClick={() => console.log(pm_id)}>
-                        Test
-                    </Button>
+                    <Progress value={(step / 3) * 100} className="my-3" />
                 </article>
             </section>
             
@@ -63,7 +53,7 @@ export default function CheckoutBody() {
                         prevStep={prevStep}
                         nextStep={nextStep}
                     />}
-                    
+
                 {step === 3 && 
                     <OrderSummary 
                         addressId={selectedAddressId}

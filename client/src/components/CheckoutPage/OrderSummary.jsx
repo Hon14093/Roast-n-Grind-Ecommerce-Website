@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { ScrollArea } from '../ui/scroll-area'
 import { Separator } from '../ui/separator'
+import { Label } from '../ui/label';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useCart } from '../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
 import { useAuth } from '../context/AuthContext';
@@ -10,9 +13,11 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const { cartItems } = useCart();
     const { user } = useAuth();
     const [addresses, setAddresses] = useState([]);
+    const [sm_id, setSm_id] = useState(1);
+    const [shippingPrice, setShippingPrice] = useState(20000);
     const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
 
-    const totalPrice = (cartItems.length === 0)
+    const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
@@ -23,7 +28,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     return (
         <div className='grid grid-cols-12 gap-4'>
         
-            <section className='col-start-2 col-span-5 mx-auto w-full'>
+            <section className='col-start-2 col-span-6 mx-auto w-full'>
                 <h1 className='font-semibold uppercase text-2xl pb-2'>Tổng kết đơn hàng</h1>
                 <ScrollArea className='h-[400px]'>
                     
@@ -55,21 +60,31 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                 <Separator className='bg-darkOlive h-[0.5px] w-[75%] mb-4'/>
 
                 <div className=''>
-                    <article className="flex">
-                        <span>
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
                             Phí vận chuyển:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
+                            {shippingPrice} vnđ
                         </span>
                     </article>
 
-                    <article className="flex">
-                        <span>
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Voucher:
+                        </span>
+                        <span className="ml-auto pr-3">
+                            {/* {totalPrice + shippingPrice} vnđ */}
+                            - 0 vnđ
+                        </span>
+                    </article>
+
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
                             Tổng tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice} vnđ
+                            {totalPrice + shippingPrice} vnđ
                         </span>
                     </article>
 
@@ -77,7 +92,9 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
 
                 <article className='flex pt-4'>
                     <Button className='' variant='secondary' onClick={prevStep}>Quay lại</Button>
-                    <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>Đặt hàng</Button>
+                    <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
+                        Đặt hàng
+                    </Button>
                 </article>
             </section>
 
@@ -85,12 +102,34 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                 <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức vận chuyển</h1>
                     <Separator className='bg-darkOlive w-[50%] mb-2'/>
-                    
+
+                    <RadioGroup defaultValue="slow" className='col-start-2 grid gap-2'>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="slow" id="slow" onClick={() => {
+                                setSm_id(1);
+                                setShippingPrice(20000);
+                            }} />
+                            <Label htmlFor="slow" className='text-base flex gap-2'>
+                                Tiết kiệm
+                            </Label>
+                        </div>
+
+                        <div className="flex items-center space-x-2 ">
+                            <RadioGroupItem value="fast" id="fast" onClick={() => {
+                                setSm_id(2);
+                                setShippingPrice(40000);
+                            }} />
+                            <Label htmlFor="fast" className='text-base'>
+                                Hỏa tốc
+                            </Label>
+                        </div>
+                    </RadioGroup>   
                 </article>
 
                 <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Địa chỉ giao hàng</h1>
                     <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-2'/>
+
                     <div>
                         {selectedAddress ? (
                             <div>
@@ -103,18 +142,29 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             <p>Không có dữ liệu</p>
                         )}
                     </div>
-                    
-
                 </article>
 
-                <article>
+                <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức thanh toán</h1>
                     <Separator className='bg-darkOlive w-[50%] mb-2'/>
+
                     {pm_id === 1 ? (
                         <p className='text-lg'>Phương thức: Chuyển khoản</p>
                     ) : (
                         <p className='text-lg'>Phương thức: Visa</p>
                     )}
+                </article>
+
+                <article>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Voucher</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-3'/>
+
+                    <div className='flex gap-1'>
+                        <Input placeholder='Nhập mã voucher' className='border-darkOlive border-2 w-3/4 text-lg'/>
+                        <Button className='bg-darkOlive '>
+                            Áp dụng
+                        </Button>
+                    </div>
                 </article>
 
             </section>
