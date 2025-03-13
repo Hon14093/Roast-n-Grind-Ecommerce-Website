@@ -1,7 +1,8 @@
 import { 
     createCartDetail,
     getCartDetailsByCartId,
-    deleteCartDetailByCartIdAndPwId
+    deleteCartDetailByCartIdAndPwId,
+    deleteCartDetailsByCartId
 } from "../models/Cart_Details.js";
 
 import {
@@ -83,6 +84,21 @@ export const removeCartDetail = async (req,res) => {
         const pw_id = req.body.pw_id;
         
         const result = await deleteCartDetailByCartIdAndPwId(cart_id, pw_id);
+        res.status(200).json({
+            success: 1,
+            result
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+// this api is called after the order is added successfully
+export const removeCartDetailsByCartId = async (req,res) => {
+    try {
+        const { cart_id } = req.params;
+        const result = await deleteCartDetailsByCartId(cart_id);
         res.status(200).json({
             success: 1,
             result

@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useState } from "react";
-import { Edit } from 'lucide-react';
 import CityComboBox from '@/components/combobox/CityCombobox';
 import { createAddressFromUser, deleteAddress, updateAddress } from '@/hooks/addressAPI';
 import { useAuth } from '@/components/context/AuthContext';

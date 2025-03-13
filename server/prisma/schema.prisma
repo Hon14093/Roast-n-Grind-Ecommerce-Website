@@ -8,30 +8,17 @@ datasource db {
 }
 
 model Account {
-  account_id             String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  account_name           String                   @db.VarChar(50)
-  email                  String                   @unique(map: "email_unique") @db.VarChar(100)
-  phone                  String                   @db.VarChar(20)
-  password               String                   @db.VarChar(60)
-  is_admin               Boolean                  @default(false)
-  date_created           DateTime                 @default(now()) @db.Timestamp(6)
-  Account_Payment_Method Account_Payment_Method[]
-  Order                  Order[]
-  Review                 Review[]
-  Shopping_Cart          Shopping_Cart[]
-  User_Address           User_Address[]
-}
-
-model Account_Payment_Method {
-  apm_id         String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  provider       String         @db.VarChar(60)
-  account_number String         @db.VarChar(50)
-  expiry_date    DateTime       @db.Date
-  is_default     Boolean        @default(false)
-  account_id     String         @db.Uuid
-  method_id      Int
-  Account        Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_1")
-  Payment_Method Payment_Method @relation(fields: [method_id], references: [method_id], onDelete: Cascade, map: "fk_payment_2")
+  account_id    String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account_name  String          @db.VarChar(50)
+  email         String          @unique(map: "email_unique") @db.VarChar(100)
+  phone         String          @db.VarChar(20)
+  password      String          @db.VarChar(60)
+  is_admin      Boolean         @default(false)
+  date_created  DateTime        @default(now()) @db.Timestamp(6)
+  Order         Order[]
+  Review        Review[]
+  Shopping_Cart Shopping_Cart[]
+  User_Address  User_Address[]
 }
 
 model Address {
@@ -92,17 +79,19 @@ model Flavour_Note {
 
 model Order {
   order_id        String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  order_date      DateTime        @db.Timestamp(6)
+  order_date      DateTime        @default(now()) @db.Timestamp(6)
   order_total     Float           @db.Real
   note            String?         @db.VarChar(1024)
   account_id      String          @db.Uuid
   shipping_id     Int
-  status_id       Int
+  status_id       Int             @default(1)
   discount_id     String?         @db.Uuid
   address_id      String          @db.Uuid
+  method_id       Int
   Account         Account         @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_order")
   Discount        Discount?       @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fk_discount")
   Address         Address         @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_order_address")
+  Payment_Method  Payment_Method  @relation(fields: [method_id], references: [method_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_payment")
   Shipping_Method Shipping_Method @relation(fields: [shipping_id], references: [shipping_id], onDelete: Cascade, map: "fk_shipping")
   Order_Status    Order_Status    @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "fk_status")
   Order_Details   Order_Details[]
@@ -126,9 +115,9 @@ model Order_Status {
 }
 
 model Payment_Method {
-  method_id              Int                      @id @default(autoincrement())
-  method_name            String                   @db.VarChar(60)
-  Account_Payment_Method Account_Payment_Method[]
+  method_id   Int     @id @default(autoincrement())
+  method_name String  @db.VarChar(60)
+  Order       Order[]
 }
 
 model Product {
