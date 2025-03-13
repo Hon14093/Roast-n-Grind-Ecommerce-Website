@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createAccount, findAccountByEmail, getAllAccounts } from '../models/Account.js';
+import { getShoppingCartByUserId } from '../models/Shopping_Cart.js';
 
 dotenv.config();
 
@@ -75,10 +76,13 @@ export const login = async (req,res) => {
             return res.status(401).json({ message: 'Incorrect password.' });
         }
 
+        const cart = await getShoppingCartByUserId(account.account_id);
+
         // generate token
         const token = jwt.sign(
             {
                 account_id: account.account_id,
+                cart_id: cart.cart_id,
                 is_admin: account.is_admin
             },
             jwtSecret,

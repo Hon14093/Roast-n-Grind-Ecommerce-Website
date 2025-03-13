@@ -1,6 +1,7 @@
 import { 
     createCartDetail,
     getCartDetailsByCartId,
+    deleteCartDetailByCartIdAndPwId
 } from "../models/Cart_Details.js";
 
 import {
@@ -38,6 +39,53 @@ export const returnCartByAccountId = async (req,res) => {
         res.status(201).json({
             success: 1,
             cart
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnCartDetailsByCartId = async (req,res) => {
+    try {
+        const { cart_id } = req.params;
+        const details = await getCartDetailsByCartId(cart_id);
+
+        const formattedDetails = details.map(detail => ({
+            cd_id: detail.cd_id,
+            cart_id: detail.cart_id,
+            item_subtotal: detail.item_subtotal,
+            product_id: detail.Product_Weight.Product.product_id,
+            pw_id: detail.pw_id,
+            product_name: detail.Product_Weight.Product.product_name,
+            weight_id: detail.Product_Weight.Weight_Option.weight_id,
+            weight_name: detail.Product_Weight.Weight_Option.weight_name,
+            price: detail.Product_Weight.product_price,
+            image_url: detail.Product_Weight.Product.image_url,
+            grind: detail.is_ground,
+            quantity: detail.quantity,
+        }))
+
+        res.status(201).json({
+            success: 1,
+            formattedDetails
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const removeCartDetail = async (req,res) => {
+    try {
+        console.log(req.body)
+        const cart_id = req.body.cart_id;
+        const pw_id = req.body.pw_id;
+        
+        const result = await deleteCartDetailByCartIdAndPwId(cart_id, pw_id);
+        res.status(200).json({
+            success: 1,
+            result
         })
     } catch (error) {
         console.log(error);

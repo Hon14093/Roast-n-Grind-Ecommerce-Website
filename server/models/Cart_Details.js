@@ -8,20 +8,45 @@ export const createCartDetail = async (data) => {
     });
 };
 
-export const getAllCartDetails = async () => {
-    return await prisma.cart_Details.findMany();
-};
-
 export const getCartDetailsById = async (cd_id) => {
     return await prisma.cart_Details.findUnique({
         where: { cd_id }
     });
 };
 
+export const deleteCartDetailByCartIdAndPwId = async (cart_id, pw_id) => {
+    return await prisma.cart_Details.delete({
+        where: {
+            cart_id_pw_id: {
+                cart_id: cart_id,
+                pw_id: pw_id,
+            },
+        }
+    })
+}
+
 export const getCartDetailsByCartId = async (cart_id) => {
     return await prisma.cart_Details.findMany({
+        select: {
+            cd_id: true,
+            cart_id: true,
+            quantity: true,
+            pw_id: true,
+            item_subtotal: true,
+            is_ground: true,
+            Product_Weight: {
+                include: {
+                    Product: true,
+                    Weight_Option: true
+                }
+            }
+        },
         where: { cart_id }
     });
+};
+
+export const getAllCartDetails = async () => {
+    return await prisma.cart_Details.findMany();
 };
 
 export const updateCartDetail = async (cd_id, data) => {
@@ -110,4 +135,3 @@ export const getCartDetailsByCartIdAndFlavourIdAndWeightId = async (cart_id, fla
         }
     });
 };
-
