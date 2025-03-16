@@ -18,3 +18,22 @@ export const createOrderDetails = async (data) => {
         console.log(error)
     }
 }
+
+export const getOrderData = async (setData) => {
+    try {
+        const orders = await axios.get('http://localhost:5000/api/order/all');
+        // setData(orders.data.formatterdOrders)
+        setData(orders.data.orders)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getOrderDetailsData = async (order_id, setData) => {
+    try {
+        const orderDetails = await axios.get(`http://localhost:5000/api/order/details/all/${order_id}`)
+        setData(orderDetails.data.details)
+    } catch (error) {
+        console.log(error)
+    }
+}

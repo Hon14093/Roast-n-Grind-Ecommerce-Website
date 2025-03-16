@@ -16,6 +16,23 @@ export const createOrderDetails = async (data) => {
     });
 };
 
+export const getOrderDetailsByOrderId = async (orderId) => {
+    return await prisma.order_Details.findMany({
+        include: {
+            Product_Weight: {
+                include: {
+                    Product: true,
+                    Weight_Option: {
+                        select: { weight_name: true }
+                    }
+                }
+            }
+        },
+        where: { order_id: orderId }
+    });
+};
+
+
 
 export const findOrderDetailById = async (id) => {
     return await prisma.order_Details.findUnique({
@@ -27,11 +44,6 @@ export const getAllOrderDetails = async () => {
     return await prisma.order_Details.findMany();
 };
 
-export const getOrderDetailsByOrderId = async (orderId) => {
-    return await prisma.order_Details.findMany({
-        where: { order_id: orderId }
-    });
-};
 
 export const getOrderDetailsByProductWeight = async (pwId) => {
     return await prisma.order_Details.findMany({

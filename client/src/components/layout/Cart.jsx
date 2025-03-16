@@ -21,7 +21,7 @@ export default function Cart({ isOpen, toggleCart }) {
     // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
     // : 0;
 
-    const totalPrice = (cartItems.length === 0)
+    const totalPrice = (cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
     

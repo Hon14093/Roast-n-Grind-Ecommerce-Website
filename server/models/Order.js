@@ -5,12 +5,33 @@ export const createOrder = async (data) => {
     return await prisma.order.create({ data });
 }
 
-
-
-
 export const getAllOrders = async () => {
-    return await prisma.order.findMany();
+    const orders = await prisma.order.findMany({
+        include: {
+            Account: {
+                include: {
+                    password: false,
+                    is_admin: false,
+                    date_created: false
+                }
+            },
+            Order_Status: true,
+            Address: {
+                include: {
+                    City: true
+                }
+            },
+            Discount: true,
+            Shipping_Method: true
+        }
+    });
+
+    return orders.map(order => ({
+        ...order,
+        order_date: order.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
 }
+
 
 export const getOrderByID = async (order_id) => {
     return await prisma.order.findUnique({

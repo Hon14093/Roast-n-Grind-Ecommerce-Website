@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Breadcrumb,
@@ -13,8 +13,51 @@ import {
     SidebarInset,
     SidebarTrigger,
 } from "../ui/sidebar"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { PackagePlus } from 'lucide-react'
+import { Button } from '../ui/button.jsx'
+import { DataTable } from '../data-table.jsx'
+import { orderColumns } from '../columns.jsx'
+import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
+import { DetailsModal } from '../modals/order/OrderModals.jsx'
+
+import { getOrderData } from '@/hooks/orderAPI.jsx'
+import { Link } from 'react-router-dom'
+import { useOrderActions } from '@/hooks/table-actions/useOrderActions.js'
+
 
 function Orders() {
+    const [data, setData] = useState([]);
+
+    // function handleViewDetails() { console.log('details')}
+    // function handleEdit() {}
+
+    useEffect(() => {
+        getOrderData(setData)
+        
+    }, []);
+
+    const test = () => {
+        console.log(data)
+    }
+
+    const {
+        selectedOrder,
+        isDetailsModalOpen,
+        isEditModalOpen,
+        handleViewDetails,
+        handleEdit,
+        setIsDetailsModalOpen,
+        setIsEditModalOpen,
+    } = useOrderActions(data)
+
     return (
         <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -41,14 +84,58 @@ function Orders() {
                 </div>
             </header>
             
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                </div>
-                <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-            </div>
+            <Card className="mx-5">
+                <CardHeader>
+                    <div className='flex'>
+                        <div className='font-bold text-2xl'>
+                            Danh sách đơn hàng
+                        </div>
+
+                        <div className='ml-auto'>
+                                <Button variant='outline' className='mr-3' onClick={test}>
+                                    <PackagePlus />
+                                    Biến thể
+                                </Button>
+
+                            {/* <AddModal onSubmitSuccess={handleSubmitSuccess} /> */}
+                        </div>
+                    </div>                    
+                </CardHeader>
+
+                <CardContent>
+                    {/* <DataTable 
+                        columns={productColumns({
+                            onViewDetails: handleViewDetails,
+                            onEdit: handleEdit,
+                            onDelete: handleDelete
+                        })} 
+                        data={data} 
+                    /> */}
+
+                    <DataTable 
+                        columns={orderColumns({
+                            onViewDetails: handleViewDetails,
+                            onEdit: handleEdit,
+                        })} 
+                        data={data} 
+                    />
+
+                    <DetailsModal 
+                        order={selectedOrder}
+                        open={isDetailsModalOpen}
+                        onClose={() => setIsDetailsModalOpen(false)}
+                    />
+
+                    {/* <EditModal 
+                        product={selectedProduct}
+                        open={isEditModalOpen}
+                        onClose={() => setIsEditModalOpen(false)}
+                        onSubmitSuccess={handleSubmitSuccess}
+                    /> */}
+
+
+                </CardContent>
+            </Card>
         </SidebarInset>
     );
 }
