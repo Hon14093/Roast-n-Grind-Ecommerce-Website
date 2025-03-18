@@ -13,18 +13,17 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { createOrderDetails, placeOrder } from "@/hooks/orderAPI";
 import { useCart } from "@/components/context/CartContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/context/AuthContext";
 import { removeAllCartDetails } from "@/hooks/cartAPI";
 
 export const VisaModal = ({ orderData, totalPrice }) => {
-    const { cartItems } = useCart();
+    const { cartItems, reload } = useCart();
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [orderOpen, setOrderOpen] = useState(false);
     const navigate = useNavigate();
     
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         // setOrderOpen(true);
@@ -34,22 +33,34 @@ export const VisaModal = ({ orderData, totalPrice }) => {
             
             const orderDetails = cartItems.map((item) => ({
                 quantity: item.quantity,
-                subtotal: item.item_subtotal,
+                subtotal: item.price * item.quantity,
                 is_ground: item.grind,
                 order_id: res.newOrder.order_id,
                 pw_id: item.pw_id,
             }))
 
+            console.log('cart', cartItems)
+            console.log('details', orderDetails)
+
             const details = await createOrderDetails(orderDetails);
             const removeItems = await removeAllCartDetails(user.cart_id);
+
+            // this will open order complete modal and wait 2 secs
+            // then take user to main page
+            // 500ms later will refresh the page
+            // to reload the header cart
             if (details.success && removeItems.success) {
                 setOrderOpen(true);
                 localStorage.removeItem('cart');
 
                 setTimeout(() => {
                     setOrderOpen(false);
-                    navigate('/')
-                }, 3000)
+                    navigate('/');
+                }, 2000)
+
+                setTimeout(() => {
+                    location.reload();
+                }, 2500)
             }
             console.log(details);
 
@@ -116,14 +127,14 @@ export const VisaModal = ({ orderData, totalPrice }) => {
                                         <Input 
                                             id="month" name="month" 
                                             className='border-darkOlive w-2/5' 
-                                            placeHolder='Tháng'
+                                            placeholder='Tháng'
                                             required 
                                         />
                                         <p className="self-center">/</p>
                                         <Input 
                                             id="year" name="year" 
                                             className='border-darkOlive w-3/5' 
-                                            placeHolder='Năm'                               
+                                            placeholder='Năm'                               
                                         />
                                     </div>
                                 </div>

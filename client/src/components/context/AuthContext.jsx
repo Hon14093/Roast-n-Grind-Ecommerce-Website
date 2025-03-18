@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('cart');
+        // localStorage.setItem("cart", JSON.stringify([]));
         setUser(null);
         setIsLoggedIn(false);
     };

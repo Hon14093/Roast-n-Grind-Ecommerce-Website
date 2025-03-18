@@ -37,3 +37,21 @@ export const getOrderDetailsData = async (order_id, setData) => {
         console.log(error)
     }
 }
+
+export const getUnprocessedOrders = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/order/unprocessed');
+        setData(result.data.unprocessed)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getProcessedOrders = async () => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/order/processed');
+        return result.data;
+    } catch (error) {
+        console.log(error)
+    }
+}

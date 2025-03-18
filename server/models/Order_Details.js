@@ -10,6 +10,7 @@ export const createOrderDetail = async (data) => {
 // pay attention to which function you actually want to import
 // one is plural and one is singular 
 export const createOrderDetails = async (data) => {
+    console.log(data)
     return await prisma.order_Details.createMany({ 
         data,
         skipDuplicates: true

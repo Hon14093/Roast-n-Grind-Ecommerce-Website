@@ -10,7 +10,7 @@ function Header({ darkBG = true, toggleCart }) {
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isTop, setIsTop] = useState(true);
     const { getTotalItems } = useCart();
-    const totalItems = getTotalItems();
+    const totalItems = getTotalItems(); // this counts how many items are there in cart, not total price
     const { isLoggedIn } = useAuth()
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { createOrder, getAllOrders } from "../models/Order.js";
+import { createOrder, getAllOrders, getRemainingOrders, getUnprocessedOrders } from "../models/Order.js";
 import { createOrderDetails, getOrderDetailsByOrderId } from "../models/Order_Details.js";
 
 export const addOrder = async (req,res) => {
@@ -48,6 +48,26 @@ export const returnAllOrders = async (req,res) => {
     try {
         const orders = await getAllOrders();
         res.status(201).json({orders});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnUnprocessedOrders = async (req,res) => {
+    try {
+        const unprocessed = await getUnprocessedOrders();
+        res.status(201).json({unprocessed});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnRemainingOrders = async (req,res) => {
+    try {
+        const remaining = await getRemainingOrders();
+        res.status(201).json({remaining})
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });

@@ -1,5 +1,6 @@
 import { TableActionsDropdown } from "./table-actions-dropdown";
 import { OrderTableActionsDropdown } from "./table-actions-dropdown";
+import { Button } from "./ui/button";
 
 // this account columns is not finished
 export const accountColumns = [
@@ -118,4 +119,12 @@ export const orderDetailsColumns = [
     { accessorKey: "Product_Weight.product_price", header: "Giá" },
     { accessorKey: "quantity", header: "Số Lượng" },
     { accessorKey: "subtotal", header: "Thành Tiền" },
+]
+
+export const checkOrdersColumns = [
+    { accessorKey: "order_id", header: "ID Đơn Hàng" },
+    { accessorKey: "order_date", header: "Ngày Đặt" },
+    { accessorKey: "order_total", header: "Tổng Tiền" },
+    { accessorKey: "Account.account_name", header: "Tài Khoản" },
+    
 ]

@@ -32,6 +32,41 @@ export const getAllOrders = async () => {
     }));
 }
 
+export const getUnprocessedOrders = async () => {
+    const result = await prisma.order.findMany({
+        include: {
+            Account: {
+                select: { account_name: true }
+            },
+            Address: true,
+            Order_Status: true,
+            Shipping_Method: true,
+            Discount: {
+                select: { discount_code: true }
+            }
+        },
+        where: {
+            status_id: 1
+        }
+    })
+
+    return result.map(res => ({
+        ...res,
+        order_date: res.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const getRemainingOrders = async () => {
+    return await prisma.order.findMany({
+        where: {
+            NOT: {
+                status_id: 1
+            }
+        }
+    })
+}
+
+
 
 export const getOrderByID = async (order_id) => {
     return await prisma.order.findUnique({

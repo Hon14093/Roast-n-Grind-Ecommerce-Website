@@ -26,6 +26,11 @@ export default function AccountBody() {
                         <button onClick={() => {
                             logout();
                             navigate('/');
+                            // location.reload();
+                            // setTimeout(() => {
+                            //     location.reload();
+                            //     console.log('Logged out')
+                            // }, 1000)
                         }}>
                             logout
                         </button>

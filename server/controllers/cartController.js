@@ -62,6 +62,7 @@ export const returnCartDetailsByCartId = async (req,res) => {
             weight_id: detail.Product_Weight.Weight_Option.weight_id,
             weight_name: detail.Product_Weight.Weight_Option.weight_name,
             price: detail.Product_Weight.product_price,
+            item_subtotal: detail.Product_Weight.product_price * detail.quantity,
             image_url: detail.Product_Weight.Product.image_url,
             grind: detail.is_ground,
             quantity: detail.quantity,

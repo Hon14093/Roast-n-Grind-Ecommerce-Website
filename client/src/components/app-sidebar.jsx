@@ -27,7 +27,6 @@ import {
   SidebarRail,
 } from "../components/ui/sidebar"
 
-// This is sample data.
 const data = {
   // bottom left avatar
   user: {
@@ -35,6 +34,7 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
+
   teams: [
     {
       name: "Roast & Grind",
@@ -42,25 +42,12 @@ const data = {
       plan: "Coffee beans",
     },
   ],
+
   navMain: [
     {
       title: "Thống kê",
       url: "http://localhost:5173/admin/analytics",
       icon: SquareTerminal,
-      // items: [
-      //   {
-      //     title: "History",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Starred",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Settings",
-      //     url: "#",
-      //   },
-      // ],
     },
     {
       title: "Quản lý",
@@ -79,6 +66,10 @@ const data = {
         {
           title: "Đơn hàng",
           url: "http://localhost:5173/admin/orders",
+        },
+        {
+          title: "Duyệt đơn hàng",
+          url: "http://localhost:5173/admin/check-orders",
         },
         {
           title: "Sản phẩm",

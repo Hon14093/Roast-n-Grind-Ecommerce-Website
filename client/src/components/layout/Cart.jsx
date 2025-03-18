@@ -21,9 +21,21 @@ export default function Cart({ isOpen, toggleCart }) {
     // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
     // : 0;
 
-    const totalPrice = (cartItems.length !== 0)
+    const totalPrice = (cartItems && cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
+
+    // const test = () => {
+    //     try {
+    //         if (cartItems.length > 0) {
+    //             return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    //         } else {
+    //             return 0;
+    //         }
+    //     } catch (error) {
+    //         return 0;
+    //     }
+    // }
     
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
@@ -92,7 +104,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Tổng tiền:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice} vnđ
+                                            {totalPrice} vnđ                                            
                                         </span>
                                     </article>
 
@@ -101,7 +113,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Phí vận chuyển:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
+                                            {/* {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'} */}
                                         </span>
                                     </article>
                                 </div>
@@ -112,7 +124,7 @@ export default function Cart({ isOpen, toggleCart }) {
 
                                 <Separator className='bg-darkOlive h-[0.5px] mx-auto max-w-[80%]'/>
 
-                                {cartItems.length > 0 ? (
+                                {(cartItems && cartItems.length > 0) ? (
                                     cartItems.map((item) => (
                                         <div
                                             key={`${item.product_id}-${item.weight_id}`}
