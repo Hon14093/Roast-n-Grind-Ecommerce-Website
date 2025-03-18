@@ -4,22 +4,36 @@ import { Separator } from '../ui/separator'
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useCart } from '../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
 import { useAuth } from '../context/AuthContext';
+import { VisaModal } from '../modals/payment/PaymentModals';
 
 export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const { cartItems } = useCart();
     const { user } = useAuth();
     const [addresses, setAddresses] = useState([]);
+    const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
     const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
-
+    const [discount_id, setDiscount_id] = useState(null); // haven't figured out this one yet
     const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
+    
+    
+    const orderData = {
+        order_total: totalPrice + shippingPrice,
+        note: note,
+        account_id: user.account_id,
+        shipping_id: sm_id,
+        discount_id: discount_id,
+        address_id: addressId,
+        method_id: pm_id
+    }
 
     useEffect(() => {
         getAddressesByAccountId(user.account_id ,setAddresses);
@@ -46,9 +60,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             <div>
                                 <p className="font-medium">{item.product_name}</p>
                                 <p className="text-base">Size: {item.weight_name}</p>
-                                <div className="text-base flex flex-nowrap gap-4 items-center">
-                                    <span className="w-[5rem]">Số lượng: {item.quantity}</span>
-                                </div>
+                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
                                 <p className="text-base">Thành tiền: {item.price}</p>
                             </div>
@@ -92,9 +104,11 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
 
                 <article className='flex pt-4'>
                     <Button className='' variant='secondary' onClick={prevStep}>Quay lại</Button>
-                    <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
+                    {/* <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
                         Đặt hàng
-                    </Button>
+                    </Button> */}
+
+                    <VisaModal orderData={orderData} totalPrice={totalPrice} />
                 </article>
             </section>
 
@@ -155,16 +169,27 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                     )}
                 </article>
 
-                <article>
+                <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Voucher</h1>
                     <Separator className='bg-darkOlive w-[50%] mb-3'/>
 
                     <div className='flex gap-1'>
                         <Input placeholder='Nhập mã voucher' className='border-darkOlive border-2 w-3/4 text-lg'/>
-                        <Button className='bg-darkOlive '>
+                        <Button className='bg-darkOlive' onClick={() => console.log(orderData)}>
                             Áp dụng
                         </Button>
                     </div>
+                </article>
+
+                <article>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Ghi chú</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-3'/>
+
+                    <Textarea 
+                        className='border-darkOlive border-2' 
+                        placeholder="Hãy nhập ghi chú của bạn (nếu có)" 
+                        onChange={(e) => setNote(e.target.value)}
+                    />
                 </article>
 
             </section>

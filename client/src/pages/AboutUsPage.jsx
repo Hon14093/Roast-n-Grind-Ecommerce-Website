@@ -18,7 +18,7 @@ function AboutUsPage() {
                 <Cart isOpen={isOpen} toggleCart={toggleCart} />
                 <Header toggleCart={toggleCart}/>
 
-                <main className='px-10 relative bg-darkOlive z-10'>
+                <main className='px-10 relative bg-darkOlive z-10 '>
                     <AboutUsBody />
                 </main>
 

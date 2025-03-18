@@ -1,18 +1,77 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const getAllOrders = async () => {
-    return await prisma.order.findMany();
+export const createOrder = async (data) => {
+    return await prisma.order.create({ data });
 }
+
+export const getAllOrders = async () => {
+    const orders = await prisma.order.findMany({
+        include: {
+            Account: {
+                include: {
+                    password: false,
+                    is_admin: false,
+                    date_created: false
+                }
+            },
+            Order_Status: true,
+            Address: {
+                include: {
+                    City: true
+                }
+            },
+            Discount: true,
+            Shipping_Method: true
+        }
+    });
+
+    return orders.map(order => ({
+        ...order,
+        order_date: order.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const getUnprocessedOrders = async () => {
+    const result = await prisma.order.findMany({
+        include: {
+            Account: {
+                select: { account_name: true }
+            },
+            Address: true,
+            Order_Status: true,
+            Shipping_Method: true,
+            Discount: {
+                select: { discount_code: true }
+            }
+        },
+        where: {
+            status_id: 1
+        }
+    })
+
+    return result.map(res => ({
+        ...res,
+        order_date: res.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const getRemainingOrders = async () => {
+    return await prisma.order.findMany({
+        where: {
+            NOT: {
+                status_id: 1
+            }
+        }
+    })
+}
+
+
 
 export const getOrderByID = async (order_id) => {
     return await prisma.order.findUnique({
         where: { order_id }
     });
-}
-
-export const createOrder = async (data) => {
-    return await prisma.order.create({ data });
 }
 
 export const deleteOrder = async (order_id) => {

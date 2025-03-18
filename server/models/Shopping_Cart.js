@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const createShoppingCart = async (data) => {
+export const createShoppingCart = async (accountId) => {
     return await prisma.shopping_Cart.create({
-        data: data
+        data: {
+            account_id: accountId
+        }
     });
 }
 

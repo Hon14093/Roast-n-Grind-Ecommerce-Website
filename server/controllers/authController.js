@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createAccount, findAccountByEmail, getAllAccounts } from '../models/Account.js';
-import { getShoppingCartByUserId } from '../models/Shopping_Cart.js';
+import { createShoppingCart, getShoppingCartByUserId } from '../models/Shopping_Cart.js';
 
 dotenv.config();
 
@@ -33,9 +33,15 @@ export const register = async (req,res) => {
         const newAccount = await createAccount(req.body);
         console.log(newAccount);
 
+        let newCart;
+        if (newAccount) {
+            newCart = await createShoppingCart(newAccount.account_id);
+        }
+
         const token = jwt.sign(
             {
                 account_id: newAccount.account_id,
+                cart_id: newCart.cart_id,
                 is_admin: false
             },
             jwtSecret,

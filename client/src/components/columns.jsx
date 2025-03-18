@@ -1,4 +1,6 @@
 import { TableActionsDropdown } from "./table-actions-dropdown";
+import { OrderTableActionsDropdown } from "./table-actions-dropdown";
+import { Button } from "./ui/button";
 
 // this account columns is not finished
 export const accountColumns = [
@@ -89,4 +91,40 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
             )
         }
     }
+]
+
+export const orderColumns = ({ onViewDetails, onEdit }) => [
+    { accessorKey: "order_id", header: "ID Đơn Hàng" },
+    { accessorKey: "order_date", header: "Ngày Đặt" },
+    { accessorKey: "order_total", header: "Tổng Tiền" },
+    { accessorKey: "Order_Status.status_name", header: "Trạng Thái" },
+    {
+        id: "action",
+        cell: ({ row }) => {
+            const order = row.original;
+
+            return (
+                <OrderTableActionsDropdown 
+                    onViewDetails={() => onViewDetails(order.order_id)}
+                    onEdit={() => onEdit(order.order_id)}
+                />
+            )
+        }
+    }
+]
+
+export const orderDetailsColumns = [
+    { accessorKey: "Product_Weight.Product.product_name", header: "Tên Sản Phẩm" },
+    { accessorKey: "Product_Weight.Weight_Option.weight_name", header: "Cân Nặng" },
+    { accessorKey: "Product_Weight.product_price", header: "Giá" },
+    { accessorKey: "quantity", header: "Số Lượng" },
+    { accessorKey: "subtotal", header: "Thành Tiền" },
+]
+
+export const checkOrdersColumns = [
+    { accessorKey: "order_id", header: "ID Đơn Hàng" },
+    { accessorKey: "order_date", header: "Ngày Đặt" },
+    { accessorKey: "order_total", header: "Tổng Tiền" },
+    { accessorKey: "Account.account_name", header: "Tài Khoản" },
+    
 ]

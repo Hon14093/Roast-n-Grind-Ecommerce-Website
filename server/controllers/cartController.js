@@ -1,7 +1,8 @@
 import { 
     createCartDetail,
     getCartDetailsByCartId,
-    deleteCartDetailByCartIdAndPwId
+    deleteCartDetailByCartIdAndPwId,
+    deleteCartDetailsByCartId
 } from "../models/Cart_Details.js";
 
 import {
@@ -61,6 +62,7 @@ export const returnCartDetailsByCartId = async (req,res) => {
             weight_id: detail.Product_Weight.Weight_Option.weight_id,
             weight_name: detail.Product_Weight.Weight_Option.weight_name,
             price: detail.Product_Weight.product_price,
+            item_subtotal: detail.Product_Weight.product_price * detail.quantity,
             image_url: detail.Product_Weight.Product.image_url,
             grind: detail.is_ground,
             quantity: detail.quantity,
@@ -83,6 +85,21 @@ export const removeCartDetail = async (req,res) => {
         const pw_id = req.body.pw_id;
         
         const result = await deleteCartDetailByCartIdAndPwId(cart_id, pw_id);
+        res.status(200).json({
+            success: 1,
+            result
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+// this api is called after the order is added successfully
+export const removeCartDetailsByCartId = async (req,res) => {
+    try {
+        const { cart_id } = req.params;
+        const result = await deleteCartDetailsByCartId(cart_id);
         res.status(200).json({
             success: 1,
             result

@@ -8,6 +8,7 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
     const { user } = useAuth(); // cart_id, account_id, is_admin
     const [cartItems, setCartItems] = useState([]);
+    const [load, reload] = useState();
 
     // example data from api
     // {
@@ -38,7 +39,6 @@ export function CartProvider({ children }) {
                     // else set them in localstorage as 'cart'
                     itemsInDB = await getCartDetailsByCartId(user.cart_id);
                     const temp = JSON.parse(localStorage.getItem("cart")).items;
-
                     
                     if (temp) {
                         const cartDetailsData = temp.map(item => ({
@@ -74,6 +74,7 @@ export function CartProvider({ children }) {
         };
     
         fetchCart();
+        
     }, [user]); 
     
     // setTimeout(() => {
@@ -124,8 +125,9 @@ export function CartProvider({ children }) {
         );
     };
 
+    // this returns the number of items in cart, not total price
     const getTotalItems = () => {
-        return cartItems.reduce((total, item) => total + item.quantity, 0);
+        return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
     }
 
     const updateQuantity = (product_id, weight_id, newQuantity) => {
@@ -140,6 +142,8 @@ export function CartProvider({ children }) {
 
     const data = {
         cartItems,
+        load,
+        reload,
         updateCart,
         getTotalItems,
         updateQuantity,

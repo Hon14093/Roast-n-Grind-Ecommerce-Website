@@ -26,6 +26,7 @@ export const deleteCartDetailByCartIdAndPwId = async (cart_id, pw_id) => {
 }
 
 export const getCartDetailsByCartId = async (cart_id) => {
+    console.log(cart_id)
     return await prisma.cart_Details.findMany({
         select: {
             cd_id: true,
@@ -45,6 +46,12 @@ export const getCartDetailsByCartId = async (cart_id) => {
     });
 };
 
+export const deleteCartDetailsByCartId = async (cart_id) => {
+    return await prisma.cart_Details.deleteMany({
+        where: { cart_id }
+    });
+};
+
 export const getAllCartDetails = async () => {
     return await prisma.cart_Details.findMany();
 };
@@ -56,11 +63,6 @@ export const updateCartDetail = async (cd_id, data) => {
     });
 };
 
-export const deleteCartDetail = async (cd_id) => {
-    return await prisma.cart_Details.delete({
-        where: { cd_id }
-    });
-};
 
 export const getCartDetailsByProductId = async (product_id) => {
     return await prisma.cart_Details.findMany({
