@@ -39,6 +39,7 @@ function App() {
                         <Route path='/signup' element={<SignupPage />} />
                         <Route path='/account' element={<AccountPage />} />
                         <Route path='/checkout' element={<CheckoutPage />} />
+                        
 
                         {/* Admin UI */}
                         <Route path='/admin/*' element={<AdminPage />} />
