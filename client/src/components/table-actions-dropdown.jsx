@@ -36,3 +36,25 @@ export function TableActionsDropdown({ onViewDetails, onEdit, onDelete}) {
         </DropdownMenu>
     )
 }
+
+export function OrderTableActionsDropdown({ onViewDetails, onEdit }) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant='ghost'>
+                    <MoreHorizontal />
+                </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align='end'>
+                <DropdownMenuItem onClick={onViewDetails}>
+                    Xem chi tiết
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={onEdit}>
+                    Sửa
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}

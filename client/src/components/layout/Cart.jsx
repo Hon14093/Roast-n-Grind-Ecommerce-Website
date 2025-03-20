@@ -15,50 +15,16 @@ export default function Cart({ isOpen, toggleCart }) {
     const { user } = useAuth();
     const { cartItems, updateQuantity, removeFromCart } = useCart();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!user?.account_id || !isOpen) return;
+    // const totalPrice = Array.isArray(cartItems) && cartItems.length > 0
+    // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    // : 0;
 
-        const fetchCart = async () => {
-            setLoading(true);
-            try {
-                const cartData = await getCartByAccountId(user.account_id);
-                if (cartData?.cart_id) {
-                    const details = await getCartDetailsByCartId(cartData.cart_id);
-                    details.forEach(item => {
-                        updateQuantity(
-                            item.product_id,
-                            item.weight_id,
-                            item.quantity,
-                            {
-                                pw_id: item.pw_id,
-                                product_name: item.product_name,
-                                price: item.price,
-                                grind: item.is_ground,
-                                image_url: item.image_url,
-                                weight_name: item.weight_name,
-                            }
-                        );
-                    });
-                }
-                setError(null);
-            } catch (err) {
-                setError(err.message || "Không thể tải giỏ hàng.");
-                console.error(err);
-            }
-            setLoading(false);
-        };
-
-        fetchCart();
-    }, [user, isOpen, updateQuantity]);
-
-    const totalPrice = cartItems.length > 0
+    const totalPrice = (cartItems.length === 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
-
-    const handleQuantityChange = async (product_id, weight_id, pw_id, newQuantity) => {
+    
+    const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
             try {
                 await updateCartDetail(user.cart_id, pw_id, newQuantity);
@@ -133,24 +99,25 @@ const handleOrder = async () => {
                     <div className="flex-1 overflow-hidden">
                         <ScrollArea className="h-[calc(100vh-100px)]">
                             <CardContent className="pt-5 grid gap-4 text-lg">
-                                {loading ? (
-                                    <p className="text-center text-gray-600">Đang tải giỏ hàng...</p>
-                                ) : error ? (
-                                    <p className="text-center text-red-600">{error}</p>
-                                ) : (
-                                    <>
-                                        <div>
-                                            <article className="flex">
-                                                <span>Tổng tiền:</span>
-                                                <span className="ml-auto">{totalPrice} vnđ</span>
-                                            </article>
-                                            <article className="flex">
-                                                <span>Phí vận chuyển:</span>
-                                                <span className="ml-auto">
-                                                    {totalPrice < 100000 ? "30,000 vnđ" : "Miễn phí"}
-                                                </span>
-                                            </article>
-                                        </div>
+                                <div>
+                                    <article className="flex">
+                                        <span>
+                                            Tổng tiền:
+                                        </span>
+                                        <span className="ml-auto">
+                                            {totalPrice} vnđ
+                                        </span>
+                                    </article>
+
+                                    <article className="flex">
+                                        <span>
+                                            Phí vận chuyển:
+                                        </span>
+                                        <span className="ml-auto">
+                                            {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
+                                        </span>
+                                    </article>
+                                </div>
 
                                         <button
                                             className="big-action-button w-full text-ivory bg-darkOlive hover:bg-darkOlive/90 py-2 rounded-md"
@@ -162,65 +129,55 @@ const handleOrder = async () => {
 
                                         <Separator className="bg-darkOlive h-[0.5px] mx-auto max-w-[80%]" />
 
-                                        {cartItems.length > 0 ? (
-                                            cartItems.map((item) => (
-                                                <div
-                                                    key={`${item.product_id}-${item.weight_id}`}
-                                                    className="flex items-start gap-4 mb-4"
-                                                >
-                                                    <img
-                                                        src={item.image_url}
-                                                        alt={item.product_name}
-                                                        className="w-28 h-28 object-cover rounded"
+                                {cartItems.length > 0 ? (
+                                    cartItems.map((item) => (
+                                        <div
+                                            key={`${item.product_id}-${item.weight_id}`}
+                                            className="flex items-start gap-4 mb-4"
+                                        >
+                                            <img
+                                                src={item.image_url}
+                                                alt={item.product_name}
+                                                className="w-28 h-28 object-cover rounded"
+                                            />
+
+                                            <div>
+                                                <p className="font-medium">{item.product_name}</p>
+                                                <p className="text-base">Size: {item.weight_name}</p>
+                                                <div className="text-base flex flex-nowrap gap-4 items-center">
+                                                    <span className="w-[5rem]">Số lượng: </span>
+                                                    <Input 
+                                                        type="number" 
+                                                        className='max-w-20 h-7 border border-darkOlive' 
+                                                        value={item.quantity}
+                                                        // onChange={handleQuantityChange}
+                                                        onChange={(e) => handleQuantityChange(
+                                                            item.product_id,
+                                                            item.weight_id,
+                                                            parseInt(e.target.value)
+                                                        )}
+                                                        min="1" max="10"
                                                     />
-                                                    <div className="flex-1">
-                                                        <p className="font-medium">{item.product_name}</p>
-                                                        <p className="text-base">Size: {item.weight_name}</p>
-                                                        <div className="text-base flex flex-nowrap gap-4 items-center">
-                                                            <span className="w-[5rem]">Số lượng:</span>
-                                                            <Input
-                                                                type="number"
-                                                                className="max-w-20 h-7 border border-darkOlive"
-                                                                value={item.quantity}
-                                                                onChange={(e) =>
-                                                                    handleQuantityChange(
-                                                                        item.product_id,
-                                                                        item.weight_id,
-                                                                        item.pw_id,
-                                                                        parseInt(e.target.value)
-                                                                    )
-                                                                }
-                                                                min="1"
-                                                                max="10"
-                                                            />
-                                                        </div>
-                                                        <p className="text-base">
-                                                            Xay: {item.grind ? "Có" : "Không"}
-                                                        </p>
-                                                        <p className="text-base">
-                                                            Thành tiền: {item.price * item.quantity} vnđ
-                                                        </p>
-                                                    </div>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleRemoveItem(
-                                                                item.product_id,
-                                                                item.weight_id,
-                                                                item.pw_id
-                                                            )
-                                                        }
-                                                        className="h-full my-auto"
-                                                    >
-                                                        <Trash2 size={25} className="text-crimsonRed" />
-                                                    </button>
                                                 </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-sm text-muted-foreground">
-                                                Không có sản phẩm trong giỏ hàng.
-                                            </p>
-                                        )}
-                                    </>
+                                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
+                                                <p className="text-base">Thành tiền: {item.price}</p>
+                                            </div>
+
+                                            <div className="h-full ml-auto">
+                                                <button 
+                                                    onClick={() => {
+                                                        removeFromCart(item.product_id, item.weight_id);
+                                                        removeCartDetail(user.cart_id, item.pw_id);
+                                                    }} 
+                                                    className="h-full my-auto">
+                                                    <Trash2 size={25} className="text-crimsonRed" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">
+                                        Không có sản phẩm trong giỏ hàng.</p>
                                 )}
                             </CardContent>
                         </ScrollArea>

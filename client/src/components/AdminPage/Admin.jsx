@@ -9,6 +9,7 @@ import Analytics from "./Analytics.jsx"
 import Discounts from "./Discounts.jsx"
 import Products from "./Products.jsx"
 import Orders from "./Orders.jsx"
+import CheckOrders from "./CheckOrders.jsx"
 import Variations from "./Variations.jsx"
 
 export default function Admin() {
@@ -25,6 +26,7 @@ export default function Admin() {
                 <Route path="/products" element={<Products />} />    
                 <Route path="/products/variations" element={<Variations />} />
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/check-orders" element={<CheckOrders />} />
             </Routes>
 
         </SidebarProvider>

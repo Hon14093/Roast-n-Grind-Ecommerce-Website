@@ -1,13 +1,4 @@
-
-// import { useEffect } from 'react';
-// import { useOrderActions } from '@/hooks/table-actions/useOrderActions';
-// import { AddForm } from '@/components/modals/orders/AddForm';
-// import { EditForm } from '@/components/modals/orders/EditForm';
-// import { ViewDetails } from '@/components/modals/orders/ViewDetails';
-// import React from 'react'
-
 import React, { useEffect, useState } from 'react'
-
 
 import {
     Breadcrumb,
@@ -33,39 +24,55 @@ import {
 import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
-import { orderColumns } from '../columns.jsx'
-import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
-import { DetailsModal } from '../modals/order/OrderModals.jsx'
+import { checkOrdersColumns } from '../columns.jsx'
 
-import { getOrderData } from '@/hooks/orderAPI.jsx'
+import { getUnprocessedOrders } from '@/hooks/orderAPI.jsx'
+import { DetailsModal } from '../modals/order/OrderModals.jsx'
 import { Link } from 'react-router-dom'
 import { useOrderActions } from '@/hooks/table-actions/useOrderActions.js'
 
 
-function Orders() {
+export default function CheckOrders() {
     const [data, setData] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
     // function handleViewDetails() { console.log('details')}
     // function handleEdit() {}
 
     useEffect(() => {
-        getOrderData(setData)
-        
+        getUnprocessedOrders(setData);
     }, []);
 
     const test = () => {
         console.log(data)
     }
 
-    const {
-        selectedOrder,
-        isDetailsModalOpen,
-        isEditModalOpen,
-        handleViewDetails,
-        handleEdit,
-        setIsDetailsModalOpen,
-        setIsEditModalOpen,
-    } = useOrderActions(data)
+    const handleViewDetails = (order) => {
+        setSelectedOrder(order);
+        setIsDetailsModalOpen(true);
+    };
+
+    const columnsWithActions = [
+        ...checkOrdersColumns,
+        {
+            header: "Hành Động",
+            id: "actions",
+            cell: ({ row }) => (
+                <div className='flex gap-2'>
+                    <Button size="sm" className='bg-blue-600' onClick={() => handleViewDetails(row.original)}>
+                        Chi Tiết
+                    </Button>
+                    <Button size="sm" className="bg-green-500 border border-green-500 hover:bg-white hover:text-green-500" >
+                        Duyệt
+                    </Button>
+                    <Button size="sm" className="bg-red-500" >
+                        Hủy
+                    </Button>
+                </div>
+            )
+        }
+    ];
 
     return (
         <SidebarInset>
@@ -86,7 +93,7 @@ function Orders() {
                             <BreadcrumbSeparator className="hidden md:block" />
 
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Đơn hàng</BreadcrumbPage>
+                                <BreadcrumbPage>Duyệt đơn hàng</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -97,37 +104,24 @@ function Orders() {
                 <CardHeader>
                     <div className='flex'>
                         <div className='font-bold text-2xl'>
-                            Danh sách đơn hàng
+                            Danh sách đơn hàng chưa duyệt
                         </div>
 
                         <div className='ml-auto'>
-                                <Button variant='outline' className='mr-3' onClick={test}>
-                                    <PackagePlus />
-                                    Biến thể
-                                </Button>
-
-                            {/* <AddModal onSubmitSuccess={handleSubmitSuccess} /> */}
+                            <Button variant='outline' className='mr-3' onClick={test}>
+                                <PackagePlus />
+                                Biến thể
+                            </Button>
                         </div>
                     </div>                    
                 </CardHeader>
 
                 <CardContent>
-                    {/* <DataTable 
-                        columns={productColumns({
-                            onViewDetails: handleViewDetails,
-                            onEdit: handleEdit,
-                            onDelete: handleDelete
-                        })} 
-                        data={data} 
-                    /> */}
-
                     <DataTable 
-                        columns={orderColumns({
-                            onViewDetails: handleViewDetails,
-                            onEdit: handleEdit,
-                        })} 
+                        columns={columnsWithActions} 
                         data={data} 
                     />
+
 
                     <DetailsModal 
                         order={selectedOrder}
@@ -146,7 +140,5 @@ function Orders() {
                 </CardContent>
             </Card>
         </SidebarInset>
-    );
+    )
 }
-
-export default Orders

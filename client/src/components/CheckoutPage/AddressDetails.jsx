@@ -113,9 +113,7 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
                             <div>
                                 <p className="font-medium">{item.product_name}</p>
                                 <p className="text-base">Size: {item.weight_name}</p>
-                                <div className="text-base flex flex-nowrap gap-4 items-center">
-                                    <span className="w-[5rem]">Số lượng: {item.quantity}</span>
-                                </div>
+                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
                                 <p className="text-base">Thành tiền: {item.price}</p>
                             </div>

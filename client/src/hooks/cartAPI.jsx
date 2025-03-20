@@ -48,6 +48,7 @@ export const removeCartDetail = async (cart_id, pw_id) => {
     if (!cart_id || !pw_id) {
         throw new Error("cart_id hoặc pw_id không được để trống.");
     }
+
     try {
         const data = { cart_id, pw_id };
         console.log("Dữ liệu xóa:", data);
@@ -73,4 +74,16 @@ export const updateCartDetail = async (cart_id, pw_id, quantity) => {
         throw error.response?.data || new Error("Không thể cập nhật số lượng.");
     }
 };
+
+
+
+
+export const removeAllCartDetails = async (cart_id) => {
+    try {
+        const result = await axios.delete(`http://localhost:5000/api/cart/details/remove-all/${cart_id}`)
+        return result.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
