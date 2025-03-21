@@ -1,148 +1,122 @@
-// hooks/productAPI.js
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = "http://localhost:5000/api/products";
-const ORDER_URL = "http://localhost:5000/api/orders";
-
-export const getProductData = async () => {
+export const getProductData = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/details`);
-        console.log("API getProductData:", result.data.products);
-        return result.data.products || [];
+        const result = await axios.get('http://localhost:5000/api/products/details');
+        console.log(result.data.products);
+        setData(result.data.products);
+        // return result.data.products;
     } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu sản phẩm:", error);
-        throw error.response?.data || new Error("Không thể lấy dữ liệu sản phẩm.");
+        console.error("Error fetching data:", error); 
     }
-};
+}
 
-export const getDetailedVariations = async () => {
+// used in shop page
+export const getDetailedVariations = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/detailed-variations`);
-        console.log("API getDetailedVariations:", result.data.formattedProducts);
-        return result.data.formattedProducts || [];
+        const result = await axios.get('http://localhost:5000/api/products/detailed-variations');
+        setData(result.data.formattedProducts);
+        console.log(result.data.formattedProducts);
     } catch (error) {
-        console.error("Lỗi khi lấy biến thể chi tiết:", error);
-        throw error.response?.data || new Error("Không thể lấy biến thể chi tiết.");
+        console.log('Error fecthing variations:', error);
     }
-};
+}
 
 export const addProduct = async (product) => {
-    if (!product) throw new Error("Dữ liệu sản phẩm không hợp lệ.");
     try {
-        const result = await axios.post(`${BASE_URL}/create`, product);
-        return result.data;
+        const result = await axios.post('http://localhost:5000/api/products/create', product);
+        return result;
     } catch (error) {
-        console.error("Lỗi khi thêm sản phẩm:", error);
-        throw error.response?.data || new Error("Không thể thêm sản phẩm.");
+        console.log(error);
     }
-};
+}
 
 export const addProductVariation = async (variation) => {
-    if (!variation) throw new Error("Dữ liệu biến thể không hợp lệ.");
     try {
-        const result = await axios.post(`${BASE_URL}/create-variation`, variation);
-        return result.data;
+        const result = await axios.post('http://localhost:5000/api/products/create-variation', variation);
+        return result;
     } catch (error) {
-        console.error("Lỗi khi thêm biến thể:", error);
-        throw error.response?.data || new Error("Không thể thêm biến thể.");
+        console.log(error);
     }
-};
+}
+
 
 export const editProduct = async (product_id, data) => {
-    if (!product_id || !data) throw new Error("Dữ liệu không hợp lệ.");
     try {
-        const result = await axios.put(`${BASE_URL}/update/${product_id}`, data);
-        return result.data;
+        const result = await axios.put(`http://localhost:5000/api/products/update/${product_id}`, data);
+        return result;
     } catch (error) {
-        console.error("Lỗi khi chỉnh sửa sản phẩm:", error);
-        throw error.response?.data || new Error("Không thể chỉnh sửa sản phẩm.");
+        console.log(error);
     }
-};
+}
 
 export const deleteProduct = async (product_id) => {
-    if (!product_id) throw new Error("product_id không hợp lệ.");
     try {
-        const result = await axios.delete(`${BASE_URL}/delete/${product_id}`);
-        return result.data;
+        const result = await axios.put(`http://localhost:5000/api/products/delete/${product_id}`)
+        return result;
     } catch (error) {
-        console.error("Lỗi khi xóa sản phẩm:", error);
-        throw error.response?.data || new Error("Không thể xóa sản phẩm.");
+        console.log(error);
+        
     }
-};
+}
 
-export const getAromas = async () => {
+// Aroma ------------------------------
+export const getAromas = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/aromas`);
-        return result.data.aromas || [];
+        const result = await axios.get('http://localhost:5000/api/products/aromas');
+        setData(result.data.aromas);
     } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu hương vị:", error);
-        throw error.response?.data || new Error("Không thể lấy dữ liệu hương vị.");
+        console.error("Error fetching aroma data:", error); 
     }
-};
+}
 
-export const getTypes = async () => {
+// Product Type ------------------------------
+export const getTypes = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/types`);
-        return result.data.types || [];
+        const result = await axios.get('http://localhost:5000/api/products/types');
+        setData(result.data.types);
     } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu loại sản phẩm:", error);
-        throw error.response?.data || new Error("Không thể lấy dữ liệu loại sản phẩm.");
+        console.error("Error fetching type data:", error); 
     }
-};
+}
 
-export const getWeights = async () => {
+// Weight Options ------------------------------
+export const getWeights = async (setWeight) => {
     try {
-        const result = await axios.get(`${BASE_URL}/weights`);
-        console.log("API getWeights:", result.data.options);
-        return result.data.options || [];
+        const result = await axios.get('http://localhost:5000/api/products/weights');
+        setWeight(result.data.options);
+        console.log(result.data.options);
     } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu trọng lượng:", error);
-        throw error.response?.data || new Error("Không thể lấy dữ liệu trọng lượng.");
+        console.error("Error fetching weight data:", error); 
     }
-};
+}
 
-export const getAllVariations = async () => {
+export const getAllVariations = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/variations`);
-        console.log("API getAllVariations:", result.data.variations);
-        return result.data.variations || [];
+        const result = await axios.get('http://localhost:5000/api/products/variations');
+        setData(result.data.variations);
+        console.log(result.data.variations);
     } catch (error) {
-        console.error("Lỗi khi lấy tất cả biến thể:", error);
-        throw error.response?.data || new Error("Không thể lấy tất cả biến thể.");
+        console.log('Error fecthing variations:', error);
     }
-};
+}
 
 export const editVariation = async (pw_id, data) => {
-    if (!pw_id || !data) throw new Error("Dữ liệu không hợp lệ.");
     try {
-        console.log("Dữ liệu chỉnh sửa biến thể:", data);
-        const result = await axios.put(`${BASE_URL}/variations/update/${pw_id}`, data);
-        return result.data;
+        console.log(data)
+        const result = await axios.put(`http://localhost:5000/api/products/variations/update/${pw_id}`, data);
+        return result;
     } catch (error) {
-        console.error("Lỗi khi chỉnh sửa biến thể:", error);
-        throw error.response?.data || new Error("Không thể chỉnh sửa biến thể.");
+        console.log(error);
     }
-};
+}
 
-export const getRoastLevels = async () => {
+// Roast Level ------------------------------
+export const getRoastLevels = async (setData) => {
     try {
-        const result = await axios.get(`${BASE_URL}/roasts`);
-        return result.data.roastLevels || [];
+        const result = await axios.get('http://localhost:5000/api/products/roasts');
+        setData(result.data.roastLevels);
     } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu mức rang:", error);
-        throw error.response?.data || new Error("Không thể lấy dữ liệu mức rang.");
+        console.error("Error fetching roast level data:", error); 
     }
-};
-
-// Thêm createOrder
-export const createOrder = async (orderData) => {
-    if (!orderData || !orderData.account_id) throw new Error("Dữ liệu đơn hàng không hợp lệ.");
-    try {
-        const result = await axios.post(`${ORDER_URL}/create`, orderData);
-        console.log("API createOrder:", result.data);
-        return result.data; // Giả định trả về { order: { order_id: "xxx", ... } }
-    } catch (error) {
-        console.error("Lỗi khi tạo đơn hàng:", error);
-        throw error.response?.data || new Error("Không thể tạo đơn hàng.");
-    }
-};
+}

@@ -1,15 +1,16 @@
-// components/Cart.jsx
-import { useEffect, useState } from "react";
-import { X, ShoppingCart, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "../ui/separator";
-import { ScrollArea } from "../ui/scroll-area";
-import { Input } from "../ui/input";
-import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext";
-import { addCartDetails, getCartByAccountId, getCartDetailsByCartId, removeCartDetail, updateCartDetail } from "@/hooks/cartAPI";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { X } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "../ui/separator"
+import { ScrollArea } from "../ui/scroll-area"
+import { Input } from "../ui/input"
+import { Trash2 } from "lucide-react"
+import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
+import { addCartDetails, getCartByAccountId, removeCartDetail } from "@/hooks/cartAPI"
+import { useNavigate } from "react-router-dom"
 
 export default function Cart({ isOpen, toggleCart }) {
     const { user } = useAuth();
@@ -20,84 +21,82 @@ export default function Cart({ isOpen, toggleCart }) {
     // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
     // : 0;
 
-    const totalPrice = (cartItems.length === 0)
+    const totalPrice = (cartItems && cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
+
+    // const test = () => {
+    //     try {
+    //         if (cartItems.length > 0) {
+    //             return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    //         } else {
+    //             return 0;
+    //         }
+    //     } catch (error) {
+    //         return 0;
+    //     }
+    // }
     
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {
-            try {
-                await updateCartDetail(user.cart_id, pw_id, newQuantity);
-                updateQuantity(product_id, weight_id, newQuantity);
-            } catch (err) {
-                setError(err.message || "Không thể cập nhật số lượng.");
-                console.error(err);
-            }
+            updateQuantity(product_id, weight_id, newQuantity);
         }
     };
-
-    const handleRemoveItem = async (product_id, weight_id, pw_id) => {
-        if (!user?.cart_id) return;
+    
+    const handleOrder = async () => {
         try {
-            await removeCartDetail(user.cart_id, pw_id);
-            removeFromCart(product_id, weight_id);
-        } catch (err) {
-            setError(err.message || "Không thể xóa sản phẩm.");
-            console.error(err);
+            console.log(cartItems)
+            const cartDetailsData = cartItems.map(item => ({
+                cart_id: user.cart_id,
+                quantity: item.quantity,
+                pw_id: item.pw_id,
+                item_subtotal: item.price * item.quantity,
+                is_ground: item.grind
+            }));
+
+            const response = await addCartDetails(cartDetailsData);
+            if (response) {
+                navigate('/checkout');
+                console.log(response);
+            }
+
+        } catch (error) {
+            console.log(error)
         }
-    };
-
-
-const handleOrder = async () => {
-    if (cartItems.length === 0) {
-        setError("Giỏ hàng trống, không thể đặt hàng.");
-        return;
     }
-    try {
-        navigate('/checkout'); // Chuyển thẳng đến checkout
-    } catch (error) {
-        setError("Không thể chuyển hướng. Vui lòng thử lại.");
-        console.error("Lỗi khi chuyển hướng:", error);
-    }
-};
 
     return (
         <div className="relative w-full overflow-hidden z-[99]">
+            {/* Backdrop when card is open */}
             {isOpen && (
-                <div
-                    className="fixed inset-0 z-40 bg-black/20 transition-opacity duration-300"
-                    onClick={toggleCart}
-                />
+                <div className="fixed inset-0 z-40 bg-black/20 transition-opacity duration-300" onClick={toggleCart} />
             )}
 
-            <div
-                className={`fixed right-0 top-0 z-50 h-full w-full lg:w-[35%] transform transition-transform duration-300 ease-in-out ${
-                    isOpen ? "translate-x-0" : "translate-x-full"
+            {/* Slide out card */}
+            <div 
+                className={`fixed right-0 top-0 z-50 h-full w-full lg:w-[35%] transform transition-transform duration-300 ease-in-out  ${
+                isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
                 <Card className="h-full rounded-none shadow-lg bg-ivory text-darkOlive">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0">
                         <div>
-                            <CardTitle className="text-4xl flex gap-4 font-ibm-plex">
-                                <ShoppingCart size={40} />
+                            <CardTitle className='text-4xl flex gap-4 font-ibm-plex'>
+                                <ShoppingCart size={40}/>
                                 Giỏ hàng
                             </CardTitle>
+                            {/* <CardDescription></CardDescription> */}
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={toggleCart}
-                            className="h-8 w-8 hover:bg-darkOlive hover:text-ivory"
-                        >
+                        <Button variant="ghost" size="icon" onClick={toggleCart} className="h-8 w-8 hover:bg-darkOlive hover:text-ivory">
                             <X className="h-4 w-4" />
                             <span className="sr-only">Close</span>
                         </Button>
                     </CardHeader>
 
-                    <Separator className="bg-darkOlive mx-auto max-w-[80%]" />
+                    <Separator className='bg-darkOlive mx-auto max-w-[80%]'/>
 
                     <div className="flex-1 overflow-hidden">
-                        <ScrollArea className="h-[calc(100vh-100px)]">
+                        <ScrollArea className="h-[calc(100vh-100px)]"> 
                             <CardContent className="pt-5 grid gap-4 text-lg">
                                 <div>
                                     <article className="flex">
@@ -105,7 +104,7 @@ const handleOrder = async () => {
                                             Tổng tiền:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice} vnđ
+                                            {totalPrice} vnđ                                            
                                         </span>
                                     </article>
 
@@ -114,22 +113,18 @@ const handleOrder = async () => {
                                             Phí vận chuyển:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'}
+                                            {/* {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'} */}
                                         </span>
                                     </article>
                                 </div>
 
-                                        <button
-                                            className="big-action-button w-full text-ivory bg-darkOlive hover:bg-darkOlive/90 py-2 rounded-md"
-                                            onClick={handleOrder}
-                                            disabled={loading}
-                                        >
-                                            {loading ? "Đang xử lý..." : "Đặt hàng"}
-                                        </button>
+                                <button className="big-action-button w-full text-ivory" onClick={handleOrder}>
+                                    Đặt hàng
+                                </button>
 
-                                        <Separator className="bg-darkOlive h-[0.5px] mx-auto max-w-[80%]" />
+                                <Separator className='bg-darkOlive h-[0.5px] mx-auto max-w-[80%]'/>
 
-                                {cartItems.length > 0 ? (
+                                {(cartItems && cartItems.length > 0) ? (
                                     cartItems.map((item) => (
                                         <div
                                             key={`${item.product_id}-${item.weight_id}`}
@@ -182,8 +177,9 @@ const handleOrder = async () => {
                             </CardContent>
                         </ScrollArea>
                     </div>
+
                 </Card>
             </div>
         </div>
-    );
+    )
 }
