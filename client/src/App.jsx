@@ -16,7 +16,7 @@ import { CartProvider } from './components/context/CartContext';
 import { AuthProvider } from './components/context/AuthContext';
 
 function App() {
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin] = useState(false);
 
     // useEffect(() => {
     //     const checkAdmin = async () => {

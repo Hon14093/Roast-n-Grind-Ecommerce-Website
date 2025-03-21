@@ -186,7 +186,7 @@ model Shipping_Method {
 
 model Shopping_Cart {
   cart_id      String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  account_id   String         @db.Uuid
+  account_id   String         @db.Uuid @unique // Thêm @unique
   Cart_Details Cart_Details[]
   Account      Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_cart")
 }
