@@ -2,17 +2,12 @@ import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 
-
-
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
-    
 
     const minPrice = product.variations.length > 0 
         ? Math.min(...product.variations.map(v => v.price))
         : "N/A";
-
-    
 
     return (
         <Card 
@@ -30,7 +25,6 @@ const ProductCard = ({ product }) => {
                 <p className="mt-2 font-semibold">{minPrice !== "N/A" ? `vnđ ${minPrice}` : "Price unavailable"}</p>
             </CardContent>
         </Card>
-        
     );
 };
 
