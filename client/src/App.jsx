@@ -16,14 +16,9 @@ import { CartProvider } from './components/context/CartContext';
 import { AuthProvider } from './components/context/AuthContext';
 
 function App() {
-    const [isAdmin] = useState(false);
-
-    // useEffect(() => {
-    //     const checkAdmin = async () => {
-    //         const user = await fetch()
-    //     }
-    // })
     
+    // This layout follows the Single Page Application (SPA) model
+    // This App.jsx is the root component that contains all routes
     return (
         <>
         <AuthProvider>
