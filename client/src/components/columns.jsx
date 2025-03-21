@@ -93,7 +93,14 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     }
 ]
 
-export const orderColumns = ({ onViewDetails, onEdit }) => [
+export const orderColumns = [
+    { accessorKey: "order_id", header: "ID Đơn Hàng" },
+    { accessorKey: "order_date", header: "Ngày Đặt" },
+    { accessorKey: "order_total", header: "Tổng Tiền" },
+    
+]
+
+export const orderColumns1 = ({ onViewDetails, onEdit }) => [
     { accessorKey: "order_id", header: "ID Đơn Hàng" },
     { accessorKey: "order_date", header: "Ngày Đặt" },
     { accessorKey: "order_total", header: "Tổng Tiền" },

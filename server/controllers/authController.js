@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createAccount, findAccountByEmail, getAllAccounts } from '../models/Account.js';
+import { createAccount, findAccountByEmail, getAccountInfo, getAllAccounts } from '../models/Account.js';
 import { createShoppingCart, getShoppingCartByUserId } from '../models/Shopping_Cart.js';
 
 dotenv.config();
@@ -112,6 +112,17 @@ export const returnAllAccounts = async (req,res) => {
     try {
         const allAccounts = await getAllAccounts();
         return res.status(200).json(allAccounts);
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error!'});
+    }
+}
+
+export const returnAccountInfo = async (req,res) => {
+    try {
+        const { account_id } = req.params;
+        const info = await getAccountInfo(account_id);
+
+        return res.status(200).json({info});
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error!'});
     }

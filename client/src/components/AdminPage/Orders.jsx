@@ -25,38 +25,68 @@ import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { orderColumns } from '../columns.jsx'
-import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
 import { DetailsModal } from '../modals/order/OrderModals.jsx'
-
-import { getOrderData } from '@/hooks/orderAPI.jsx'
+import { getProcessedOrders } from '@/hooks/orderAPI.jsx'
 import { Link } from 'react-router-dom'
-import { useOrderActions } from '@/hooks/table-actions/useOrderActions.js'
-
+import { updateOrderStatus } from '@/hooks/orderAPI.jsx'
+import OrderStatusComboBox from '../combobox/OrderStatusCombobox.jsx'
 
 function Orders() {
     const [data, setData] = useState([]);
-
-    // function handleViewDetails() { console.log('details')}
-    // function handleEdit() {}
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    // const [status, setStatus] = useState(2);
 
     useEffect(() => {
-        getOrderData(setData)
-        
+        getProcessedOrders(setData)
     }, []);
 
     const test = () => {
         console.log(data)
     }
 
-    const {
-        selectedOrder,
-        isDetailsModalOpen,
-        isEditModalOpen,
-        handleViewDetails,
-        handleEdit,
-        setIsDetailsModalOpen,
-        setIsEditModalOpen,
-    } = useOrderActions(data)
+    const handleViewDetails = (order) => {
+        setSelectedOrder(order);
+        setIsDetailsModalOpen(true);
+    };
+
+    const columnsWithActions = [
+        ...orderColumns,
+        { 
+            header: "Trạng Thái",
+            id: "status",
+            cell: ({ row }) => {
+                const order = row.original; 
+                const [status, setStatus] = useState(order.status_id); 
+    
+                const handleStatusChange = async (newStatus) => {
+                    setStatus(newStatus); 
+                    await updateOrderStatus(order.order_id, newStatus); 
+                };
+    
+                return (
+                    <OrderStatusComboBox 
+                        value={status} 
+                        onChange={handleStatusChange} 
+                    />
+                );
+            }
+        },
+        {
+            header: "Hành Động",
+            id: "actions",
+            cell: ({ row }) => (
+                <div className='flex gap-2'>
+                    <Button size="sm" className='bg-blue-500 border border-blue-500 hover:bg-white hover:text-blue-500' 
+                        onClick={() => handleViewDetails(row.original)}
+                    >
+                        Chi Tiết
+                    </Button>
+                    
+                </div>
+            )
+        }
+    ];
 
     return (
         <SidebarInset>
@@ -103,20 +133,9 @@ function Orders() {
                 </CardHeader>
 
                 <CardContent>
-                    {/* <DataTable 
-                        columns={productColumns({
-                            onViewDetails: handleViewDetails,
-                            onEdit: handleEdit,
-                            onDelete: handleDelete
-                        })} 
-                        data={data} 
-                    /> */}
 
                     <DataTable 
-                        columns={orderColumns({
-                            onViewDetails: handleViewDetails,
-                            onEdit: handleEdit,
-                        })} 
+                        columns={columnsWithActions} 
                         data={data} 
                     />
 

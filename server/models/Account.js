@@ -28,6 +28,22 @@ export const getAllAccounts = async () => {
     return await prisma.account.findMany();
 };
 
+export const getAccountInfo = async (account_id) => {
+    return await prisma.account.findFirst({
+        select: {
+            account_id: true,
+            account_name: true,
+            email: true,
+            phone: true,
+            date_created: true,
+            password: false
+        },
+        where: {account_id: account_id}
+    });
+}
+
+
+
 // const data = {
 //     account_name: 'lkjljlsdf',
 //     email: 'example@example.com',

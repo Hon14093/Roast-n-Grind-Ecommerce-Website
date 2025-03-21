@@ -38,7 +38,11 @@ export const getUnprocessedOrders = async () => {
             Account: {
                 select: { account_name: true }
             },
-            Address: true,
+            Address: {
+                include: {
+                    City: true
+                }
+            },
             Order_Status: true,
             Shipping_Method: true,
             Discount: {
@@ -57,11 +61,78 @@ export const getUnprocessedOrders = async () => {
 }
 
 export const getRemainingOrders = async () => {
-    return await prisma.order.findMany({
+    const orders = await prisma.order.findMany({
+        include: {
+            Account: {
+                include: {
+                    password: false,
+                    is_admin: false,
+                    date_created: false
+                }
+            },
+            Order_Status: true,
+            Address: {
+                include: {
+                    City: true
+                }
+            },
+            Discount: true,
+            Shipping_Method: true
+        },
         where: {
             NOT: {
                 status_id: 1
             }
+        },
+        orderBy: {
+            order_date: 'asc',
+        }
+    })
+
+    return orders.map(order => ({
+        ...order,
+        order_date: order.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const getOrdersByAccountId = async (account_id) => {
+    const orders = await prisma.order.findMany({
+        include: {
+            Account: {
+                include: {
+                    password: false,
+                    is_admin: false,
+                    date_created: false
+                }
+            },
+            Order_Status: true,
+            Address: {
+                include: {
+                    City: true
+                }
+            },
+            Discount: true,
+            Shipping_Method: true
+        },
+        where: {
+            account_id: account_id
+        },
+        orderBy: {
+            order_date: 'asc',
+        }
+    })
+
+    return orders.map(order => ({
+        ...order,
+        order_date: order.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const updateOrderStatus = async (order_id, statusId) => {
+    return await prisma.order.update({
+        where: { order_id },
+        data: {
+            status_id: statusId
         }
     })
 }

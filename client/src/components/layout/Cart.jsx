@@ -24,18 +24,6 @@ export default function Cart({ isOpen, toggleCart }) {
     const totalPrice = (cartItems && cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
-
-    // const test = () => {
-    //     try {
-    //         if (cartItems.length > 0) {
-    //             return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-    //         } else {
-    //             return 0;
-    //         }
-    //     } catch (error) {
-    //         return 0;
-    //     }
-    // }
     
     const handleQuantityChange = (product_id, weight_id, newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 10) {

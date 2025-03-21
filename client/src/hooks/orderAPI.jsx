@@ -47,10 +47,38 @@ export const getUnprocessedOrders = async (setData) => {
     }
 }
 
-export const getProcessedOrders = async () => {
+export const getProcessedOrders = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/order/processed');
+        setData(result.data.remaining);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getOrdersByAccountId = async (account_id, setData) => {
+    try {
+        const result = await axios.get(`http://localhost:5000/api/order/my-orders/${account_id}`);
+        setData(result.data.orders);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const updateOrderStatus = async (order_id, statusId) => {
+    try {
+        const result = await axios.put(`http://localhost:5000/api/order/check/${order_id}`, { status_id: statusId });
         return result.data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getAllOrderStatuses = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/order/status/all');
+        setData(result.data.statuses);
     } catch (error) {
         console.log(error)
     }

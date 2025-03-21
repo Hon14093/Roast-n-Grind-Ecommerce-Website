@@ -1,5 +1,15 @@
-import { createOrder, getAllOrders, getRemainingOrders, getUnprocessedOrders } from "../models/Order.js";
-import { createOrderDetails, getOrderDetailsByOrderId } from "../models/Order_Details.js";
+import { createOrder, 
+    getAllOrders, 
+    getOrdersByAccountId, 
+    getRemainingOrders, 
+    getUnprocessedOrders, 
+    updateOrderStatus
+} from "../models/Order.js";
+
+import { createOrderDetails, 
+    getOrderDetailsByOrderId 
+} from "../models/Order_Details.js";
+import { getAllOrderStatuses, getOrderStatusByName } from "../models/Order_Status.js";
 
 export const addOrder = async (req,res) => {
     try {
@@ -37,7 +47,7 @@ export const returnOrderDetailsByOrderId = async (req,res) => {
         const { order_id } = req.params;
         const details = await getOrderDetailsByOrderId(order_id);
 
-        res.status(201).json({ details });
+        res.status(200).json({ details });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -47,7 +57,7 @@ export const returnOrderDetailsByOrderId = async (req,res) => {
 export const returnAllOrders = async (req,res) => {
     try {
         const orders = await getAllOrders();
-        res.status(201).json({orders});
+        res.status(200).json({orders});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -57,17 +67,59 @@ export const returnAllOrders = async (req,res) => {
 export const returnUnprocessedOrders = async (req,res) => {
     try {
         const unprocessed = await getUnprocessedOrders();
-        res.status(201).json({unprocessed});
+        res.status(200).json({unprocessed});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
+// not sure if this will be used
 export const returnRemainingOrders = async (req,res) => {
     try {
         const remaining = await getRemainingOrders();
-        res.status(201).json({remaining})
+        res.status(200).json({remaining});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnOrdersByAccountId = async (req,res) => {
+    try {
+        const { account_id } = req.params;
+        const orders = await getOrdersByAccountId(account_id);
+        res.status(200).json({orders});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const editOrderStatus = async (req,res) => {
+    try {
+        const { order_id } = req.params;
+        const { status_id } = req.body;
+        
+        const editedStatus = await updateOrderStatus(order_id, parseInt(status_id));
+
+        res.status(200).json({
+            success: 1,
+            editedStatus
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+
+
+// get order statuses
+export const returnOrderStatuses = async (req,res) => {
+    try {
+        const statuses = await getAllOrderStatuses();
+        res.status(200).json({statuses});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });

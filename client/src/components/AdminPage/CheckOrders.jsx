@@ -26,10 +26,10 @@ import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { checkOrdersColumns } from '../columns.jsx'
 
-import { getUnprocessedOrders } from '@/hooks/orderAPI.jsx'
+import { getUnprocessedOrders, updateOrderStatus } from '@/hooks/orderAPI.jsx'
 import { DetailsModal } from '../modals/order/OrderModals.jsx'
 import { Link } from 'react-router-dom'
-import { useOrderActions } from '@/hooks/table-actions/useOrderActions.js'
+
 
 
 export default function CheckOrders() {
@@ -53,6 +53,20 @@ export default function CheckOrders() {
         setIsDetailsModalOpen(true);
     };
 
+    const handlePassOrder = async (order) => {
+        const res = await updateOrderStatus(order.order_id, 2);
+        if (res.success) {
+            getUnprocessedOrders(setData);
+        }
+    }
+
+    const handleRejectOrder = async (order) => {
+        const res = await updateOrderStatus(order.order_id, 6);
+        if (res.success) {
+            getUnprocessedOrders(setData);
+        }
+    }
+
     const columnsWithActions = [
         ...checkOrdersColumns,
         {
@@ -60,13 +74,19 @@ export default function CheckOrders() {
             id: "actions",
             cell: ({ row }) => (
                 <div className='flex gap-2'>
-                    <Button size="sm" className='bg-blue-600' onClick={() => handleViewDetails(row.original)}>
+                    <Button size="sm" className='bg-blue-500 border border-blue-500 hover:bg-white hover:text-blue-500' 
+                        onClick={() => handleViewDetails(row.original)}
+                    >
                         Chi Tiết
                     </Button>
-                    <Button size="sm" className="bg-green-500 border border-green-500 hover:bg-white hover:text-green-500" >
+                    <Button size="sm" className="bg-green-500 border border-green-500 hover:bg-white hover:text-green-500" 
+                        onClick={() => handlePassOrder(row.original)}
+                    >
                         Duyệt
                     </Button>
-                    <Button size="sm" className="bg-red-500" >
+                    <Button size="sm" className='bg-red-500 border border-red-500 hover:bg-white hover:text-red-500' 
+                        onClick={() => handleRejectOrder(row.original)}
+                    >
                         Hủy
                     </Button>
                 </div>

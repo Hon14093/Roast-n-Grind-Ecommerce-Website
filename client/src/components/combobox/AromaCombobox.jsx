@@ -14,12 +14,12 @@ import { getAromas } from "@/hooks/productAPI";
 // ];
 
 export default function AromaComboBox({ value, onChange }) {
+    const [open, setOpen] = useState(false);
+    const [aromas, setAromas] = useState([]);
+
     useEffect(() => {
         getAromas(setAromas);
     },[])
-
-    const [open, setOpen] = useState(false);
-    const [aromas, setAromas] = useState([]);
 
     return (
         <article className="grid w-full items-center gap-1.5">
