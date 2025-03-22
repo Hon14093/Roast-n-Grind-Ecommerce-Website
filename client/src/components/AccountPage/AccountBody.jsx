@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom"
-import { useAuth } from '@/components/context/AuthContext'
+import { useAuth } from '@/context/AuthContext'
 import { CircleUser } from 'lucide-react';
 import { ShoppingBasket } from 'lucide-react';
 import { Power } from 'lucide-react';

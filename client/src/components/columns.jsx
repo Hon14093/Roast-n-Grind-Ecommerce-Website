@@ -55,22 +55,6 @@ export const variationColumns = ({ onViewDetails, onEdit, onDelete }) => [
     }
 ]
 
-// {
-//     "product_id": "76aaf7d5-7701-42bd-9744-3938ec989be8",
-//     "product_name": "Cà phê 1",
-//     "description": "I'm coffee 1",
-//     "image_url": "https://shop.phase-connect.com/cdn/shop/files/luminewcoffee_1776x1184.png?v=1715241054",
-//     "Roast_Level": {
-//         "roast_lvl": "Rang nhẹ"
-//     },
-//     "Product_Type": {
-//         "type_name": "Hỗn hợp"
-//     },
-//     "Aroma": {
-//         "aroma_name": "Hương trái cây"
-//     }
-// }
-
 export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     { accessorKey: "product_name", header: "Tên Sản Phẩm" },
     { accessorKey: "Roast_Level.roast_lvl", header: "Độ Rang" },
@@ -93,31 +77,16 @@ export const productColumns = ({ onViewDetails, onEdit, onDelete }) => [
     }
 ]
 
+
+// Newly formatted columns for better readability
+// The columns arrays will not contains the functions anymore
+// Instead, the functions will be added to columns in the component
+// This will make the columns array more readable
+// And less convoluted with multiple files for one table
 export const orderColumns = [
     { accessorKey: "order_id", header: "ID Đơn Hàng" },
     { accessorKey: "order_date", header: "Ngày Đặt" },
     { accessorKey: "order_total", header: "Tổng Tiền" },
-    
-]
-
-export const orderColumns1 = ({ onViewDetails, onEdit }) => [
-    { accessorKey: "order_id", header: "ID Đơn Hàng" },
-    { accessorKey: "order_date", header: "Ngày Đặt" },
-    { accessorKey: "order_total", header: "Tổng Tiền" },
-    { accessorKey: "Order_Status.status_name", header: "Trạng Thái" },
-    {
-        id: "action",
-        cell: ({ row }) => {
-            const order = row.original;
-
-            return (
-                <OrderTableActionsDropdown 
-                    onViewDetails={() => onViewDetails(order.order_id)}
-                    onEdit={() => onEdit(order.order_id)}
-                />
-            )
-        }
-    }
 ]
 
 export const orderDetailsColumns = [
@@ -133,5 +102,11 @@ export const checkOrdersColumns = [
     { accessorKey: "order_date", header: "Ngày Đặt" },
     { accessorKey: "order_total", header: "Tổng Tiền" },
     { accessorKey: "Account.account_name", header: "Tài Khoản" },
-    
+]
+
+export const discountColumns = [
+    { accessorKey: "discount_code", header: "Mã Khuyến Mãi" },
+    { accessorKey: "discount_value", header: "Giá Trị Khuyến Mãi" },
+    { accessorKey: "start_date", header: "Ngày Bắt Đầu" },
+    { accessorKey: "end_date", header: "Ngày Kết Thúc" },
 ]

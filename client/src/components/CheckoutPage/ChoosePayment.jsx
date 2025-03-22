@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '../ui/button'
 import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals'
-import { useCart } from '../context/CartContext'
+import { useCart } from '../../context/CartContext'
 import { ScrollArea } from '../ui/scroll-area'
 import { Separator } from '../ui/separator'
 import { Checkbox } from '../ui/checkbox'

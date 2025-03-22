@@ -5,7 +5,7 @@ import logoBlack from '../../images/orange.png'
 import AddressDetails from './AddressDetails'
 import ChoosePayment from './ChoosePayment'
 import OrderSummary from './OrderSummary'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 
 export default function CheckoutBody() {
     const [step, setStep] = useState(1);

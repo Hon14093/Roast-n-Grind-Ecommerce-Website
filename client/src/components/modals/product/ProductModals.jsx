@@ -62,6 +62,7 @@ export function AddModal({ onSubmitSuccess }) {
         onSubmitSuccess();
         setOpen(false);
     }
+    
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>

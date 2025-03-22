@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { createOrderDetails, placeOrder } from "@/hooks/orderAPI";
-import { useCart } from "@/components/context/CartContext";
+import { useCart } from "@/context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/components/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { removeAllCartDetails } from "@/hooks/cartAPI";
 
 export const VisaModal = ({ orderData, totalPrice }) => {

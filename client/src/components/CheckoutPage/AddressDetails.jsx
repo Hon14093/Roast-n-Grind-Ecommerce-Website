@@ -4,12 +4,12 @@ import { HousePlus } from 'lucide-react'
 import { Trash2 } from 'lucide-react'
 import { Button } from '../ui/button'
 import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals'
-import { useCart } from '../context/CartContext'
+import { useCart } from '../../context/CartContext'
 import { ScrollArea } from '../ui/scroll-area'
 import { Separator } from '../ui/separator'
 import { Checkbox } from '../ui/checkbox'
 import { getAddressesByAccountId } from '@/hooks/addressAPI'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 
 export default function AddressDetails({ addressId, setSelectedAddressId, nextStep }) {
     const { user } = useAuth();

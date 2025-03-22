@@ -1,20 +1,26 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const createDiscount = async (data) => {
-    return await prisma.discount.create({
-        data: data
-    });
+export const getAllDiscounts = async () => {
+    const discounts = await prisma.discount.findMany();
+
+    return discounts.map(discount => ({
+        ...discount,
+        start_date: discount.start_date.toISOString().slice(0, 10),
+        end_date: discount.end_date.toISOString().slice(0, 10)
+    }))
 }
+
+export const createDiscount = async (data) => {
+    return await prisma.discount.create({ data });
+}
+
+
 
 export const findDiscountById = async (id) => {
     return await prisma.discount.findUnique({
         where: { discount_id: id } // Fixed field name
     });
-}
-
-export const getAllDiscounts = async () => {
-    return await prisma.discount.findMany();
 }
 
 export const getActiveDiscounts = async () => {
@@ -30,5 +36,5 @@ export const getDiscountsByDateRange = async (startDate, endDate) => {
             end_date: { lte: endDate }
         }
     });
-  }
+}
 

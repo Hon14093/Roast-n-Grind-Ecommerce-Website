@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logoWhite from '../../images/white.png'
 import logoBlack from '../../images/orange.png'
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 function Header({ darkBG = true, toggleCart }) {
     const [scrollDirection, setScrollDirection] = useState(null);

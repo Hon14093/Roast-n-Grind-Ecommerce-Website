@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DataTable } from '../data-table';
 import { getOrdersByAccountId, updateOrderStatus } from '@/hooks/orderAPI';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { orderColumns } from '../columns';
 import OrderStatusComboBox from '../combobox/OrderStatusCombobox';
 import { Button } from '../ui/button';

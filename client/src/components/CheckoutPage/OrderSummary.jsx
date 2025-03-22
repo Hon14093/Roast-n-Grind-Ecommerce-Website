@@ -6,9 +6,9 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import { useCart } from '../context/CartContext';
+import { useCart } from '../../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { VisaModal } from '../modals/payment/PaymentModals';
 
 export default function OrderSummary({ addressId, pm_id, prevStep }) {

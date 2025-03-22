@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from "react";
 import CityComboBox from '@/components/combobox/CityCombobox';
 import { createAddressFromUser, deleteAddress, updateAddress } from '@/hooks/addressAPI';
-import { useAuth } from '@/components/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 export const AddAddress = ({ onSubmitSuccess }) => {
     const [open, setOpen] = useState(false);

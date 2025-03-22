@@ -12,8 +12,8 @@ import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
 import CheckoutPage from './pages/CheckoutPage';
 
-import { CartProvider } from './components/context/CartContext';
-import { AuthProvider } from './components/context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
     
