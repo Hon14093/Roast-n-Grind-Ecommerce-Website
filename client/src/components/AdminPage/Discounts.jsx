@@ -25,13 +25,18 @@ import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { discountColumns } from '../columns.jsx'
-import { AddModal } from '../modals/discounts/DiscountsModals.jsx'
+import { AddModal, DetailsModal } from '../modals/discounts/DiscountsModals.jsx'
 
 import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
 import { getAllDiscounts } from '@/hooks/discountAPI.jsx'
+import { TableActionsDropdown } from '../table-actions-dropdown.jsx'
 
 function Discounts() {
     const [data, setData] = useState([]);
+    const [selectedDiscount, setSelectedDiscount] = useState(null);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
 
     useEffect(() => {
         getAllDiscounts(setData);
@@ -40,6 +45,32 @@ function Discounts() {
     const handleSubmitSuccess = () => {
         getAllDiscounts(setData);
     }
+
+    const onViewDetails = (discount_id) => {
+        const discount = data.find(discount => discount.discount_id === discount_id);
+        setSelectedDiscount(discount);
+        setIsDetailsModalOpen(true);
+    }
+    const onEdit = (discount_id) => {}
+    const onDelete = (discount_id) => {}
+
+    const columnsWithActions = [
+        ...discountColumns,
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                const discount = row.original;
+
+                return (
+                    <TableActionsDropdown 
+                        onViewDetails={() => onViewDetails(discount.discount_id)}
+                        onEdit={() => onEdit(discount.discount_id)}
+                        onDelete={() => onDelete(discount.discount_id)}
+                    />
+                )
+            }
+        }
+    ]
 
     return (
         <SidebarInset>
@@ -82,8 +113,14 @@ function Discounts() {
 
                 <CardContent>
                     <DataTable 
-                        columns={discountColumns} 
+                        columns={columnsWithActions} 
                         data={data} 
+                    />
+
+                    <DetailsModal
+                        discount={selectedDiscount}
+                        open={isDetailsModalOpen}
+                        onClose={() => setIsDetailsModalOpen(false)}
                     />
 
                     {/* <DetailsModal 

@@ -19,7 +19,7 @@ export function DetailsModal({ discount, open, onClose }) {
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className='w-[1000px] max-w-none'>
+            <DialogContent className=''>
                 <DialogHeader>
                     <DialogTitle>Thông tin khuyến mãi</DialogTitle>
                 </DialogHeader>
