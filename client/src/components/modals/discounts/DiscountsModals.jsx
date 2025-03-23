@@ -11,8 +11,9 @@ import { Plus, CircleX } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { ViewDetails } from './ViewDetails';
-// import { EditForm } from './EditForm';
+
 import AddForm from './AddForm';
+import EditForm from './EditForm';
 
 export function DetailsModal({ discount, open, onClose }) {
     if (!discount) return null;
@@ -58,6 +59,28 @@ export function AddModal({ onSubmitSuccess }) {
 
                 <div className='text-base text-darkOlive'>
                     <AddForm onSubmitSuccess={handleSubmitSucess} />
+                </div>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+export function EditModal({ discount, open, onClose, onSubmitSuccess }) {
+    if (!discount) return null;
+
+    return (
+        <Dialog open={open} onOpenChange={onClose} >
+            <DialogContent className=''>
+                <DialogHeader>
+                    <DialogTitle className='pb-5'>Cập nhật thông tin khuyến mãi</DialogTitle>
+                    {/* <DialogDescription className='text-base text-black'>
+                        <EditForm product={product} />
+                    </DialogDescription> */}
+                </DialogHeader>
+
+                <div className='text-base text-darkOlive'>
+                    <EditForm discount={discount} onClose={onClose} onSubmitSuccess={onSubmitSuccess} />
+
                 </div>
             </DialogContent>
         </Dialog>

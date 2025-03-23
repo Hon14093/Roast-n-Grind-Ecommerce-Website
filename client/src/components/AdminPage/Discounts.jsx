@@ -25,7 +25,7 @@ import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { discountColumns } from '../columns.jsx'
-import { AddModal, DetailsModal } from '../modals/discounts/DiscountsModals.jsx'
+import { AddModal, DetailsModal , EditModal} from '../modals/discounts/DiscountsModals.jsx'
 
 import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
 import { getAllDiscounts } from '@/hooks/discountAPI.jsx'
@@ -51,7 +51,11 @@ function Discounts() {
         setSelectedDiscount(discount);
         setIsDetailsModalOpen(true);
     }
-    const onEdit = (discount_id) => {}
+    const onEdit = (discount_id) => {
+        const discount = data.find(discount => discount.discount_id === discount_id);
+        setSelectedDiscount(discount);
+        setIsEditModalOpen(true);
+    }
     const onDelete = (discount_id) => {}
 
     const columnsWithActions = [
@@ -123,24 +127,18 @@ function Discounts() {
                         onClose={() => setIsDetailsModalOpen(false)}
                     />
 
-                    {/* <DetailsModal 
-                        product={selectedProduct}
-                        open={isDetailsModalOpen}
-                        onClose={() => setIsDetailsModalOpen(false)}
-                    />
-
                     <EditModal 
-                        product={selectedProduct}
+                        discount={selectedDiscount}
                         open={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
                         onSubmitSuccess={handleSubmitSuccess}
                     />
 
-                    <DeleteModal
+                    {/* <DeleteModal
                         product={selectedProduct}
                         open={isDeleteModalOpen}
                         onClose={() => setIsDeleteModalOpen(false)}
-                    />    */}
+                    />    */} 
 
                 </CardContent>
             </Card>

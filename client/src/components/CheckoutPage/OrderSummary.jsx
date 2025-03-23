@@ -99,7 +99,6 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             {totalPrice + shippingPrice} vnđ
                         </span>
                     </article>
-
                 </div>
 
                 <article className='flex pt-4'>

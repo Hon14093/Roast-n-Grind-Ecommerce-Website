@@ -15,6 +15,13 @@ export const createDiscount = async (data) => {
     return await prisma.discount.create({ data });
 }
 
+export const updateDiscount = async (discount_id, data) => {
+    return await prisma.discount.update({
+        where: { discount_id },
+        data
+    })
+}
+
 
 
 export const findDiscountById = async (id) => {
