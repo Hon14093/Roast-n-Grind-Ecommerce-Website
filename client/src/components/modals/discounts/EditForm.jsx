@@ -11,6 +11,7 @@ export default function EditForm({ discount, onClose, onSubmitSuccess }) {
     const [maxDiscount, setMaxDiscount] = useState(discount.max_discount_amount);
     const [startDate, setStartDate] = useState(discount.start_date);
     const [endDate, setEndDate] = useState(discount.end_date);
+    const [loading, setLoading] = useState(false);
 
     const formatDateTimeLocal = (isoString) => {
         if (!isoString) return "";
@@ -31,6 +32,7 @@ export default function EditForm({ discount, onClose, onSubmitSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const data = {
@@ -50,6 +52,8 @@ export default function EditForm({ discount, onClose, onSubmitSuccess }) {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -133,8 +137,8 @@ export default function EditForm({ discount, onClose, onSubmitSuccess }) {
                     </div>
                 </article>
 
-                <Button type='submit'>
-                    Cập nhật
+                <Button type="submit" disabled={loading}>
+                    {loading ? "Đang cập nhật..." : "Cập nhật"}
                 </Button>
             </section>
         </form>

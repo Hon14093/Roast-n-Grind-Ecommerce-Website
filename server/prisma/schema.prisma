@@ -61,7 +61,7 @@ model Country {
 
 model Discount {
   discount_id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  discount_code       String   @db.VarChar(15)
+  discount_code       String   @unique(map: "discountCode") @db.VarChar(15)
   discount_value      Float    @db.Real
   max_discount_amount Float    @db.Real
   min_order_amount    Float    @db.Real
@@ -186,7 +186,7 @@ model Shipping_Method {
 
 model Shopping_Cart {
   cart_id      String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  account_id   String         @db.Uuid @unique // Thêm @unique
+  account_id   String         @db.Uuid
   Cart_Details Cart_Details[]
   Account      Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_cart")
 }

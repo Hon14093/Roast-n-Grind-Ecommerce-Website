@@ -5,6 +5,7 @@ import logoBlack from '../../images/orange.png'
 import AddressDetails from './AddressDetails'
 import ChoosePayment from './ChoosePayment'
 import OrderSummary from './OrderSummary'
+import { Toaster } from '../ui/sonner';
 import { useAuth } from '../../context/AuthContext'
 
 export default function CheckoutBody() {
@@ -62,6 +63,8 @@ export default function CheckoutBody() {
                     />
                 }
             </div>
+
+            <Toaster />
         </div>
     )
 }

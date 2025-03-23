@@ -2,7 +2,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const getAllDiscounts = async () => {
-    const discounts = await prisma.discount.findMany();
+    const discounts = await prisma.discount.findMany({
+        orderBy: { start_date: 'desc' }
+    });
 
     return discounts.map(discount => ({
         ...discount,
@@ -22,6 +24,11 @@ export const updateDiscount = async (discount_id, data) => {
     })
 }
 
+export const getDiscountByCode = async (discount_code) => {
+    return await prisma.discount.findUnique({
+        where: { discount_code }
+    })
+}
 
 
 export const findDiscountById = async (id) => {

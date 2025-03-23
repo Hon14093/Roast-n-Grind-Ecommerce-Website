@@ -1,4 +1,4 @@
-import { createDiscount, getAllDiscounts, updateDiscount } from "../models/Discount.js";
+import { createDiscount, getAllDiscounts, getDiscountByCode, updateDiscount } from "../models/Discount.js";
 
 export const addDiscount = async (req,res) => {
     try {
@@ -38,5 +38,23 @@ export const editDiscount = async (req,res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const findDiscountByCode = async (req,res) => {
+    try {
+        const { discount_code } = req.params;
+        const discount = await getDiscountByCode(discount_code);
+
+        res.status(200).json({
+            success: 1,
+            discount
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ 
+            success: 0,
+            message: 'Internal Server Error'
+        });
     }
 }

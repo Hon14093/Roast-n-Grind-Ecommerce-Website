@@ -4,12 +4,14 @@ import { Separator } from '../ui/separator'
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { toast } from 'sonner';
 import { Textarea } from '../ui/textarea';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useCart } from '../../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
 import { useAuth } from '../../context/AuthContext';
 import { VisaModal } from '../modals/payment/PaymentModals';
+import { getDiscountByCode } from '@/hooks/discountAPI';
 
 export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const { cartItems } = useCart();
@@ -18,15 +20,16 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
-    const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
     const [discount_id, setDiscount_id] = useState(null); // haven't figured out this one yet
+    const [discountCode, setDiscountCode] = useState(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
+    const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
     const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
     
-    
-    const orderData = {
-        order_total: totalPrice + shippingPrice,
+    let orderData = {
+        order_total: totalPrice + shippingPrice - discountAmount,
         note: note,
         account_id: user.account_id,
         shipping_id: sm_id,
@@ -38,6 +41,40 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     useEffect(() => {
         getAddressesByAccountId(user.account_id ,setAddresses);
     })
+
+    const calculateDiscount = (minOrder, maxDiscount, value) => {
+        if (totalPrice >= minOrder) {
+            let discountAmount = totalPrice * value / 100;
+            
+            if (discountAmount > maxDiscount) {
+                setDiscountAmount(maxDiscount);
+            } else {
+                setDiscountAmount(discountAmount);
+            }
+
+            toast("Mã giảm giá đã được áp dụng");
+        } else {
+            toast("Đơn hàng của bạn không đủ điều kiện để sử dụng mã giảm giá này");
+        }
+    }
+
+    // try to find discount code in db
+    // if found, set discount id and update orderData
+    // else, notify user that the code is invalid
+    const handleApplyDiscount = async () => {
+        const discount = await getDiscountByCode(discountCode);
+
+        if (discount) {
+            setDiscount_id(discount.discount_id);
+            orderData.discount_id = discount.discount_id;
+
+            calculateDiscount(discount.min_order_amount, discount.max_discount_amount, discount.discount_value);
+            console.log(orderData);
+
+        } else {
+            alert('Mã giảm giá không hợp lệ');
+        }
+    }
 
     return (
         <div className='grid grid-cols-12 gap-4'>
@@ -87,7 +124,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                         </span>
                         <span className="ml-auto pr-3">
                             {/* {totalPrice + shippingPrice} vnđ */}
-                            - 0 vnđ
+                            - {discountAmount} vnđ
                         </span>
                     </article>
 
@@ -96,7 +133,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             Tổng tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice + shippingPrice} vnđ
+                            {totalPrice + shippingPrice - discountAmount} vnđ
                         </span>
                     </article>
                 </div>
@@ -111,7 +148,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                 </article>
             </section>
 
-            <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
+            <section className='col-span-4 text-darkOlive'>
                 <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức vận chuyển</h1>
                     <Separator className='bg-darkOlive w-[50%] mb-2'/>
@@ -173,8 +210,12 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                     <Separator className='bg-darkOlive w-[50%] mb-3'/>
 
                     <div className='flex gap-1'>
-                        <Input placeholder='Nhập mã voucher' className='border-darkOlive border-2 w-3/4 text-lg'/>
-                        <Button className='bg-darkOlive' onClick={() => console.log(orderData)}>
+                        <Input 
+                            className='border-darkOlive border-2 w-3/4 text-lg'
+                            placeholder='Nhập mã voucher' 
+                            onChange={(e) => setDiscountCode(e.target.value)}
+                        />
+                        <Button className='bg-darkOlive' onClick={() => handleApplyDiscount()}>
                             Áp dụng
                         </Button>
                     </div>

@@ -95,15 +95,6 @@ export default function Cart({ isOpen, toggleCart }) {
                                             {totalPrice} vnđ                                            
                                         </span>
                                     </article>
-
-                                    <article className="flex">
-                                        <span>
-                                            Phí vận chuyển:
-                                        </span>
-                                        <span className="ml-auto">
-                                            {/* {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'} */}
-                                        </span>
-                                    </article>
                                 </div>
 
                                 <button className="big-action-button w-full text-ivory" onClick={handleOrder}>

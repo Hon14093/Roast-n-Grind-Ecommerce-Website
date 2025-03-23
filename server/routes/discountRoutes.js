@@ -1,9 +1,15 @@
 import express from "express";
-import { addDiscount, editDiscount, returnAllDiscounts } from "../controllers/discountController.js";
+import { 
+    addDiscount, 
+    editDiscount, 
+    findDiscountByCode, 
+    returnAllDiscounts 
+} from "../controllers/discountController.js";
 
 const router = express.Router();
 
 router.get('/all', returnAllDiscounts);
+router.get('/info/:discount_code', findDiscountByCode)
 
 router.post('/create', addDiscount);
 
