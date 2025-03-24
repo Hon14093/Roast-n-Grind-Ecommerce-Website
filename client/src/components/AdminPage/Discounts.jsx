@@ -25,7 +25,7 @@ import { PackagePlus } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { discountColumns } from '../columns.jsx'
-import { AddModal, DetailsModal , EditModal} from '../modals/discounts/DiscountsModals.jsx'
+import { AddModal, DetailsModal, EditModal, DeleteModal} from '../modals/discounts/DiscountsModals.jsx'
 
 import { useProductActions } from '@/hooks/table-actions/useProductActions.js'
 import { getAllDiscounts } from '@/hooks/discountAPI.jsx'
@@ -56,7 +56,11 @@ function Discounts() {
         setSelectedDiscount(discount);
         setIsEditModalOpen(true);
     }
-    const onDelete = (discount_id) => {}
+    const onDelete = (discount_id) => {
+        const discount = data.find(discount => discount.discount_id === discount_id);
+        setSelectedDiscount(discount);
+        setIsDeleteModalOpen(true);
+    }
 
     const columnsWithActions = [
         ...discountColumns,
@@ -106,7 +110,7 @@ function Discounts() {
                 <CardHeader>
                     <div className='flex'>
                         <div className='font-bold text-2xl'>
-                            Danh sách sản phẩm
+                            Danh sách khuyến mãi
                         </div>
 
                         <div className='ml-auto'>
@@ -134,11 +138,11 @@ function Discounts() {
                         onSubmitSuccess={handleSubmitSuccess}
                     />
 
-                    {/* <DeleteModal
-                        product={selectedProduct}
+                    <DeleteModal
+                        discount={selectedDiscount}
                         open={isDeleteModalOpen}
                         onClose={() => setIsDeleteModalOpen(false)}
-                    />    */} 
+                    />  
 
                 </CardContent>
             </Card>

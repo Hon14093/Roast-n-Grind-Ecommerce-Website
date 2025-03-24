@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
+import { toast } from 'sonner';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
 import { getDetailedVariations } from '@/hooks/productAPI.jsx'
 
 // {
@@ -37,22 +40,55 @@ import { getDetailedVariations } from '@/hooks/productAPI.jsx'
 
 function ShopBody() {
     const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState([]);
 
     useEffect(() => {
         getDetailedVariations(setProducts);
-    }, [])
+    }, []);
+
+    const handleSearch = () => {
+        const results = products.filter(product =>
+            product.product_name.toLowerCase().includes(search.toLowerCase())
+        );
+
+        if (results.length === 0) {
+            toast("Không tìm thấy sản phẩm");
+        }
+
+        setFilteredProducts(results);
+    };
 
     return (
-        <div className="h-fit p-8 text-darkOlive">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {products.map((product) => (
-                    <ProductCard
-                        // className='h-fit'
-                        key={product.product_id}
-                        product={product}
-                    />
+        <div className="h-fit p-8 pt-4 text-darkOlive">
+            <section className='mb-5 flex w-1/2 mx-auto rounded-l-none'>
+                <Input
+                    className='border border-darkOlive'
+                    placeholder='Tìm kiếm sản phẩm'
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+                <Button className='bg-darkOlive text-ivory' onClick={handleSearch}>
+                    Tìm kiếm
+                </Button>
+            </section>
+
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {(filteredProducts.length > 0 ? filteredProducts : products).map((product) => (
+                    <ProductCard key={product.product_id} product={product} />
                 ))}
-            </div>
+            </section>
+
+            {/* Below is dynamic search without search button */}
+            {/* <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                        <ProductCard key={product.product_id} product={product} />
+                    ))
+                ) : (
+                    <p className="text-center min-h-[50vh] col-span-3">Không tìm thấy sản phẩm</p>
+                )}
+            </section> */}
         </div>
 
     )

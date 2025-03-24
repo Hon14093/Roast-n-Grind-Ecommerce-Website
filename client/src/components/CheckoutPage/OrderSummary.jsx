@@ -72,7 +72,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
             console.log(orderData);
 
         } else {
-            alert('Mã giảm giá không hợp lệ');
+            toast('Mã giảm giá không hợp lệ');
         }
     }
 

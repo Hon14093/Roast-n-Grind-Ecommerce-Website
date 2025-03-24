@@ -23,6 +23,9 @@ export const getAllOrders = async () => {
             },
             Discount: true,
             Shipping_Method: true
+        },
+        orderBy: {
+            order_date: 'desc',
         }
     });
 
@@ -88,7 +91,7 @@ export const getRemainingOrders = async () => {
             }
         },
         orderBy: {
-            order_date: 'asc',
+            order_date: 'desc',
         }
     })
 
@@ -121,7 +124,7 @@ export const getOrdersByAccountId = async (account_id) => {
             account_id: account_id
         },
         orderBy: {
-            order_date: 'asc',
+            order_date: 'desc',
         }
     })
 

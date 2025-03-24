@@ -80,7 +80,7 @@ export default function EditForm({ discount, onClose, onSubmitSuccess }) {
                 </article>
 
                 <article className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="discount_value">Giá trị khuyến mãi</Label>
+                    <Label htmlFor="discount_value">Giá trị khuyến mãi (%)</Label>
                     <Input 
                         id="discount_value" 
                         placeholder="giá trị sản phẩm" 
