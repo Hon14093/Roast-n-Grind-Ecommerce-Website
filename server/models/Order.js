@@ -51,6 +51,9 @@ export const getUnprocessedOrders = async () => {
         },
         where: {
             status_id: 1
+        },
+        orderBy: {
+            order_date: 'desc',
         }
     })
 
@@ -136,6 +139,7 @@ export const updateOrderStatus = async (order_id, statusId) => {
         }
     })
 }
+
 
 
 

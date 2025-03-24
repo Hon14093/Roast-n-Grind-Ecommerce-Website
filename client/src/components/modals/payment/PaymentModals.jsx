@@ -94,7 +94,7 @@ export const VisaModal = ({ orderData, totalPrice }) => {
                                     <Input 
                                         id="name" name="name" 
                                         className='border-darkOlive' 
-                                        defaultValue={totalPrice + ' vnđ'}
+                                        defaultValue={orderData.order_total + ' vnđ'}
                                         disabled
                                     />
                                 </div>
