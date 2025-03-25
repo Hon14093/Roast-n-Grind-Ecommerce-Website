@@ -1,18 +1,8 @@
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
   Coffee,
   FileSliders,
-  SlidersHorizontal,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
+  ChartColumn
 } from "lucide-react"
 
 import { NavMain } from "../components/nav-main"
@@ -47,7 +37,7 @@ const data = {
     {
       title: "Thống kê",
       url: "http://localhost:5173/admin/analytics",
-      icon: SquareTerminal,
+      icon: ChartColumn,
     },
     {
       title: "Quản lý",
@@ -92,7 +82,6 @@ export function AppSidebar({
 
       <SidebarContent className='bg-darkOlive text-ivory'>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
 
       <SidebarFooter className='bg-darkOlive text-ivory'>
