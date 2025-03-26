@@ -21,7 +21,6 @@ import {
 import { useEffect } from "react";
 
 export function NavMain({ items }) {
-    useEffect(() => console.log(items), []);
     return (
         (<SidebarGroup>
             <SidebarMenu>

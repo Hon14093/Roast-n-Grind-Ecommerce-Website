@@ -79,7 +79,7 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
                                 <p className="text-base">Size: {item.weight_name}</p>
                                 <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price}</p>
+                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                             </div>
                         </div>
                     ))}
@@ -94,7 +94,7 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
                             Thành tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice} vnđ
+                            {totalPrice.toLocaleString()} vnđ
                         </span>
                     </article>
                 </div>

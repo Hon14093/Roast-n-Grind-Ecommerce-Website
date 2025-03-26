@@ -42,6 +42,9 @@ export const getAccountInfo = async (account_id) => {
     });
 }
 
+export const getTotalAccounts = async () => {
+    return await prisma.account.count();
+}
 
 
 // const data = {

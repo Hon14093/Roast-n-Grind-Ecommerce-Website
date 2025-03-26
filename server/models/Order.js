@@ -143,9 +143,53 @@ export const updateOrderStatus = async (order_id, statusId) => {
     })
 }
 
+// for analytics -----------------------------
+export const getTotalRevenue = async () => {
+    return await prisma.order.aggregate({
+        _sum: {
+            order_total: true
+        }
+    });
+}
+
+export const getTotalRevenueLast30Days = async () => {
+    return await prisma.order.aggregate({
+        _sum: {
+            order_total: true
+        },
+        where: {
+            order_date: {
+                gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000)
+            }
+        }
+    });
+}
+
+export const countOrders = async () => {
+    return await prisma.order.count();
+}
+
+export const countUnprocessedOrders = async () => {
+    return await prisma.order.count({
+        where: {
+            status_id: 1
+        }
+    });
+}
+
+export const countOrdersLast30Days = async () => {
+    return await prisma.order.count({
+        where: {
+            order_date: {
+                gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000)
+            }
+        }
+    });
+};
 
 
 
+// unused -------------------------------------
 export const getOrderByID = async (order_id) => {
     return await prisma.order.findUnique({
         where: { order_id }

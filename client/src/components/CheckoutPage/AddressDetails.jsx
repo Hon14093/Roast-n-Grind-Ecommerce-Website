@@ -115,7 +115,7 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
                                 <p className="text-base">Size: {item.weight_name}</p>
                                 <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price}</p>
+                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                             </div>
                         </div>
                     ))}
@@ -129,7 +129,7 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
                             Thành tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice} vnđ
+                            {totalPrice.toLocaleString()} vnđ
                         </span>
                     </article>
                 </div>

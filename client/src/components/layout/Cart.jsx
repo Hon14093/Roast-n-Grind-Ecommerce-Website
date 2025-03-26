@@ -134,7 +134,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                                     />
                                                 </div>
                                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                                <p className="text-base">Thành tiền: {item.price}</p>
+                                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                                             </div>
 
                                             <div className="h-full ml-auto">

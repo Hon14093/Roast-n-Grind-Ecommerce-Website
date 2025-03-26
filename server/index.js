@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors'
+import analyticsRoutes from './routes/analyticsRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import addressRoutes from './routes/addressRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/api/analytics', analyticsRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/address', addressRoutes);

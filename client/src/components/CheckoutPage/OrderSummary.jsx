@@ -69,8 +69,6 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
             orderData.discount_id = discount.discount_id;
 
             calculateDiscount(discount.min_order_amount, discount.max_discount_amount, discount.discount_value);
-            console.log(orderData);
-
         } else {
             toast('Mã giảm giá không hợp lệ');
         }
@@ -99,7 +97,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                                 <p className="text-base">Size: {item.weight_name}</p>
                                 <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price}</p>
+                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                             </div>
                         </div>
                     ))}
@@ -114,7 +112,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             Phí vận chuyển:
                         </span>
                         <span className="ml-auto pr-3">
-                            {shippingPrice} vnđ
+                            {shippingPrice.toLocaleString()} vnđ
                         </span>
                     </article>
 
@@ -123,8 +121,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             Voucher:
                         </span>
                         <span className="ml-auto pr-3">
-                            {/* {totalPrice + shippingPrice} vnđ */}
-                            - {discountAmount} vnđ
+                            - {discountAmount.toLocaleString()} vnđ
                         </span>
                     </article>
 
@@ -133,7 +130,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                             Tổng tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice + shippingPrice - discountAmount} vnđ
+                            {(totalPrice + shippingPrice - discountAmount).toLocaleString()} vnđ
                         </span>
                     </article>
                 </div>

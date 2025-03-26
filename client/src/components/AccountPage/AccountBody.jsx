@@ -9,6 +9,7 @@ import { User2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
 import MyOrders from './MyOrders';
+import MyAddresses from './MyAddresses';
 import axios from 'axios';
 
 export default function AccountBody() {
@@ -41,10 +42,10 @@ export default function AccountBody() {
     return (
         <>
         <section className='grid place-items-center min-h-screen'>
-            <div className='flex w-full gap-8 justify-center'>
+            <div className='flex w-full gap-8 justify-center items-center'>
 
                 {/* This will contain tabs */}
-                <article className=' bg-ivory text-darkOlive h-fit rounded-xl md:w-[25%] xl:w-[20%]'>
+                <article className=' bg-ivory text-darkOlive h-fit rounded-xl md:w-[25%] xl:w-[20%] flex-shrink-0'>
 
                     <div className="mb-4 p-2 rounded-2xl shadow-lg gap-4 font-raleway text-xl">
                         <div className='flex items-center gap-2'>
@@ -54,8 +55,6 @@ export default function AccountBody() {
                         
                         {/* <div>{user.account_id}</div> */}
                     </div>
-
-                    {/* <Separator className='bg-darkOlive mx-auto mb-4' /> */}
 
                     <nav className="flex flex-col pb-10">
                         <button
@@ -96,16 +95,15 @@ export default function AccountBody() {
                 </article>
 
                 {/* This will render tab content */}
-                <article className='bg-darkOlive md:w-[65%] xl:w-[60%]'>
+                <article className='bg-darkOlive md:w-[65%] xl:w-[60%] max-h-screen overflow-y-auto'>
                     <div className='text-center text-ivory text-3xl m-7 font-semibold'>
                         Ngày mới tốt lành!
                     </div>
 
                     <div className='bg-ivory rounded-xl text-darkOlive p-4'>
                         {tab === "account" && <AccountInfo />}
-                        {tab === "address" && <AddressList />}
+                        {tab === "address" && <MyAddresses />}
                         {tab === "orders" && <MyOrders />}
-                        {tab === "logout" && <Logout />}
                     </div>
                 </article>
             </div>
@@ -117,5 +115,3 @@ export default function AccountBody() {
 }
 
 const AccountInfo = () => <div>Thông tin tài khoản</div>;
-const AddressList = () => <div>Địa chỉ của bạn</div>;
-const Logout = () => <div>Đăng xuất</div>;
