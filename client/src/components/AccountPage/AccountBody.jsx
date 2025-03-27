@@ -10,6 +10,7 @@ import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
 import MyOrders from './MyOrders';
 import MyAddresses from './MyAddresses';
+import MyAccountInfo from './MyAccountInfo';
 import axios from 'axios';
 
 export default function AccountBody() {
@@ -95,13 +96,13 @@ export default function AccountBody() {
                 </article>
 
                 {/* This will render tab content */}
-                <article className='bg-darkOlive md:w-[65%] xl:w-[60%] max-h-screen overflow-y-auto'>
+                <article className='bg-darkOlive md:w-[55%] xl:w-[50%] max-h-screen overflow-y-auto'>
                     <div className='text-center text-ivory text-3xl m-7 font-semibold'>
                         Ngày mới tốt lành!
                     </div>
 
                     <div className='bg-ivory rounded-xl text-darkOlive p-4'>
-                        {tab === "account" && <AccountInfo />}
+                        {tab === "account" && <MyAccountInfo />}
                         {tab === "address" && <MyAddresses />}
                         {tab === "orders" && <MyOrders />}
                     </div>
@@ -113,5 +114,3 @@ export default function AccountBody() {
         </>
     )
 }
-
-const AccountInfo = () => <div>Thông tin tài khoản</div>;

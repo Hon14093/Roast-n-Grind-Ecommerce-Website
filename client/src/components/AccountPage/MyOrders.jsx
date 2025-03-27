@@ -42,7 +42,7 @@ function MyOrders() {
     ];
 
     return (
-        <div>
+        <div className='min-h-40'>
             <DataTable data={data} columns={columnsWithActions} />
 
             <DetailsModal 
