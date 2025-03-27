@@ -28,12 +28,11 @@ export function ProductDetailsBody() {
             product_name: product.product_name,
             weight_id: selectedWeight.weight_id,
             weight_name: selectedWeight.weight_name,
-            price: selectedWeight.price,
+            price: selectedWeight.product_price,
             image_url: product.image_url,
             grind: grind,
             quantity: qty,
         });
-        // alert('Product added to cart!');
     };
 
     const handleQuantityChange = (e) => {
@@ -69,7 +68,7 @@ export function ProductDetailsBody() {
 
                         <span className="text-4xl font-serifs mt-4">
                             {hasVariations ? 
-                                `${selectedWeight.price.toLocaleString()} vnđ` : 
+                                `${selectedWeight.product_price.toLocaleString()} vnđ` : 
                                 <span className="text-red-500">Out of Stock</span>}
                         </span>
 

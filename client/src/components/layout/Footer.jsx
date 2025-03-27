@@ -9,8 +9,8 @@ function Footer({ theme }) {
     let hoverColor = 'hover:text-primaryGreen';
 
     if (theme === 'bg-primaryGreen') {
-        textColor = 'text-bgColor';
-        hoverColor = 'hover:text-bgColor';
+        textColor = 'text-ivory';
+        hoverColor = 'hover:text-ivory';
     }
 
     return (

@@ -6,7 +6,7 @@ const ProductCard = ({ product }) => {
     const navigate = useNavigate();
 
     const minPrice = product.variations.length > 0 
-        ? Math.min(...product.variations.map(v => v.price))
+        ? Math.min(...product.variations.map(v => v.product_price))
         : "N/A";
 
     return (

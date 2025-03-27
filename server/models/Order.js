@@ -187,6 +187,14 @@ export const countOrdersLast30Days = async () => {
     });
 };
 
+// for popular products ----------------------
+export const getCompletedOrders = async () => {
+    return await prisma.order.findMany({
+        select: { order_id: true },
+        where: { status_id: 5 }
+    })
+}
+
 
 
 // unused -------------------------------------

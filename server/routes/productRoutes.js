@@ -12,7 +12,8 @@ import {
     returnAllRoastLevels,
     returnAllProductVariations,
     returnDetailedVaritions,
-    deleteProductWithID
+    deleteProductWithID,
+    returnPopularProducts
 } from '../controllers/productController.js';
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.get('/all', returnAllProducts);
 router.get('/detailed-variations', returnDetailedVaritions) // return products with their weight options
 router.get('/variations', returnAllProductVariations); // not sure
 router.get('/details', returnAllProductsDetails); // admin page for products
+router.get('/popular', returnPopularProducts);
 
 router.get('/aromas', returnAllAromas);
 router.get('/weights', returnAllOptions);

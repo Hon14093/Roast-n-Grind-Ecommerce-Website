@@ -36,7 +36,7 @@ export default function AccountBody() {
     const tab = new URLSearchParams(location.search).get("tab") || "account";
 
     const handleTabChange = (newTab) => {
-        navigate(`?tab=${newTab}`); // Update URL without reloading
+        navigate(`?tab=${newTab}`);
     };
 
     return (

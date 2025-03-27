@@ -1,8 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logoWhite from '../../images/white.png'
+import ProductCard from '../ShopPage/ProductCard'
+import { getPopularProducts } from '@/hooks/productAPI';
 // import lumiCoffee from '../../images/Lumi.png'
 
 function FeaturedProductsSection() {
+    const [popularProducts, setPopularProducts] = useState([0]);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        getPopularProducts(setPopularProducts, setLoading);
+    }, []);
+
+    if (loading) return <div className="loading-spinner">Loading...</div>;
+    if (popularProducts.length === 0) return <div>No popular products found</div>;
+
+
     return (
         <article className='relative z-[1] text-[48px]'>
             <div className="text-ivory body-font bg-ivory">
@@ -17,13 +30,13 @@ function FeaturedProductsSection() {
                 </div> */}
 
                 <div className='pt-10 bg-ivory popular'>
-                    <h1 className=''>
-                        SẨN PHẨM PHỔ BIẾN
+                    <h1>
+                        SẢN PHẨM PHỔ BIẾN
                     </h1>
                 </div>
 
                 
-                <div className="container px-5 pb-20 pt-8 mx-auto bg-ivory">
+                {/* <div className="container px-5 pb-20 pt-8 mx-auto bg-ivory">
                     <div className="flex flex-wrap -mt-4 -mb-2">
                         
                         <button className="md:w-1/3 p-2">
@@ -81,6 +94,13 @@ function FeaturedProductsSection() {
                             Shop All Coffee
                         </button>
                     </div>
+                </div> */}
+
+                <div className="grid grid-cols-3 gap-6 w-3/4 mx-auto pb-20 pt-8">
+                    {popularProducts.map((product) => (
+                        // <div>{product.product_id}</div>
+                        <ProductCard key={product.product_id} product={product} />
+                    ))}
                 </div>
 
                 

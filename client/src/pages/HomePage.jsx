@@ -12,7 +12,7 @@ function HomePage() {
     };
 
     return (
-        <div className='text-darkOlive'>
+        <div className='text-darkOlive bg-ivory'>
             <Cart isOpen={isOpen} toggleCart={toggleCart} />
             <Header toggleCart={toggleCart}/>
             <main>

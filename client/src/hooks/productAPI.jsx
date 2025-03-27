@@ -56,7 +56,19 @@ export const deleteProduct = async (product_id) => {
         return result;
     } catch (error) {
         console.log(error);
-        
+    }
+}
+
+export const getPopularProducts = async (setData, setLoading) => {
+    try {
+        setLoading(true);
+        const result = await axios.get('http://localhost:5000/api/products/popular');
+        console.log(result.data.sortedProducts);
+        setData(result.data.sortedProducts)
+    } catch (error) {
+        console.log(error);
+    } finally {
+        setLoading(false);
     }
 }
 
