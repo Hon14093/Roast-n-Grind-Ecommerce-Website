@@ -1,56 +1,71 @@
+// ProductDetailsBody.jsx
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useLocation } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { addCartDetails } from "@/hooks/cartAPI"; 
 
 export function ProductDetailsBody() {
     const location = useLocation();
     const product = location.state?.product;
+    const { user } = useAuth(); // Lấy user từ AuthContext
+    const { updateCart } = useCart();
     const [grind, setGrind] = useState(false);
     const [qty, setQty] = useState(1);
+    const [error, setError] = useState(null); // Thêm state error
 
-    const { updateCart } = useCart();
-
-    const hasVariations = product.variations.length > 0;
+    const hasVariations = product?.variations?.length > 0;
     const [selectedWeight, setSelectedWeight] = useState(hasVariations ? product.variations[0] : null);
 
     if (!product) {
         return <p className="text-center mt-10 text-red-500">Product not found</p>;
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (!selectedWeight) return;
+        if (!user?.cart_id) {
+            setError("Vui lòng đăng nhập để thêm vào giỏ hàng.");
+            return;
+        }
 
-        updateCart({
-            product_id: product.product_id,
+        const cartItem = {
+            cart_id: user.cart_id,
             pw_id: selectedWeight.pw_id,
-            product_name: product.product_name,
-            weight_id: selectedWeight.weight_id,
-            weight_name: selectedWeight.weight_name,
-            price: selectedWeight.price,
-            image_url: product.image_url,
-            grind: grind,
             quantity: qty,
-        });
-        // alert('Product added to cart!');
+            item_subtotal: selectedWeight.price * qty,
+            is_ground: grind,
+        };
+
+        console.log("Dữ liệu gửi lên Cart_Details:", cartItem);
+
+        const response = await addCartDetails([cartItem]);
+        if (response) {
+            updateCart({
+                product_id: product.product_id,
+                pw_id: selectedWeight.pw_id,
+                product_name: product.product_name,
+                weight_id: selectedWeight.weight_id,
+                weight_name: selectedWeight.weight_name,
+                price: selectedWeight.price,
+                image_url: product.image_url,
+                grind: grind,
+                quantity: qty,
+            });
+            alert("Sản phẩm đã được thêm vào giỏ hàng!");
+        } else {
+            setError("Không thể thêm sản phẩm vào giỏ hàng.");
+        }
     };
 
     const handleQuantityChange = (e) => {
         let value = parseInt(e.target.value, 10);
-
-        if (isNaN(value)) {
-            value = 1;
-        }
-
-        if (value < 1) {
-            value = 1;
-        } else if (value > 10) {
-            value = 10;
-        }
-
+        if (isNaN(value)) value = 1;
+        if (value < 1) value = 1;
+        else if (value > 10) value = 10;
         setQty(value);
-    }
+    };
 
     return (
         <div className="text-darkOlive">
@@ -97,10 +112,10 @@ export function ProductDetailsBody() {
                         )}
 
                         <section className="flex mt-4 gap-5 items-center">
-                            <h2 className="text-lg font-semibold ">Số lượng:</h2>
+                            <h2 className="text-lg font-semibold">Số lượng:</h2>
                             <Input 
                                 type="number" 
-                                className='max-w-20 border border-darkOlive' 
+                                className="max-w-20 border border-darkOlive" 
                                 value={qty}
                                 onChange={handleQuantityChange}
                                 min="1" max="10"
@@ -108,27 +123,23 @@ export function ProductDetailsBody() {
                         </section>
 
                         <section className="flex mt-4 gap-4 items-center">
-                            <h2 className="text-lg font-semibold ">Xay cà phê?</h2>
-                            <Checkbox onClick={() => setGrind(true)} className='size-6'/>
+                            <h2 className="text-lg font-semibold">Xay cà phê?</h2>
+                            <Checkbox onClick={() => setGrind(!grind)} checked={grind} className="size-6" />
                         </section>
+
+                        {error && <p className="text-red-500 mt-2">{error}</p>}
 
                         <button 
                             className={`w-full mt-5 big-action-button
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
-                            onClick={() => {
-                                if (hasVariations) {
-                                    handleAddToCart(); 
-                                }
-                            }}
+                            onClick={handleAddToCart}
                             disabled={!hasVariations}
                         >
                             {hasVariations ? "Thêm vào giỏ hàng" : "Out of Stock"}
                         </button>
                     </section>
-
                 </div>
-
             </div>
         </div>
-    )
+    );
 }

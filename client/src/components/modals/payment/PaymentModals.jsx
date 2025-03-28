@@ -1,156 +1,120 @@
+// PaymentModals.jsx
 import React, { useState } from "react";
-import { 
+import {
     Dialog,
     DialogTrigger,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"; // Điều chỉnh đường dẫn nếu cần
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { createOrderDetails, placeOrder } from "@/hooks/orderAPI";
+import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/CartContext";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { placeOrder, createOrderDetails } from "@/hooks/orderAPI";
 import { removeAllCartDetails } from "@/hooks/cartAPI";
+import { createVNPayPaymentUrl } from "@/hooks/orderAPI"; // Giả định dùng VNPAY
+import { useNavigate } from "react-router-dom";
 
-export const VisaModal = ({ orderData, totalPrice }) => {
-    const { cartItems, reload } = useCart();
+export const VNPayModal = ({ orderData, totalPrice }) => {
+    const { cartItems, setCartItems } = useCart();
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [orderOpen, setOrderOpen] = useState(false);
-    const navigate = useNavigate();
-    
+    const [error, setError] = useState(null);
+    const [paymentUrl, setPaymentUrl] = useState(null);
+    const [loading, setLoading] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // setOrderOpen(true);
+        setError(null);
+        setLoading(true);
+
+        if (!user?.account_id) {
+            setError("Vui lòng đăng nhập để thanh toán.");
+            setLoading(false);
+            return;
+        }
+        if (cartItems.length === 0) {
+            setError("Giỏ hàng trống, không thể thanh toán.");
+            setLoading(false);
+            return;
+        }
 
         try {
-            const res = await placeOrder(orderData);
-            
+            const orderResponse = await createOrder(orderData);
+            console.log("Đơn hàng đã được tạo:", orderResponse);
+
             const orderDetails = cartItems.map((item) => ({
                 quantity: item.quantity,
                 subtotal: item.price * item.quantity,
                 is_ground: item.grind,
-                order_id: res.newOrder.order_id,
+                order_id: orderResponse.order.order_id,
                 pw_id: item.pw_id,
-            }))
+            }));
 
-            console.log('cart', cartItems)
-            console.log('details', orderDetails)
+            await createOrderDetails(orderDetails);
 
-            const details = await createOrderDetails(orderDetails);
-            const removeItems = await removeAllCartDetails(user.cart_id);
+            const paymentData = await createVNPayPaymentUrl(
+                totalPrice,
+                orderResponse.order.order_id,
+                `Thanh toán đơn hàng ${orderResponse.order.order_id}`
+            );
 
-            // this will open order complete modal and wait 2 secs
-            // then take user to main page
-            // 500ms later will refresh the page
-            // to reload the header cart
-            if (details.success && removeItems.success) {
+            if (paymentData && paymentData.paymentUrl) {
+                setPaymentUrl(paymentData.paymentUrl);
+                await removeAllCartDetails(user.cart_id);
+                setCartItems([]);
                 setOrderOpen(true);
-                localStorage.removeItem('cart');
-
                 setTimeout(() => {
                     setOrderOpen(false);
-                    navigate('/');
-                }, 2000)
-
-                setTimeout(() => {
-                    location.reload();
-                }, 2500)
+                    navigate("/account");
+                }, 2000);
+            } else {
+                setError("Không thể tạo URL thanh toán.");
             }
-            console.log(details);
-
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            setError(err.message || "Không thể xử lý thanh toán.");
+            console.error("Lỗi khi thanh toán:", err);
         }
-    }
+        setLoading(false);
+    };
 
     return (
         <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
+                    <Button className="bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto">
                         Đặt hàng
                     </Button>
                 </DialogTrigger>
 
-                <DialogContent className='bg-ivory'>
+                <DialogContent className="bg-ivory">
                     <DialogHeader>
-                        <DialogTitle>Thanh toán</DialogTitle>
-                        <DialogDescription className='text-base text-black'>
-
+                        <DialogTitle>Thanh toán qua VNPAY</DialogTitle>
+                        <DialogDescription className="text-base text-black">
+                            Vui lòng xác nhận thanh toán đơn hàng.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={handleSubmit} className="space-y-6 lg:col-span-2">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
-                            <article className='flex gap-4 w-full'>
-                                <div className="grid gap-2 w-1/2">
-                                    <Label htmlFor="name">Tổng cộng</Label>
-                                    <Input 
-                                        id="name" name="name" 
-                                        className='border-darkOlive' 
-                                        defaultValue={totalPrice + ' vnđ'}
-                                        disabled
-                                    />
-                                </div>
-
-                                <div className="grid gap-2 w-1/2">
-                                    <Label htmlFor="name">Tên chủ thẻ</Label>
-                                    <Input 
-                                        id="name" name="name" 
-                                        className='border-darkOlive' 
-                                        // onChange={(e) => setFirstName(e.target.value)}
-                                        required 
-                                    />
-                                </div>
-                            </article>
-
                             <div className="grid gap-2">
-                                <Label htmlFor="address">Số thẻ</Label>
-                                <Input 
-                                    id="address" name="address" 
-                                    className='border-darkOlive' 
-                                    // onChange={(e) => setAddressLine(e.target.value)}
-                                    required 
+                                <Label>Tổng cộng</Label>
+                                <Input
+                                    className="border-darkOlive"
+                                    value={`${totalPrice} vnđ`}
+                                    disabled
                                 />
                             </div>
-                            
-                            <div className="grid gap-2 sm:grid-cols-2">
-                                <div>
-                                    <Label htmlFor="month">Hạn sử dụng</Label>
-                                    <div className="flex w-full gap-1">
-                                        <Input 
-                                            id="month" name="month" 
-                                            className='border-darkOlive w-2/5' 
-                                            placeholder='Tháng'
-                                            required 
-                                        />
-                                        <p className="self-center">/</p>
-                                        <Input 
-                                            id="year" name="year" 
-                                            className='border-darkOlive w-3/5' 
-                                            placeholder='Năm'                               
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <Label htmlFor="state">CVV</Label>
-                                    <Input 
-                                        id="state" name="state" 
-                                        className='border-darkOlive' 
-                                        // onChange={(e) => setDistict(e.target.value)}
-                                        required 
-                                    />
-                                </div>
-                            </div>
                         </div>
-                        <Button type="submit" className="w-full bg-darkOlive text-ivory">
-                            Thanh toán
+                        {error && <p className="text-red-500">{error}</p>}
+                        <Button type="submit" className="w-full bg-darkOlive text-ivory" disabled={loading}>
+                            {loading ? "Đang xử lý..." : "Xác nhận thanh toán"}
                         </Button>
                     </form>
                 </DialogContent>
@@ -158,23 +122,34 @@ export const VisaModal = ({ orderData, totalPrice }) => {
 
             <Dialog open={orderOpen} onOpenChange={setOrderOpen}>
                 <DialogContent>
-                    <div className="flex">
+                    <DialogHeader>
+                        <DialogTitle>Thanh toán qua VNPAY</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
                         <CheckCircle2 className="mx-auto" size={80} color="green" />
+                        <p className="text-xl mx-auto font-bold">Đặt hàng thành công</p>
+                        {paymentUrl ? (
+                            <>
+                                <p className="text-sm text-gray-600">
+                                    Quét mã QR dưới đây để thanh toán qua VNPAY hoặc{" "}
+                                    <a href={paymentUrl} className="text-blue-500 underline">
+                                        nhấp vào đây
+                                    </a>
+                                    .
+                                </p>
+                                <div className="w-40 h-40 bg-gray-200 flex items-center justify-center mx-auto">
+                                    <p className="text-gray-500">QR Code Placeholder</p>
+                                </div>
+                            </>
+                        ) : (
+                            <p>Đang tạo URL thanh toán...</p>
+                        )}
+                        <p className="text-sm text-gray-600">
+                            Trở về trang tài khoản trong giây lát...
+                        </p>
                     </div>
-                    <span className="text-xl mx-auto font-bold">
-                        Đặt hàng thành công
-                    </span>
-                    <span className="mx-auto -mt-4">
-                        Trở về trang chủ trong giây lát...
-                    </span>
                 </DialogContent>
             </Dialog>
         </>
-    )
-}
-
-export const TransferModal = () => {
-    return (
-        <div></div>
-    )
-}
+    );
+};

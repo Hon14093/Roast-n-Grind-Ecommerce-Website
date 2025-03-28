@@ -1,13 +1,16 @@
 import axios from 'axios';
 
 export const addCartDetails = async (detail) => {
+    console.log("Dữ liệu gửi lên addCartDetails:", detail);
     try {
-        const result = await axios.post('http://localhost:5000/api/cart/details/create', detail);
+        const result = await axios.post("http://localhost:5000/api/cart/details/create", detail);
+        console.log("Kết quả từ addCartDetails:", result.data);
         return result;
     } catch (error) {
-        console.log(error);
+        console.error("Lỗi khi thêm chi tiết giỏ hàng:", error);
+        return null;
     }
-}
+};
 
 // this only returns cart_id and account_id
 export const getCartByAccountId = async (account_id, setCart) => {
@@ -24,12 +27,13 @@ export const getCartByAccountId = async (account_id, setCart) => {
 export const getCartDetailsByCartId = async (cart_id) => {
     try {
         const result = await axios.get(`http://localhost:5000/api/cart/details/${cart_id}`);
-        console.log('api cart details: ',result.data.formattedDetails);
-        return result.data.formattedDetails;
+        console.log("API getCartDetailsByCartId:", result.data.formattedDetails);
+        return result.data.formattedDetails || [];
     } catch (error) {
-        console.log(error);
+        console.error("Lỗi khi lấy chi tiết giỏ hàng:", error);
+        return [];
     }
-}
+};
 
 export const removeCartDetail = async (cart_id, pw_id) => {
     try {

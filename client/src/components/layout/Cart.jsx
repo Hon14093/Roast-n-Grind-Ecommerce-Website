@@ -17,10 +17,6 @@ export default function Cart({ isOpen, toggleCart }) {
     const { cartItems, updateQuantity, removeFromCart } = useCart();
     const navigate = useNavigate();
 
-    // const totalPrice = Array.isArray(cartItems) && cartItems.length > 0
-    // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-    // : 0;
-
     const totalPrice = (cartItems && cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
@@ -92,16 +88,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Tổng tiền:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice} vnđ                                            
-                                        </span>
-                                    </article>
-
-                                    <article className="flex">
-                                        <span>
-                                            Phí vận chuyển:
-                                        </span>
-                                        <span className="ml-auto">
-                                            {/* {totalPrice < 100000 ? 30000 + ' vnđ' : 'Miễn phí'} */}
+                                            {totalPrice.toLocaleString()} vnđ                                            
                                         </span>
                                     </article>
                                 </div>
@@ -143,7 +130,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                                     />
                                                 </div>
                                                 <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                                <p className="text-base">Thành tiền: {item.price}</p>
+                                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                                             </div>
 
                                             <div className="h-full ml-auto">

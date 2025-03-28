@@ -1,5 +1,6 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
+
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -9,38 +10,41 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('jwtToken');
+        const storedToken = localStorage.getItem("jwtToken");
+        console.log("Stored token:", storedToken);
         if (storedToken) {
             try {
-                const decodedToken = jwtDecode(storedToken); 
+                const decodedToken = jwtDecode(storedToken);
+                console.log("Decoded token:", decodedToken);
                 setUser(decodedToken);
-                setIsLoggedIn(true)
+                setIsLoggedIn(true);
             } catch (error) {
-                console.error('Error decoding token:', error);
-                localStorage.removeItem('jwtToken');
+                console.error("Error decoding token:", error);
+                localStorage.removeItem("jwtToken");
             }
         } else {
-            setIsLoggedIn(false)
+            setIsLoggedIn(false);
         }
         setLoading(false);
     }, []);
 
     const login = (token) => {
-        localStorage.setItem('jwtToken', token);
+        console.log("Login with token:", token);
+        localStorage.setItem("jwtToken", token);
         try {
             const decodedToken = jwtDecode(token);
+            console.log("Decoded token in login:", decodedToken);
             setUser(decodedToken);
             setIsLoggedIn(true);
         } catch (error) {
-            console.error('Error decoding token:', error);
-            localStorage.removeItem('jwtToken');
+            console.error("Error decoding token:", error);
+            localStorage.removeItem("jwtToken");
         }
     };
 
     const logout = () => {
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('cart');
-        // localStorage.setItem("cart", JSON.stringify([]));
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("cart");
         setUser(null);
         setIsLoggedIn(false);
     };

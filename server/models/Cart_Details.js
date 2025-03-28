@@ -1,12 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const createCartDetail = async (data) => {
-    return await prisma.cart_Details.createMany({ 
-        data,
-        skipDuplicates: true
-    });
-};
+
 
 export const getCartDetailsById = async (cd_id) => {
     return await prisma.cart_Details.findUnique({
@@ -136,4 +131,19 @@ export const getCartDetailsByCartIdAndFlavourIdAndWeightId = async (cart_id, fla
             weight_id
         }
     });
+};
+
+export const createCartDetail = async (data) => {
+    console.log("Dữ liệu nhận được từ client:", data);
+    try {
+        const result = await prisma.cart_Details.createMany({ 
+            data,
+            skipDuplicates: true
+        });
+        console.log("Kết quả từ Prisma:", result);
+        return result;
+    } catch (error) {
+        console.error("Lỗi khi tạo Cart_Details:", error);
+        throw error; // Để server trả lỗi chi tiết về client
+    }
 };
