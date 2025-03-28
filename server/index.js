@@ -10,6 +10,7 @@ import imageUpload from './controllers/imageUpload.js'
 import orderRoutes from './routes/orderRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
+import reviewRoutes from './routes/reviewRoutes.js'
 
 dotenv.config();
 
@@ -32,7 +33,8 @@ app.use('/api/address', addressRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/discount', discountRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/order', orderRoutes)
+app.use('/api/order', orderRoutes);
+app.use('/api/review', reviewRoutes)
 app.use('/image/', imageUpload);
 
 app.listen(PORT, () => {

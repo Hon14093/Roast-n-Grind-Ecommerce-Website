@@ -1,9 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+// review_id, review_date,
+// star, comment, product_id, account_id
 export const createReview = async (data) => {
     return await prisma.review.create({ data });
 }
+
+export const getReviewsByProductId = async (product_id) => {
+    return await prisma.review.findMany({
+        where: { product_id }
+    });
+}
+
+
 
 export const getAllReviews = async () => {
     return await prisma.review.findMany();
@@ -12,12 +22,6 @@ export const getAllReviews = async () => {
 export const getReviewById = async (review_id) => {
     return await prisma.review.findUnique({
         where: { review_id }
-    });
-}
-
-export const getReviewsByProductId = async (product_id) => {
-    return await prisma.review.findMany({
-        where: { product_id }
     });
 }
 

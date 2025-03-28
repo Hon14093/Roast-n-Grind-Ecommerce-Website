@@ -96,14 +96,20 @@ function FeaturedProductsSection() {
                     </div>
                 </div> */}
 
-                <div className="grid grid-cols-3 gap-6 w-3/4 mx-auto pb-20 pt-8">
+                <div className="grid grid-cols-3 gap-6 max-w-[75%] mx-auto pt-8">
                     {popularProducts.map((product) => (
                         // <div>{product.product_id}</div>
                         <ProductCard key={product.product_id} product={product} />
                     ))}
+
+                    
                 </div>
 
-                
+                <div className='max-w-[75%] mx-auto pb-20'>
+                    <button className='big-action-button font-bold w-full text-ivory'>
+                        Shop All Coffee
+                    </button>
+                </div>
             </div>
 
         </article>

@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
+import ReviewSection from "./ReviewSection";
 
 export function ProductDetailsBody() {
     const location = useLocation();
@@ -53,8 +55,8 @@ export function ProductDetailsBody() {
 
     return (
         <div className="text-darkOlive">
-            <div className="bg-ivory">
-                <div className="p-4 grid grid-cols-12">
+            <div className="bg-ivory max-w-[1250px] mx-auto">
+                <div className="p-4 grid grid-cols-12 ">
                     <section className="col-span-6">
                         <img 
                             src={product.image_url} 
@@ -127,6 +129,9 @@ export function ProductDetailsBody() {
 
                 </div>
 
+                <Separator className='bg-darkOlive my-4 mx-auto max-w-[80%]'/>
+
+                <ReviewSection />
             </div>
         </div>
     )

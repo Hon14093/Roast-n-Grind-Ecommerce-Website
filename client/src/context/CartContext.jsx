@@ -87,8 +87,12 @@ export function CartProvider({ children }) {
                 let savedCart;
                 let itemsInDB = [];
     
+                // if user is logged in, idea 1
+                // else check the localstorage 
                 if (user && user.account_id) {
-                    // Fetch items from DB if logged in
+                    // idea 1: fetch items from db and localStorage
+                    // if there are items in localStorage, update them in db
+                    // else set them in localstorage as 'cart'
                     itemsInDB = await getCartDetailsByCartId(user.cart_id);
                     const temp = JSON.parse(localStorage.getItem("cart"))?.items || [];
     
@@ -107,7 +111,7 @@ export function CartProvider({ children }) {
     
                     savedCart = itemsInDB;
                 } else {
-                    // Fetch from localStorage if not logged in
+                    // fetch items from localStorage if not logged in
                     savedCart = JSON.parse(localStorage.getItem("cart")) || { items: [] };
                 }
     
@@ -121,38 +125,12 @@ export function CartProvider({ children }) {
         fetchCart();
     }, [user]);
 
-    // Update localStorage when cartItems change
     useEffect(() => {
         if (cartItems.length > 0) {
             localStorage.setItem("cart", JSON.stringify({ items: cartItems }));
             console.log("Cart updated:", cartItems);
         }
     }, [cartItems]);
-
-    const updateCart1 = (newItem) => {
-        // const cartExist = JSON.parse(localStorage.getItem("cart")).items;
-        // console.log('Checking', JSON.parse(cartExist))
-
-        const existingItem = cartItems.find(
-            (item) =>
-                item.product_id === newItem.product_id &&
-                item.weight_id === newItem.weight_id
-        );
-    
-        if (existingItem) {
-          // Update quantity if the variation already exists
-            setCartItems((prev) =>
-                prev.map((item) =>
-                item.product_id === newItem.product_id &&
-                item.weight_id === newItem.weight_id
-                    ? { ...item, quantity: item.quantity + newItem.quantity }
-                    : item
-                )
-            );
-        } else {
-            setCartItems((prev) => [...prev, { ...newItem }]);
-        }        
-    };
 
     const updateCart = (newItem) => {
         setCartItems((prev = []) => {
