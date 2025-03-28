@@ -3,6 +3,7 @@ import axios from 'axios';
 export const addCartDetails = async (detail) => {
     try {
         const result = await axios.post('http://localhost:5000/api/cart/details/create', detail);
+        console.log(result.data.success)
         return result;
     } catch (error) {
         console.log(error);

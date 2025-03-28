@@ -9,6 +9,7 @@ export function CartProvider({ children }) {
     const { user } = useAuth(); // cart_id, account_id, is_admin
     const [cartItems, setCartItems] = useState([]);
     const [load, reload] = useState();
+    let check = 0;
 
     // example data from api
     // {
@@ -25,22 +26,73 @@ export function CartProvider({ children }) {
     //     "quantity": 1
     // },
 
+    // useEffect(() => {
+    //     const fetchCart = async () => {
+    //         try {
+    //             let savedCart ;
+    //             var itemsInDB = [];
+
+    //             // if user is logged in, idea 1
+    //             // else check the localstorage 
+    //             if (user && user.account_id) {
+    //                 // idea 1: fetch items from db and localstorage
+    //                 // if there are items in local storage, update them in db
+    //                 // else set them in localstorage as 'cart'
+    //                 itemsInDB = await getCartDetailsByCartId(user.cart_id);
+    //                 const temp = JSON.parse(localStorage.getItem("cart")).items;
+    //                 console.log('Items in cart: ', temp)
+                    
+    //                 if (temp) {
+    //                     const cartDetailsData = temp.map(item => ({
+    //                         cart_id: user.cart_id,
+    //                         quantity: item.quantity,
+    //                         pw_id: item.pw_id,
+    //                         item_subtotal: item.price * item.quantity,
+    //                         is_ground: item.grind
+    //                     }));
+            
+    //                     await addCartDetails(cartDetailsData);
+    //                     itemsInDB = await getCartDetailsByCartId(user.cart_id);
+    //                     savedCart = itemsInDB;
+    //                 } else {
+    //                     savedCart = itemsInDB;
+    //                 }
+
+    //             } else {
+    //                 // check the localStorage
+    //                 savedCart = localStorage.getItem("cart");
+    //                 console.log('Not logged in');
+    //             }
+    
+    //             // this works
+    //             if (typeof savedCart !== 'object') {
+    //                 setCartItems(JSON.parse(savedCart).items);
+    //                 console.log(typeof savedCart, savedCart)
+    //             } else {
+    //                 setCartItems(savedCart);
+    //                 console.log(typeof savedCart, savedCart)
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching cart:", error);
+    //         }
+    //     };
+    
+    //     fetchCart();
+        
+    // }, [user]); 
+
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                let savedCart ;
-                var itemsInDB = [];
-
-                // if user is logged in, idea 1
-                // else check the localstorage 
+                let savedCart;
+                let itemsInDB = [];
+    
                 if (user && user.account_id) {
-                    // idea 1: fetch items from db and localstorage
-                    // if there are items in storage, update them in db
-                    // else set them in localstorage as 'cart'
+                    // Fetch items from DB if logged in
                     itemsInDB = await getCartDetailsByCartId(user.cart_id);
-                    const temp = JSON.parse(localStorage.getItem("cart")).items;
-                    
-                    if (temp) {
+                    const temp = JSON.parse(localStorage.getItem("cart"))?.items || [];
+    
+                    if (temp.length > 0) {
                         const cartDetailsData = temp.map(item => ({
                             cart_id: user.cart_id,
                             quantity: item.quantity,
@@ -48,57 +100,43 @@ export function CartProvider({ children }) {
                             item_subtotal: item.price * item.quantity,
                             is_ground: item.grind
                         }));
-            
+    
                         await addCartDetails(cartDetailsData);
                         itemsInDB = await getCartDetailsByCartId(user.cart_id);
-                        savedCart = itemsInDB;
                     }
-
+    
+                    savedCart = itemsInDB;
                 } else {
-                    // check the localStorage
-                    savedCart = localStorage.getItem("cart");
-                    console.log('Not logged in');
+                    // Fetch from localStorage if not logged in
+                    savedCart = JSON.parse(localStorage.getItem("cart")) || { items: [] };
                 }
     
-                // this works
-                if (typeof savedCart !== 'object') {
-                    setCartItems(JSON.parse(savedCart).items);
-                    console.log(typeof savedCart, savedCart)
-                } else {
-                    setCartItems(savedCart);
-                    console.log(typeof savedCart, savedCart)
-                }
+                setCartItems(savedCart.items || savedCart); 
+                console.log("Cart loaded:", savedCart);
             } catch (error) {
                 console.error("Error fetching cart:", error);
             }
         };
     
         fetchCart();
-        
-    }, [user]); 
-    
-    // setTimeout(() => {
-    //     console.log('containing: ',cartItems)
-    // }, 1000)
-
-    // useEffect(() => {
-    //     const savedCart = localStorage.getItem('cart');
-    //     if (savedCart) {
-    //         setCartItems(JSON.parse(savedCart).items);
-    //     }
-    // }, []);
+    }, [user]);
 
     // Update localStorage when cartItems change
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify({ items: cartItems }));
-        console.log(typeof cartItems, cartItems)
+        if (cartItems.length > 0) {
+            localStorage.setItem("cart", JSON.stringify({ items: cartItems }));
+            console.log("Cart updated:", cartItems);
+        }
     }, [cartItems]);
 
-    const updateCart = (newItem) => {
+    const updateCart1 = (newItem) => {
+        // const cartExist = JSON.parse(localStorage.getItem("cart")).items;
+        // console.log('Checking', JSON.parse(cartExist))
+
         const existingItem = cartItems.find(
             (item) =>
                 item.product_id === newItem.product_id &&
-                item.weight_id === newItem.weight_id // Check for matching variation
+                item.weight_id === newItem.weight_id
         );
     
         if (existingItem) {
@@ -113,7 +151,28 @@ export function CartProvider({ children }) {
             );
         } else {
             setCartItems((prev) => [...prev, { ...newItem }]);
-        }
+        }        
+    };
+
+    const updateCart = (newItem) => {
+        setCartItems((prev = []) => {
+            const existingItem = prev.find(
+                (item) =>
+                    item.product_id === newItem.product_id &&
+                    item.weight_id === newItem.weight_id
+            );
+    
+            if (existingItem) {
+                return prev.map((item) =>
+                    item.product_id === newItem.product_id &&
+                    item.weight_id === newItem.weight_id
+                        ? { ...item, quantity: item.quantity + newItem.quantity }
+                        : item
+                );
+            } else {
+                return [...prev, newItem];
+            }
+        });
     };
 
     const removeFromCart = (product_id, weight_id) => {

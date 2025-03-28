@@ -16,7 +16,6 @@ export const getDetailedVariations = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/products/detailed-variations');
         setData(result.data.formattedProducts);
-        console.log(result.data.formattedProducts);
     } catch (error) {
         console.log('Error fecthing variations:', error);
     }
@@ -63,7 +62,6 @@ export const getPopularProducts = async (setData, setLoading) => {
     try {
         setLoading(true);
         const result = await axios.get('http://localhost:5000/api/products/popular');
-        console.log(result.data.sortedProducts);
         setData(result.data.sortedProducts)
     } catch (error) {
         console.log(error);
@@ -97,7 +95,6 @@ export const getWeights = async (setWeight) => {
     try {
         const result = await axios.get('http://localhost:5000/api/products/weights');
         setWeight(result.data.options);
-        console.log(result.data.options);
     } catch (error) {
         console.error("Error fetching weight data:", error); 
     }
@@ -107,7 +104,6 @@ export const getAllVariations = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/products/variations');
         setData(result.data.variations);
-        console.log(result.data.variations);
     } catch (error) {
         console.log('Error fecthing variations:', error);
     }

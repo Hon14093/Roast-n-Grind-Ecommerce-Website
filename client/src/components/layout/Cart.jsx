@@ -17,10 +17,6 @@ export default function Cart({ isOpen, toggleCart }) {
     const { cartItems, updateQuantity, removeFromCart } = useCart();
     const navigate = useNavigate();
 
-    // const totalPrice = Array.isArray(cartItems) && cartItems.length > 0
-    // ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-    // : 0;
-
     const totalPrice = (cartItems && cartItems.length !== 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
@@ -92,7 +88,7 @@ export default function Cart({ isOpen, toggleCart }) {
                                             Tổng tiền:
                                         </span>
                                         <span className="ml-auto">
-                                            {totalPrice} vnđ                                            
+                                            {totalPrice.toLocaleString()} vnđ                                            
                                         </span>
                                     </article>
                                 </div>

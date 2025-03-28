@@ -112,7 +112,7 @@ export function ProductDetailsBody() {
                         </section>
 
                         <button 
-                            className={`w-full mt-5 big-action-button
+                            className={`w-full mt-5 big-action-button font-bold
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
                             onClick={() => {
                                 if (hasVariations) {
