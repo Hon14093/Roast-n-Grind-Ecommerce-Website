@@ -16,17 +16,17 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
     const { cartItems } = useCart();
     const [addresses, setAddresses] = useState([]);
 
-    const totalPrice = (cartItems.length > 0)
+    const totalPrice = cartItems.length > 0
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
     const handleSubmitSuccess = () => {
-        getAddressesByAccountId(user.account_id ,setAddresses);
+        getAddressesByAccountId(user.account_id, setAddresses);
     }
 
     useEffect(() => {
-        getAddressesByAccountId(user.account_id ,setAddresses);
-    })
+        getAddressesByAccountId(user.account_id, setAddresses);
+    }, [user.account_id]);
 
     const isAddressChecked = () => {
         if (addressId) {
@@ -35,106 +35,108 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
             alert('Hãy chọn địa chỉ giao hàng');
         }
     }
-    
+
     return (
-        <div className='grid grid-cols-12 gap-4'>
+        <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                {/* Address Section */}
+                <section className="md:col-span-7">
+                    <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
+                        Địa chỉ giao hàng
+                    </h1>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {addresses.map((address) => (
+                            <article 
+                                key={address.Address.address_id}
+                                className="relative p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                            >
+                                <div className="flex items-start space-x-3">
+                                    <Checkbox
+                                        id={`address-${address.Address.address_id}`}
+                                        checked={addressId === address.Address.address_id}
+                                        onCheckedChange={(checked) => {
+                                            setSelectedAddressId(checked ? address.Address.address_id : null);
+                                        }}
+                                        className="mt-1"
+                                    />
+                                    <div className="flex-1 space-y-1">
+                                        <p className="font-semibold text-gray-900">
+                                            {address.Address.last_name} {address.Address.first_name}
+                                        </p>
+                                        <p className="text-gray-600">{address.Address.address_line}</p>
+                                        <p className="text-gray-600">{address.Address.ward}</p>
+                                        <p className="text-gray-600">{address.Address.district}</p>
+                                        <p className="text-gray-600">
+                                            {address.Address.City.city_name}, {address.Address.postal_code}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="absolute top-4 right-4 flex space-x-2">
+                                    <EditAddress 
+                                        address={address.Address}
+                                        onSubmitSuccess={handleSubmitSuccess}
+                                    />
+                                    <DeleteWarning 
+                                        address_id={address.Address.address_id}
+                                        onSubmitSuccess={handleSubmitSuccess}
+                                    />
+                                </div>
+                            </article>
+                        ))}
+                        <AddAddress onSubmitSuccess={handleSubmitSuccess} />
+                    </div>
 
-            {/* Address Form */}
-            <section className='col-span-7 mx-auto w-full'>
-
-                <h1 className='font-semibold uppercase text-2xl pb-2'>địa chỉ giao hàng</h1>
-                <div className='flex flex-wrap gap-4'>
-                    {addresses.map((address) => (
-                        <article 
-                            key={address.Address.address_id}
-                            className='py-1 pl-2 mb-4 h-52 w-64 items-stretch border-darkOlive border-2 rounded-xl'
-                        >
-                            <Checkbox
-                                id={`address-${address.Address.address_id}`}
-                                checked={addressId === address.Address.address_id}
-                                onCheckedChange={(checked) => {
-                                    if (checked) {
-                                        setSelectedAddressId(address.Address.address_id);
-                                    } else {
-                                        setSelectedAddressId(null); // Unselect if unchecked (optional)
-                                    }
-                                }}
-                            />
-                            <p className='text-lg'>{address.Address.last_name} {address.Address.first_name}</p>
-                            <p className='text-lg'>{address.Address.address_line}</p>
-                            <p className='text-lg'>{address.Address.ward}</p>
-                            <p className='text-lg'>{address.Address.district}</p>
-                            <span className='flex'>
-                                <p className='text-lg'>{address.Address.City.city_name}</p>
-                                
-                                <DeleteWarning 
-                                    address_id={address.Address.address_id} 
-                                    onSubmitSuccess={handleSubmitSuccess} 
-                                />
-                            </span>
-                            <span className='flex'>
-                                <p className='text-lg'>{address.Address.postal_code}</p>
-                                <EditAddress 
-                                    address={address.Address}
-                                    onSubmitSuccess={handleSubmitSuccess} 
-                                />
-                                {/* <Button className='ml-auto text-blue-600' variant='link'>Chỉnh sửa</Button> */}
-                            </span>
-                        </article>
-                    ))}
-
-                    <AddAddress onSubmitSuccess={handleSubmitSuccess} />
-
-                </div>
-
-                <div className='pt-5'>
-                    <Button className='bg-darkOlive border-darkOlive border-2 w-full hover:bg-ivory hover:text-darkOlive' onClick={isAddressChecked}>
+                    <Button 
+                        className="mt-8 w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+                        onClick={isAddressChecked}
+                    >
                         Tiếp theo
                     </Button>
-                </div>
-            </section>
+                </section>
 
-            {/* Display cart */}
-            <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
-                <h1 className='font-semibold uppercase text-2xl pb-2'>Giỏ hàng</h1>
-                <ScrollArea className='h-[500px]'>
+                {/* Cart Section */}
+                <section className="md:col-span-5">
+                    <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
+                        Giỏ hàng
+                    </h1>
                     
-                    {cartItems.map((item) => (
-                        <div
-                            key={`${item.product_id}-${item.weight_id}`}
-                            className="flex items-start gap-4 mb-4"
-                        >
-                            <img
-                                src={item.image_url}
-                                alt={item.product_name}
-                                className="w-28 h-28 object-cover rounded"
-                            />
-
-                            <div>
-                                <p className="font-medium">{item.product_name}</p>
-                                <p className="text-base">Size: {item.weight_name}</p>
-                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
-                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price}</p>
+                    <ScrollArea className="h-[500px] bg-white rounded-lg border border-gray-200 p-4">
+                        {cartItems.map((item) => (
+                            <div
+                                key={`${item.product_id}-${item.weight_id}`}
+                                className="flex items-start gap-4 py-4 border-b border-gray-100 last:border-b-0"
+                            >
+                                <img
+                                    src={item.image_url}
+                                    alt={item.product_name}
+                                    className="w-20 h-20 object-cover rounded-md"
+                                />
+                                <div className="flex-1">
+                                    <p className="font-semibold text-gray-900">{item.product_name}</p>
+                                    <p className="text-sm text-gray-600">Size: {item.weight_name}</p>
+                                    <p className="text-sm text-gray-600">Số lượng: {item.quantity}</p>
+                                    <p className="text-sm text-gray-600">
+                                        Xay: {item.grind ? "Có" : "Không"}
+                                    </p>
+                                    <p className="text-sm font-medium text-gray-900">
+                                        {item.price.toLocaleString()} vnđ
+                                    </p>
+                                </div>
                             </div>
+                        ))}
+                    </ScrollArea>
+
+                    <div className="mt-6 bg-white rounded-lg border border-gray-200 p-4">
+                        <div className="flex items-center justify-between text-lg">
+                            <span className="font-bold text-gray-800">Tổng cộng:</span>
+                            <span className="font-semibold text-darkOlive">
+                                {totalPrice.toLocaleString()} vnđ
+                            </span>
                         </div>
-                    ))}
-                </ScrollArea>
-
-                <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-4'/>
-                
-                <div>
-                    <article className="flex text-lg">
-                        <span className='font-bold'>
-                            Thành tiền:
-                        </span>
-                        <span className="ml-auto pr-3">
-                            {totalPrice} vnđ
-                        </span>
-                    </article>
-                </div>
-
-            </section>
+                    </div>
+                </section>
+            </div>
         </div>
     )
 }

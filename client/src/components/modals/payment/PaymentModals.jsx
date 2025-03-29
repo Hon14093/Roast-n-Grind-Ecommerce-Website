@@ -16,8 +16,9 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { placeOrder, createOrderDetails } from "@/hooks/orderAPI";
 import { removeAllCartDetails } from "@/hooks/cartAPI";
-import { createVNPayPaymentUrl } from "@/hooks/orderAPI"; // Giả định dùng VNPAY
+import { createVNPayPaymentUrl } from "@/hooks/orderAPI"; 
 import { useNavigate } from "react-router-dom";
+// import QRCode from "qrcode.react";
 
 export const VNPayModal = ({ orderData, totalPrice }) => {
     const { cartItems, setCartItems } = useCart();
@@ -46,8 +47,12 @@ export const VNPayModal = ({ orderData, totalPrice }) => {
         }
 
         try {
-            const orderResponse = await createOrder(orderData);
+            const orderResponse = await placeOrder(orderData);
             console.log("Đơn hàng đã được tạo:", orderResponse);
+
+            if (!orderResponse || !orderResponse.order?.order_id) {
+                throw new Error("Không thể tạo đơn hàng.");
+            }
 
             const orderDetails = cartItems.map((item) => ({
                 quantity: item.quantity,
@@ -70,10 +75,7 @@ export const VNPayModal = ({ orderData, totalPrice }) => {
                 await removeAllCartDetails(user.cart_id);
                 setCartItems([]);
                 setOrderOpen(true);
-                setTimeout(() => {
-                    setOrderOpen(false);
-                    navigate("/account");
-                }, 2000);
+                // Không chuyển hướng ngay, để người dùng quét QR
             } else {
                 setError("Không thể tạo URL thanh toán.");
             }
@@ -130,23 +132,26 @@ export const VNPayModal = ({ orderData, totalPrice }) => {
                         <p className="text-xl mx-auto font-bold">Đặt hàng thành công</p>
                         {paymentUrl ? (
                             <>
-                                <p className="text-sm text-gray-600">
+                                <p className="text-sm text-gray-600 text-center">
                                     Quét mã QR dưới đây để thanh toán qua VNPAY hoặc{" "}
                                     <a href={paymentUrl} className="text-blue-500 underline">
                                         nhấp vào đây
                                     </a>
                                     .
                                 </p>
-                                <div className="w-40 h-40 bg-gray-200 flex items-center justify-center mx-auto">
-                                    <p className="text-gray-500">QR Code Placeholder</p>
+                                <div className="flex justify-center">
+                                    <QRCode value={paymentUrl} size={200} />
                                 </div>
+                                <Button
+                                    onClick={() => navigate("/account")}
+                                    className="w-full bg-darkOlive text-ivory mt-4"
+                                >
+                                    Hoàn tất
+                                </Button>
                             </>
                         ) : (
                             <p>Đang tạo URL thanh toán...</p>
                         )}
-                        <p className="text-sm text-gray-600">
-                            Trở về trang tài khoản trong giây lát...
-                        </p>
                     </div>
                 </DialogContent>
             </Dialog>

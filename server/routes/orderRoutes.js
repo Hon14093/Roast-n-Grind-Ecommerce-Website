@@ -1,3 +1,4 @@
+// routes/orderRouter.js
 import express from "express";
 import { 
     addOrder, 
@@ -20,10 +21,9 @@ router.get('/processed', returnRemainingOrders);
 router.get('/status/all', returnOrderStatuses);
 router.get('/my-orders/:account_id', returnOrdersByAccountId);
 
-router.post('/create', addOrder);
+router.post('/create', addOrder); 
 router.post('/details/create', addOrderDetails);
 
 router.put('/check/:order_id', editOrderStatus);
-
 
 export default router;

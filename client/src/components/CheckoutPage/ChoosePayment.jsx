@@ -9,10 +9,11 @@ import { CreditCard } from 'lucide-react'
 import { Label } from "../ui/label"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import visaLogo from '../../images/visa.png'
+import vnpayLogo from "../../images/vnpay.png";
 
-export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
+export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
     const { cartItems } = useCart();
-    const totalPrice = (cartItems.length > 0)
+    const totalPrice = cartItems.length > 0
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
@@ -20,87 +21,105 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
         if (pm_id) {
             nextStep();
         } else {
-            alert('Hãy chọn phương thức thanh toán')
+            alert("Hãy chọn phương thức thanh toán");
         }
-    }
+    };
 
     return (
-        <div className='grid grid-cols-12 gap-4'>
-        
-            <section className='col-span-7 mx-auto w-full'>
-                <h1 className='font-semibold uppercase text-2xl pb-2'>Chọn phương thức thanh toán</h1>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            {/* Payment Method Section */}
+            <section className="md:col-span-7">
+                <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
+                    Chọn phương thức thanh toán
+                </h1>
 
-                <article className='border-2 border-darkOlive min-h-36 rounded-lg grid grid-cols-4'>
-                    <RadioGroup defaultValue="option-one" className='col-start-2 grid gap-6'>
-                        <div className="flex items-center space-x-2 self-end">
-                            <RadioGroupItem value="bank" id="bank" onClick={() => setPm_id(1)} />
-                            <Label htmlFor="bank" className='text-base flex gap-2'>
-                                <CreditCard />
-                                Chuyển khoản
+                <article className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                    <RadioGroup 
+                        value={pm_id === 1 ? "vnpay" : pm_id === 2 ? "visa" : ""}
+                        onValueChange={(value) => setPm_id(value === "vnpay" ? 1 : 2)}
+                        className="space-y-4"
+                    >
+                        <div className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                            <RadioGroupItem value="vnpay" id="vnpay" className="border-darkOlive" />
+                            <Label 
+                                htmlFor="vnpay" 
+                                className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
+                            >
+                                <img src={vnpayLogo} alt="VNPAY" className="h-8 w-auto" />
+                                VNPAY
                             </Label>
                         </div>
 
-                        <div className="flex items-center space-x-2 self-start">
-                            <RadioGroupItem value="visa" id="visa" onClick={() => setPm_id(2)} />
-                            <Label htmlFor="visa" className='text-base'>
-                                <img src={visaLogo} alt="" className='h-6' />
+                        <div className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                            <RadioGroupItem value="visa" id="visa" className="border-darkOlive" />
+                            <Label 
+                                htmlFor="visa" 
+                                className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
+                            >
+                                <img src={visaLogo} alt="Visa" className="h-8 w-auto" />
+                                Visa
                             </Label>
                         </div>
-                    </RadioGroup>   
-
+                    </RadioGroup>
                 </article>
 
-                <article className='flex pt-4'>
-                    <Button onClick={prevStep} className='bg-darkOlive'>Quay lại</Button>
-
-                    <Button onClick={isPaymentChosen} className='ml-auto bg-darkOlive'>Tiếp theo</Button>
-
-                </article>
+                <div className="flex justify-between mt-6 gap-4">
+                    <Button 
+                        onClick={prevStep} 
+                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+                    >
+                        Quay lại
+                    </Button>
+                    <Button 
+                        onClick={isPaymentChosen} 
+                        className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+                    >
+                        Tiếp theo
+                    </Button>
+                </div>
             </section>
 
-            {/* Display cart */}
-            <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
-                <h1 className='font-semibold uppercase text-2xl pb-2'>Giỏ hàng</h1>
-                <ScrollArea className='h-[500px]'>
-                    
+            {/* Cart Section */}
+            <section className="md:col-span-5">
+                <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
+                    Giỏ hàng
+                </h1>
+                
+                <ScrollArea className="h-[500px] bg-white rounded-lg border border-gray-200 p-4">
                     {cartItems.map((item) => (
                         <div
                             key={`${item.product_id}-${item.weight_id}`}
-                            className="flex items-start gap-4 mb-4"
+                            className="flex items-start gap-4 py-4 border-b border-gray-100 last:border-b-0"
                         >
                             <img
                                 src={item.image_url}
                                 alt={item.product_name}
-                                className="w-28 h-28 object-cover rounded"
+                                className="w-20 h-20 object-cover rounded-md"
                             />
-
-                            <div>
-                                <p className="font-medium">{item.product_name}</p>
-                                <p className="text-base">Size: {item.weight_name}</p>
-                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
-                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price}</p>
+                            <div className="flex-1">
+                                <p className="font-semibold text-gray-900">{item.product_name}</p>
+                                <p className="text-sm text-gray-600">Size: {item.weight_name}</p>
+                                <p className="text-sm text-gray-600">Số lượng: {item.quantity}</p>
+                                <p className="text-sm text-gray-600">
+                                    Xay: {item.grind ? "Có" : "Không"}
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                    {item.price.toLocaleString()} vnđ
+                                </p>
                             </div>
                         </div>
                     ))}
-
                 </ScrollArea>
 
-                <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-4'/>
-                
-                <div>
-                    <article className="flex text-lg">
-                        <span className='font-bold'>
-                            Thành tiền:
+                <div className="mt-6 bg-white rounded-lg border border-gray-200 p-4">
+                    <div className="flex items-center justify-between text-lg">
+                        <span className="font-bold text-gray-800">Tổng cộng:</span>
+                        <span className="font-semibold text-darkOlive">
+                            {totalPrice.toLocaleString()} vnđ
                         </span>
-                        <span className="ml-auto pr-3">
-                            {totalPrice} vnđ
-                        </span>
-                    </article>
+                    </div>
                 </div>
-
             </section>
         </div>
-    )
+    );
 }
-

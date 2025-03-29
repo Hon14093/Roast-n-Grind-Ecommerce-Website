@@ -11,20 +11,18 @@ import { createOrderDetails,
 } from "../models/Order_Details.js";
 import { getAllOrderStatuses, getOrderStatusByName } from "../models/Order_Status.js";
 
-export const addOrder = async (req,res) => {
+export const addOrder = async (req, res) => {
     try {
-        const data = req.body;
-        const newOrder = await createOrder(data);
-        res.status(201).json({ 
-            success: 1,
-            message: 'Order created successfully',
-            newOrder
-        });
+        const result = await createOrder(req.body);
+        res.json(result);
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        console.error("Lỗi khi tạo đơn hàng trong controller:", error);
+        res.status(500).json({ 
+            error: "Không thể tạo đơn hàng", 
+            details: error.message || "Lỗi không xác định từ server" 
+        });
     }
-}
+};
 
 export const addOrderDetails = async (req,res) => {
     try {

@@ -1,4 +1,4 @@
-
+// index.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -16,9 +16,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
-
 
 app.use((req, res, next) => {
     req.user = { account_id: "550e8400-e29b-41d4-a716-446655440000" };

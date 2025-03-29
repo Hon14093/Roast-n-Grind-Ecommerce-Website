@@ -7,10 +7,10 @@ export const placeOrder = async (data) => {
     try {
         const result = await axios.post(`${BASE_URL}/api/order/create`, data);
         console.log("API placeOrder:", result.data);
-        return result.data; // Giả định trả về { newOrder: { order_id: "xxx", ... } }
+        return result.data; // { order: { order_id: "xxx", ... } }
     } catch (error) {
-        console.log("Lỗi khi tạo đơn hàng:", error);
-        return null; // Trả về null nếu lỗi
+        console.error("Lỗi khi tạo đơn hàng:", error.response?.data || error.message);
+        throw error.response?.data || new Error("Không thể tạo đơn hàng trên server.");
     }
 };
 
@@ -96,14 +96,13 @@ export const getAllOrderStatuses = async (setData) => {
     }
 };
 
-export const createVNPayPaymentUrl = async (amount, orderId, orderDescription) => {
+export const createVNPayPaymentUrl = async (orderData) => {
     try {
         const response = await axios.post(
-            `${BASE_URL}/create_payment_url`,
+            `${BASE_URL}/api/payment/create_payment_url`,
             {
-                amount,
-                orderId,
-                orderDescription,
+                address_id: orderData.address_id,
+                discount_id: orderData.discount_id || null
             },
             {
                 headers: { "Content-Type": "application/json" },
@@ -111,9 +110,13 @@ export const createVNPayPaymentUrl = async (amount, orderId, orderDescription) =
             }
         );
         console.log("API createVNPayPaymentUrl:", response.data);
-        return response.data; 
+        return response.data; // { paymentUrl: "...", orderId: "..." }
     } catch (error) {
-        console.log("Lỗi khi tạo URL thanh toán VNPAY:", error);
-        return null; // Trả về null nếu lỗi
+        console.error("Lỗi khi tạo URL thanh toán VNPAY:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        throw error.response?.data || new Error("Không thể tạo URL thanh toán.");
     }
 };

@@ -182,12 +182,21 @@ async function seed() {
       },
     });
 
-    console.log('Dữ liệu mẫu đã được thêm');
+   
+
+const paymentMethod = await prisma.payment_Method.upsert({
+  where: { method_id: 1 },
+  update: {},
+  create: {
+      method_id: 1,
+      payment_method: 'VNPAY',
+  },
+});
+ console.log('Dữ liệu mẫu đã được thêm');
   } catch (error) {
     console.error('Lỗi khi thêm dữ liệu:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
-
 seed();

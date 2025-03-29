@@ -2,9 +2,37 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const createOrder = async (data) => {
-    return await prisma.order.create({ data });
-}
+    console.log("Dữ liệu nhận được từ client:", data);
 
+    // Kiểm tra các trường bắt buộc
+    const requiredFields = ["account_id", "shipping_id", "address_id", "method_id", "order_total"];
+    for (const field of requiredFields) {
+        if (!data[field]) {
+            throw new Error(`Trường bắt buộc '${field}' bị thiếu hoặc không hợp lệ.`);
+        }
+    }
+
+    try {
+        const order = await prisma.order.create({
+            data: {
+                order_total: data.order_total,
+                note: data.note || "",
+                account_id: data.account_id,
+                shipping_id: data.shipping_id,
+                status_id: data.status_id || 1,
+                discount_id: data.discount_id || null,
+                address_id: data.address_id,
+                method_id: data.method_id,
+                order_date: new Date(),
+            },
+        });
+        console.log("Đơn hàng đã tạo:", order);
+        return { order };
+    } catch (error) {
+        console.error("Lỗi khi tạo đơn hàng:", error);
+        throw error;
+    }
+};
 export const getAllOrders = async () => {
     const orders = await prisma.order.findMany({
         include: {

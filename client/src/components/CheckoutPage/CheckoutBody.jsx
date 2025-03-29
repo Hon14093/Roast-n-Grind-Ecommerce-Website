@@ -45,49 +45,72 @@ export default function CheckoutBody() {
     }, [user, cartItems]);
 
     return (
-        <div className="p-4">
-            <section className="grid grid-cols-12">
-                <article className="col-span-3">
-                    <a href="/">
-                        <img src={logoBlack} className="w-24" alt="Roast n Grind Logo" />
-                    </a>
-                </article>
-
-                <article className="w-full mx-auto col-span-6">
-                    <div className="flex justify-between text-sm font-semibold text-darkOlive">
-                        <span className={step >= 1 ? "text-darkOlive" : "text-gray-500"}>Địa chỉ giao hàng</span>
-                        <span className={step >= 2 ? "text-darkOlive" : "text-gray-500"}>Phương thức thanh toán</span>
-                        <span className={step >= 3 ? "text-darkOlive" : "text-gray-500"}>Tổng kết đơn hàng</span>
+        <div className="min-h-screen bg-gray-50">
+            <div className="container mx-auto px-4 py-8">
+                {/* Header Section */}
+                <header className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center mb-8">
+                    <div className="col-span-1 md:col-span-3">
+                        <a href="/">
+                            <img 
+                                src={logoBlack} 
+                                className="w-24 h-auto" 
+                                alt="Roast n Grind Logo" 
+                            />
+                        </a>
                     </div>
-                    <Progress value={(step / 3) * 100} className="my-3" />
-                </article>
-            </section>
 
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+                    <div className="col-span-1 md:col-span-9 w-full">
+                        <div className="flex justify-between items-center text-sm font-medium text-gray-600">
+                            <span className={`${step >= 1 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+                                Địa chỉ giao hàng
+                            </span>
+                            <span className={`${step >= 2 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+                                Phương thức thanh toán
+                            </span>
+                            <span className={`${step >= 3 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+                                Tổng kết đơn hàng
+                            </span>
+                        </div>
+                        <Progress 
+                            value={(step / 3) * 100} 
+                            className="mt-4 h-2 bg-gray-200" 
+                            indicatorClassName="bg-darkOlive"
+                        />
+                    </div>
+                </header>
 
-            <div className="p-4 rounded-lg">
-                {step === 1 && (
-                    <AddressDetails
-                        addressId={selectedAddressId}
-                        setSelectedAddressId={setSelectedAddressId}
-                        nextStep={nextStep}
-                    />
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-center">
+                        {error}
+                    </div>
                 )}
-                {step === 2 && (
-                    <ChoosePayment
-                        pm_id={pm_id}
-                        setPm_id={setPm_id}
-                        prevStep={prevStep}
-                        nextStep={nextStep}
-                    />
-                )}
-                {step === 3 && (
-                    <OrderSummary
-                        addressId={selectedAddressId}
-                        pm_id={pm_id}
-                        prevStep={prevStep}
-                    />
-                )}
+
+                {/* Main Content */}
+                <main className="bg-white rounded-lg shadow-sm p-6">
+                    {step === 1 && (
+                        <AddressDetails
+                            addressId={selectedAddressId}
+                            setSelectedAddressId={setSelectedAddressId}
+                            nextStep={nextStep}
+                        />
+                    )}
+                    {step === 2 && (
+                        <ChoosePayment
+                            pm_id={pm_id}
+                            setPm_id={setPm_id}
+                            prevStep={prevStep}
+                            nextStep={nextStep}
+                        />
+                    )}
+                    {step === 3 && (
+                        <OrderSummary
+                            addressId={selectedAddressId}
+                            pm_id={pm_id}
+                            prevStep={prevStep}
+                        />
+                    )}
+                </main>
             </div>
         </div>
     );

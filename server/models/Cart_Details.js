@@ -144,6 +144,6 @@ export const createCartDetail = async (data) => {
         return result;
     } catch (error) {
         console.error("Lỗi khi tạo Cart_Details:", error);
-        throw error; // Để server trả lỗi chi tiết về client
+        throw error; 
     }
 };
