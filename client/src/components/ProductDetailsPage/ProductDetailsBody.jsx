@@ -131,7 +131,7 @@ export function ProductDetailsBody() {
 
                 <Separator className='bg-darkOlive my-4 mx-auto max-w-[80%]'/>
 
-                <ReviewSection />
+                <ReviewSection productId={product.product_id} />
             </div>
         </div>
     )

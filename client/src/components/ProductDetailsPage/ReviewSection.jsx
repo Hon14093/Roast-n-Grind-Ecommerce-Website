@@ -1,23 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RatingSummary from '@keyvaluesystems/react-star-rating-summary'
 import ReviewCard from './ReviewCard';
 import { Separator } from '../ui/separator';
+import { getReviewsByProductId } from '@/hooks/reviewAPI';
 
-export default function ReviewSection() {
-    const ratingValues = {
-        5: 226,
-        4: 300,
-        3: 191,
-        2: 25,
-        1: 50
-    };
+export default function ReviewSection({ productId }) {
+    const [data, setData] = useState([]);
+    const [ratingValues, setRatingValues] = useState({
+        5: 0,
+        4: 0,
+        3: 0,
+        2: 0,
+        1: 0,
+    });
 
-    const review = {
-        rating: 4,
-        comment: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo aperiam exercitationem, laboriosam possimus doloribus officia hic? Possimus, amet suscipit quas sunt reprehenderit architecto vitae hic autem facilis cum assumenda. Eaque vero nam eveniet, eos atque, error facere obcaecati voluptatibus harum quia officiis maxime sapiente aspernatur.',
-        user: 'John Cat',
-        date: '2020-12-4'
-    }
+    useEffect(() => {
+        getReviewsByProductId(productId, setData, setRatingValues);
+    }, [productId])
     
     return (
         <section className='p-4'>
@@ -46,9 +45,14 @@ export default function ReviewSection() {
 
             <Separator className='bg-darkOlive my-4 mx-auto max-w-[80%]'/>
 
-            <article>
-                <ReviewCard review={review}/>
-                <ReviewCard review={review}/>
+            <article id='reviewSection'>
+                {Array.isArray(data) && data.length > 0 ? (
+                    data.map((review, index) => (
+                        <ReviewCard key={index} review={review} />
+                    ))
+                ) : (
+                    <p className="text-center text-gray-500">Không có đánh giá.</p>
+                )}
             </article>
         </section>
     )

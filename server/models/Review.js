@@ -9,6 +9,9 @@ export const createReview = async (data) => {
 
 export const getReviewsByProductId = async (product_id) => {
     return await prisma.review.findMany({
+        include: {
+            Account: true
+        },
         where: { product_id }
     });
 }

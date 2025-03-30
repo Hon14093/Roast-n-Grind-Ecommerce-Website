@@ -19,7 +19,7 @@ export default function ReviewForm({ detail, open, onClose }) {
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
-        
+
         try {
             const data = {
                 star: rating,
@@ -46,7 +46,10 @@ export default function ReviewForm({ detail, open, onClose }) {
                 <form onSubmit={handleSubmit} className='text-base text-darkOlive'>
                     <div className='pb-5'>
                         <Label className='font-bold'>Sản phẩm:  </Label>
-                        {detail.Product_Weight.Product.product_name}
+
+                        {/* This is the problem */}
+                        {detail?.Product_Weight?.Product?.product_name || "Loading..."}
+
                     </div>
                     <div className='mx-auto pb-5'>
                         <Rating
