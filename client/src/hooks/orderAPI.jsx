@@ -56,10 +56,17 @@ export const getProcessedOrders = async (setData) => {
     }
 }
 
-export const getOrdersByAccountId = async (account_id, setData) => {
+export const getOrdersByAccountId = async (account_id, setProcessingOrders, setDeliveredOrders) => {
     try {
         const result = await axios.get(`http://localhost:5000/api/order/my-orders/${account_id}`);
-        setData(result.data.orders);
+        const allOrders = result.data.orders;
+
+        // Filter orders into processing and delivered
+        const delivered = allOrders.filter(order => order.status_id === 5);
+        const processing = allOrders.filter(order => order.status_id !== 5);
+
+        setDeliveredOrders(delivered);
+        setProcessingOrders(processing);
     } catch (error) {
         console.log(error)
     }
