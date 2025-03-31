@@ -94,30 +94,6 @@ function Analytics() {
 
                 <Popular products={popularProducts} />
 
-                {/* <ScrollArea className='h-[500px]'>
-                    
-                    {cartItems.map((item) => (
-                        <div
-                            key={`${item.product_id}-${item.weight_id}`}
-                            className="flex items-start gap-4 mb-4"
-                        >
-                            <img
-                                src={item.image_url}
-                                alt={item.product_name}
-                                className="w-28 h-28 object-cover rounded"
-                            />
-
-                            <div>
-                                <p className="font-medium">{item.product_name}</p>
-                                <p className="text-base">Size: {item.weight_name}</p>
-                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
-                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
-                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
-                            </div>
-                        </div>
-                    ))}
-                </ScrollArea> */}
-
                 <Card className="min-h-[400px] flex-1 md:min-h-min">
                     <CardHeader>
                         <CardTitle>Thống kê doanh thu</CardTitle>
@@ -139,6 +115,7 @@ function Analytics() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
+                
             </div>
         </SidebarInset>
     );
