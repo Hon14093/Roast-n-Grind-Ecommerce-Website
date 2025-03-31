@@ -18,7 +18,10 @@ import {
 } from "../ui/chart.jsx"; // Import từ chart.jsx
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useEffect, useState } from "react";
+import StatsCards from "./analytics/StatsCards.jsx";
+import Popular from "./analytics/Popular.jsx";
 import axios from "axios";
+import { ScrollArea } from "../ui/scroll-area.jsx";
 
 // Dữ liệu mẫu
 const chartData = [
@@ -38,6 +41,7 @@ const chartConfig = {
 
 function Analytics() {
     const [data, setData] = useState({ revenue: 0, revenueLast30: 0 });
+    const [popularProducts, setPopularProducts] = useState([]);
     // useState({ revenue: 0, orders: 0, customers: 0 });
 
     useEffect(() => {
@@ -45,12 +49,23 @@ function Analytics() {
             try {
                 const stats = await axios.get('http://localhost:5000/api/analytics/all');
                 setData(stats.data.allStats);
-                console.log(stats.data.allStats);
+                console.log('Stats', stats.data.allStats);
             } catch (error) {
                 console.log(error);
             }
         }
 
+        const getPopularProducts = async () => {
+            try {
+                const result = await axios.get('http://localhost:5000/api/products/popular');
+                setPopularProducts(result.data.sortedProducts);
+                console.log(result.data.sortedProducts)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getPopularProducts();
         getAllStats();
     }, [])
 
@@ -75,43 +90,33 @@ function Analytics() {
             </header>
 
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-4">
-                    <Card className="aspect-auto bg-blue-500 text-ivory">
-                        <CardHeader>
-                            <CardTitle>Doanh thu trong tháng</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-4xl font-sans">{data.revenue.toLocaleString()} vnđ</p>
-                        </CardContent>
-                    </Card>
+                <StatsCards data={data} />
+
+                <Popular products={popularProducts} />
+
+                {/* <ScrollArea className='h-[500px]'>
                     
-                    <Card className="aspect-auto bg-purple-500 text-white">
-                        <CardHeader>
-                            <CardTitle>Tổng số đơn hàng</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-4xl font-sans">{data.orders}</p>
-                        </CardContent>
-                    </Card>
+                    {cartItems.map((item) => (
+                        <div
+                            key={`${item.product_id}-${item.weight_id}`}
+                            className="flex items-start gap-4 mb-4"
+                        >
+                            <img
+                                src={item.image_url}
+                                alt={item.product_name}
+                                className="w-28 h-28 object-cover rounded"
+                            />
 
-                    <Card className="aspect-auto bg-yellow-400 text-white">
-                        <CardHeader>
-                            <CardTitle>Tổng số người dùng</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-4xl font-sans">{data.totalAccounts}</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="aspect-auto bg-orange-500 text-white">
-                        <CardHeader>
-                            <CardTitle>Đơn hàng cần duyệt</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-4xl font-sans">{data.uncheckedOrders}</p>
-                        </CardContent>
-                    </Card>
-                </div>
+                            <div>
+                                <p className="font-medium">{item.product_name}</p>
+                                <p className="text-base">Size: {item.weight_name}</p>
+                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
+                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
+                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
+                            </div>
+                        </div>
+                    ))}
+                </ScrollArea> */}
 
                 <Card className="min-h-[400px] flex-1 md:min-h-min">
                     <CardHeader>

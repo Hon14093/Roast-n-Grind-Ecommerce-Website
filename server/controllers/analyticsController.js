@@ -3,7 +3,8 @@ import {
     getTotalRevenueLast30Days,
     countOrders,
     countUnprocessedOrders,
-    countOrdersLast30Days
+    countOrdersLast30Days,
+    getOrderStatusDistribution
 } from "../models/Order.js"
 import { getTotalAccounts } from "../models/Account.js"
 
@@ -14,7 +15,6 @@ export const getAllStats = async (req,res) => {
         const ordersCount = await countOrders();
         const unprocessedOrdersCount = await countUnprocessedOrders();
         const ordersCountLast30Days = await countOrdersLast30Days();
-
         const totalAccounts = await getTotalAccounts();
 
         const allStats = {
@@ -29,5 +29,16 @@ export const getAllStats = async (req,res) => {
         res.status(200).json({ allStats })
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+}
+
+export const returnOrderStatusDistribution = async (req,res) => {
+    try {
+        const distributions = await getOrderStatusDistribution();
+        res.status(200).json({ distributions });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' })
     }
 }

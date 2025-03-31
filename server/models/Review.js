@@ -18,6 +18,8 @@ export const getReviewsByProductId = async (product_id) => {
 
 
 
+
+
 export const getAllReviews = async () => {
     return await prisma.review.findMany();
 }

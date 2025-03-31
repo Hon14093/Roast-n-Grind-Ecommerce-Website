@@ -187,6 +187,47 @@ export const countOrdersLast30Days = async () => {
     });
 };
 
+export const getOrderStatusDistribution1 = async () => {
+    return await prisma.order.groupBy({
+        by: ['status_name'], // or 'status_id' if you prefer
+        _count: {
+            status_name: true
+        }
+    });
+};
+
+export const getOrderStatusDistribution = async () => {
+    // Step 1: Fetch all possible status names
+    const statusNames = await prisma.order_Status.findMany({
+        select: {
+            status_id: true,
+            status_name: true
+        }
+    });
+
+    // Step 2: Get the count of each order status from the Orders table
+    const result = await prisma.order.groupBy({
+        by: ['status_id'],
+        _count: {
+            status_id: true
+        }
+    });
+
+    // Step 3: Convert the result into a map for easy lookup
+    const statusCounts = result.reduce((acc, item) => {
+        acc[item.status_id] = item._count.status_id;
+        return acc;
+    }, {});
+
+    // Step 4: Merge statusNames with counts, defaulting to 0 if not found
+    return statusNames.map(status => ({
+        status: status.status_name,
+        count: statusCounts[status.status_id] || 0
+    }));
+};
+
+
+
 // for popular products ----------------------
 export const getCompletedOrders = async () => {
     return await prisma.order.findMany({
