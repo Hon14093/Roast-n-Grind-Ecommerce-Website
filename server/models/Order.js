@@ -1,5 +1,6 @@
+import { subMonths, endOfMonth, format, startOfMonth } from 'date-fns'
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 export const createOrder = async (data) => {
     return await prisma.order.create({ data });
@@ -225,6 +226,49 @@ export const getOrderStatusDistribution = async () => {
         count: statusCounts[status.status_id] || 0
     }));
 };
+
+export const getMonthlyRevenues = async () => {
+    try {
+        const currentDate = new Date();
+        const months = [];
+
+        for (let i=11; i>=0; i--) {
+            const date = subMonths(currentDate, i);
+            months.push({
+                month: format(date, 'yyyy-MM'),
+                startDate: startOfMonth(date),
+                endDate: endOfMonth(date)
+            });
+        }
+
+        const revenueData = await Promise.all(
+            months.map(async ({month, startDate, endDate}) => {
+                const revenue = await prisma.order.aggregate({
+                    where: {
+                        status_id: 5,
+                        order_date: {
+                            gte: startDate,
+                            lte: endDate,
+                        },
+                    },
+                    _sum: {
+                        order_total: true,
+                    }
+                });
+
+                return {
+                    month,
+                    revenue: revenue._sum.order_total || 0,
+                };
+            })
+        );
+
+        return revenueData;
+    } catch (error) {
+        console.error("Error fetching monthly revenue:", error);
+        throw new Error("Failed to retrieve revenue data");
+    }
+}
 
 
 

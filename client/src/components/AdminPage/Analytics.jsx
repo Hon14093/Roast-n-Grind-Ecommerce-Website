@@ -20,8 +20,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useEffect, useState } from "react";
 import StatsCards from "./analytics/StatsCards.jsx";
 import Popular from "./analytics/Popular.jsx";
-import axios from "axios";
-import { ScrollArea } from "../ui/scroll-area.jsx";
+import RevenuesChart from "./analytics/RevenuesChart.jsx";
+import { getAllStats, getPopularProducts, getMonthlyRevenues } from "@/hooks/analyticsAPI.jsx";
 
 // Dữ liệu mẫu
 const chartData = [
@@ -42,31 +42,12 @@ const chartConfig = {
 function Analytics() {
     const [data, setData] = useState({ revenue: 0, revenueLast30: 0 });
     const [popularProducts, setPopularProducts] = useState([]);
-    // useState({ revenue: 0, orders: 0, customers: 0 });
+    const [revenues, setRevenues] = useState([]);
 
     useEffect(() => {
-        const getAllStats = async () => {
-            try {
-                const stats = await axios.get('http://localhost:5000/api/analytics/all');
-                setData(stats.data.allStats);
-                console.log('Stats', stats.data.allStats);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        const getPopularProducts = async () => {
-            try {
-                const result = await axios.get('http://localhost:5000/api/products/popular');
-                setPopularProducts(result.data.sortedProducts);
-                console.log(result.data.sortedProducts)
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getPopularProducts();
-        getAllStats();
+        getAllStats(setData);
+        getPopularProducts(setPopularProducts);
+        getMonthlyRevenues(setRevenues);
     }, [])
 
     return (
@@ -94,12 +75,14 @@ function Analytics() {
 
                 <Popular products={popularProducts} />
 
-                <Card className="min-h-[400px] flex-1 md:min-h-min">
+                <RevenuesChart />
+
+                <Card className="min-h-[400px] max-h-[500px] flex-1 md:min-h-min">
                     <CardHeader>
                         <CardTitle>Thống kê doanh thu</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ChartContainer config={chartConfig}>
+                        <ChartContainer config={chartConfig} className='max-h-[500px] w-full'>
                             <BarChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" />
@@ -115,7 +98,7 @@ function Analytics() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
-                
+
             </div>
         </SidebarInset>
     );

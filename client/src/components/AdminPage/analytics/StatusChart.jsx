@@ -3,7 +3,9 @@ import { Pie, PieChart } from 'recharts'
 import { 
     ChartContainer,
     ChartTooltip,
-    ChartTooltipContent
+    ChartTooltipContent,
+    ChartLegend,
+    ChartLegendContent,
 } from '@/components/ui/chart'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import axios from 'axios';
@@ -11,12 +13,12 @@ import axios from 'axios';
 export default function StatusChart() {
     const [data, setData] = useState([]);
     const statusColors = [
-        "var(--color-unprocessed)",
-        "var(--color-processing)",
-        "var(--color-packaging)",
-        "var(--color-delivering)", 
-        "var(--color-delivered)",
-        "var(--color-cancelled)" 
+        "hsl(var(--chart-1))",
+        "hsl(var(--chart-2))",
+        "hsl(var(--chart-3))",
+        "hsl(var(--chart-4))",
+        "hsl(var(--chart-5))",
+        "#780c17"
     ];
 
     useEffect(() => {
@@ -38,40 +40,31 @@ export default function StatusChart() {
         fill: statusColors[index] || "var(--color-default)"
     }))
 
-    const chartData = [
-        { status: "Chưa xử lý", count: 275, fill: "var(--color-unprocessed)" },
-        { status: "Đang xử lý", count: 200, fill: "var(--color-processing)" },
-        { status: "Đang đóng gói", count: 187, fill: "var(--color-packaging)" },
-        { status: "Đang giao hàng", count: 173, fill: "var(--color-delivering)" },
-        { status: "Đã giao hàng", count: 90, fill: "var(--color-delivered)" },
-        { status: "Đã hủy", count: 10, fill: "var(--color-cancelled)" },
-    ]
-
     const chartConfig = {
         count: {
-            label: "Hello",
+            label: "count",
         },
-        unprocessed: {
+        "Chưa xử lý": {
             label: "Chưa xử lý",
             color: "hsl(var(--chart-1))",
         },
-        processing: {
+        "Đang được xử lý": {
             label: "Đang xử lý",
             color: "hsl(var(--chart-2))",
         },
-        packaging: {
+        "Đang đóng gói": {
             label: "Đang đóng gói",
             color: "hsl(var(--chart-3))",
         },
-        delivering: {
+        "Đang giao hàng": {
             label: "Đang giao hàng",
             color: "hsl(var(--chart-4))",
         },
-        delivered: {
+        "Đã giao hàng": {
             label: "Đã giao hàng",
             color: "hsl(var(--chart-5))",
         },
-        cancelled: {
+        "Đã hủy": {
             label: "Đã hủy",
             color: "#780c17",
         },
@@ -92,6 +85,10 @@ export default function StatusChart() {
                     <PieChart>
                         <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                         <Pie data={processedData} dataKey="count" label nameKey="status" />
+                        <ChartLegend
+                            content={<ChartLegendContent nameKey="status" />}
+                            className="-translate-y-2 flex-wrap gap-4 [&>*]:justify-center text-darkOlive"
+                        />
                     </PieChart>
                 </ChartContainer>
             </CardContent>
