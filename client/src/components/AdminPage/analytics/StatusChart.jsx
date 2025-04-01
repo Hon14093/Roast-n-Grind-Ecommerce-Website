@@ -8,7 +8,7 @@ import {
     ChartLegendContent,
 } from '@/components/ui/chart'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import axios from 'axios';
+import { getDistribution } from '@/hooks/analyticsAPI'
 
 export default function StatusChart() {
     const [data, setData] = useState([]);
@@ -22,17 +22,7 @@ export default function StatusChart() {
     ];
 
     useEffect(() => {
-        const getDistribution = async () => {
-            try {
-                const result = await axios('http://localhost:5000/api/analytics/status-distribution');
-                console.log(result.data.distributions);
-                setData(result.data.distributions)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        getDistribution();
+        getDistribution(setData);
     }, []);
 
     const processedData = data.map((item, index) => ({

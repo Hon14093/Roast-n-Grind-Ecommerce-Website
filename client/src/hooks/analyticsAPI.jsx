@@ -29,3 +29,14 @@ export const getMonthlyRevenues = async (setRevenues) => {
         console.log(error);
     }
 }
+
+// for status chart
+export const getDistribution = async (setData) => {
+    try {
+        const result = await axios('http://localhost:5000/api/analytics/status-distribution');
+        console.log(result.data.distributions);
+        setData(result.data.distributions)
+    } catch (error) {
+        console.log(error)
+    }
+}

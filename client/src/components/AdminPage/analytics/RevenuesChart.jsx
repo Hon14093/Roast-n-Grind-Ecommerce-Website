@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 import {
     Card,
@@ -13,27 +13,30 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import { getMonthlyRevenues } from '@/hooks/analyticsAPI'
 
 const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { month: "January", revenue: 186 },
+    { month: "February", revenue: 305 },
+    { month: "March", revenue: 237 },
+    { month: "April", revenue: 73 },
+    { month: "May", revenue: 209 },
+    { month: "June", revenue: 214 },
 ]
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
+    revenue: {
+        label: "Revenue",
         color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-2))",
     },
 }
 
 export default function RevenuesChart() {
+    const [revenues, setRevenues] = useState([]);
+
+    useEffect(() => {
+        getMonthlyRevenues(setRevenues);
+    }, [])
+
     return (
         <Card>
             <CardHeader>
@@ -45,7 +48,7 @@ export default function RevenuesChart() {
                 <ChartContainer config={chartConfig} className='max-h-[400px] w-full'>
                     <LineChart
                         accessibilityLayer
-                        data={chartData}
+                        data={revenues}
                         margin={{
                             left: 12,
                             right: 12,
@@ -55,24 +58,24 @@ export default function RevenuesChart() {
                         <XAxis
                             dataKey="month"
                             tickLine={false}
-                            // axisLine={false}
                             tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            tickFormatter={(value) => value}
                         />
                         <YAxis
-                            tickFormatter={(value) => `${value}`}
+                            tickFormatter={(value) => `${value / 1000000}tr`}
                         />
                         <ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
+                            content={<ChartTooltipContent />}
+                            formatter={(value) => `${value.toLocaleString()} VND`}
                         />
                         <Line
-                            dataKey="desktop"
+                            dataKey="revenue"
                             type="natural"
-                            stroke="var(--color-desktop)"
+                            stroke="var(--color-revenue)"
                             strokeWidth={2}
                             dot={{
-                                fill: "var(--color-desktop)",
+                                fill: "var(--color-revenue)",
                             }}
                             activeDot={{
                                 r: 6,

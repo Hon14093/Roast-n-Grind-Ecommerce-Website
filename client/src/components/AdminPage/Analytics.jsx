@@ -42,12 +42,10 @@ const chartConfig = {
 function Analytics() {
     const [data, setData] = useState({ revenue: 0, revenueLast30: 0 });
     const [popularProducts, setPopularProducts] = useState([]);
-    const [revenues, setRevenues] = useState([]);
 
     useEffect(() => {
         getAllStats(setData);
         getPopularProducts(setPopularProducts);
-        getMonthlyRevenues(setRevenues);
     }, [])
 
     return (
