@@ -6,25 +6,27 @@ export const createOrder = async (data) => {
     return await prisma.order.create({ data });
 }
 
+const includeObject = {
+    Account: {
+        include: {
+            password: false,
+            is_admin: false,
+            date_created: false
+        }
+    },
+    Order_Status: true,
+    Address: {
+        include: {
+            City: true
+        }
+    },
+    Discount: true,
+    Shipping_Method: true
+}
+
 export const getAllOrders = async () => {
     const orders = await prisma.order.findMany({
-        include: {
-            Account: {
-                include: {
-                    password: false,
-                    is_admin: false,
-                    date_created: false
-                }
-            },
-            Order_Status: true,
-            Address: {
-                include: {
-                    City: true
-                }
-            },
-            Discount: true,
-            Shipping_Method: true
-        },
+        include: includeObject,
         orderBy: {
             order_date: 'desc',
         }
@@ -38,27 +40,26 @@ export const getAllOrders = async () => {
 
 export const getUnprocessedOrders = async () => {
     const result = await prisma.order.findMany({
-        include: {
-            Account: {
-                select: { account_name: true }
-            },
-            Address: {
-                include: {
-                    City: true
-                }
-            },
-            Order_Status: true,
-            Shipping_Method: true,
-            Discount: {
-                select: { discount_code: true }
-            }
-        },
+        include: includeObject,
         where: {
             status_id: 1
         },
-        orderBy: {
-            order_date: 'desc',
-        }
+        orderBy: { order_date: 'desc' }
+    })
+
+    return result.map(res => ({
+        ...res,
+        order_date: res.order_date.toISOString().slice(0, 10) // Extract YYYY-MM-DD
+    }));
+}
+
+export const getRejectedOrders = async () => {
+    const result = await prisma.order.findMany({
+        include: includeObject,
+        where: {
+            status_id: 6
+        },
+        orderBy: { order_date: 'desc' }
     })
 
     return result.map(res => ({
@@ -69,31 +70,14 @@ export const getUnprocessedOrders = async () => {
 
 export const getRemainingOrders = async () => {
     const orders = await prisma.order.findMany({
-        include: {
-            Account: {
-                include: {
-                    password: false,
-                    is_admin: false,
-                    date_created: false
-                }
-            },
-            Order_Status: true,
-            Address: {
-                include: {
-                    City: true
-                }
-            },
-            Discount: true,
-            Shipping_Method: true
-        },
+        include: includeObject,
         where: {
-            NOT: {
-                status_id: 1
-            }
+            NOT: [
+                { status_id: 1 }, // Exclude unprocessed status
+                { status_id: 6 }  // Exclude cancelled status
+            ]
         },
-        orderBy: {
-            order_date: 'desc',
-        }
+        orderBy: { order_date: 'desc' }
     })
 
     return orders.map(order => ({
@@ -104,29 +88,11 @@ export const getRemainingOrders = async () => {
 
 export const getOrdersByAccountId = async (account_id) => {
     const orders = await prisma.order.findMany({
-        include: {
-            Account: {
-                include: {
-                    password: false,
-                    is_admin: false,
-                    date_created: false
-                }
-            },
-            Order_Status: true,
-            Address: {
-                include: {
-                    City: true
-                }
-            },
-            Discount: true,
-            Shipping_Method: true
-        },
+        include: includeObject,
         where: {
             account_id: account_id
         },
-        orderBy: {
-            order_date: 'desc',
-        }
+        orderBy: { order_date: 'desc' }
     })
 
     return orders.map(order => ({
@@ -184,15 +150,6 @@ export const countOrdersLast30Days = async () => {
             order_date: {
                 gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000)
             }
-        }
-    });
-};
-
-export const getOrderStatusDistribution1 = async () => {
-    return await prisma.order.groupBy({
-        by: ['status_name'], // or 'status_id' if you prefer
-        _count: {
-            status_name: true
         }
     });
 };

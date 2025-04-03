@@ -21,19 +21,22 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { PackagePlus } from 'lucide-react'
+import { PackagePlus, CircleX } from 'lucide-react'
 import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { checkOrdersColumns } from '../columns.jsx'
 
-import { getUnprocessedOrders, updateOrderStatus } from '@/hooks/orderAPI.jsx'
+import { 
+    getUnprocessedOrders, 
+    getRejectedOrders,
+    updateOrderStatus
+} from '@/hooks/orderAPI.jsx'
 import { DetailsModal } from '../modals/order/OrderModals.jsx'
 import { Link } from 'react-router-dom'
 
-
-
 export default function CheckOrders() {
     const [data, setData] = useState([]);
+    const [rejectedOrders, setRejectedOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -42,11 +45,8 @@ export default function CheckOrders() {
 
     useEffect(() => {
         getUnprocessedOrders(setData);
+        getRejectedOrders(setRejectedOrders);
     }, []);
-
-    const test = () => {
-        console.log(data)
-    }
 
     const handleViewDetails = (order) => {
         setSelectedOrder(order);
@@ -94,6 +94,28 @@ export default function CheckOrders() {
         }
     ];
 
+    const columnsWithActions1 = [
+        ...checkOrdersColumns,
+        {
+            header: "Hành Động",
+            id: "actions",
+            cell: ({ row }) => (
+                <div className='flex gap-2'>
+                    <Button size="sm" className='bg-blue-500 border border-blue-500 hover:bg-white hover:text-blue-500' 
+                        onClick={() => handleViewDetails(row.original)}
+                    >
+                        Chi Tiết
+                    </Button>
+                    <Button size="sm" className="bg-green-500 border border-green-500 hover:bg-white hover:text-green-500" 
+                        onClick={() => handlePassOrder(row.original)}
+                    >
+                        Duyệt
+                    </Button>
+                </div>
+            )
+        }
+    ];
+
     return (
         <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -126,13 +148,6 @@ export default function CheckOrders() {
                         <div className='font-bold text-2xl'>
                             Danh sách đơn hàng chưa duyệt
                         </div>
-
-                        <div className='ml-auto'>
-                            <Button variant='outline' className='mr-3' onClick={test}>
-                                <PackagePlus />
-                                Biến thể
-                            </Button>
-                        </div>
                     </div>                    
                 </CardHeader>
 
@@ -141,23 +156,30 @@ export default function CheckOrders() {
                         columns={columnsWithActions} 
                         data={data} 
                     />
-
-
-                    <DetailsModal 
-                        order={selectedOrder}
-                        open={isDetailsModalOpen}
-                        onClose={() => setIsDetailsModalOpen(false)}
-                    />
-
-                    {/* <EditModal 
-                        product={selectedProduct}
-                        open={isEditModalOpen}
-                        onClose={() => setIsEditModalOpen(false)}
-                        onSubmitSuccess={handleSubmitSuccess}
-                    /> */}
-
-
                 </CardContent>
+            </Card>
+
+            <Card className="mx-5">
+                <CardHeader>
+                    <div className='flex'>
+                        <div className='font-bold text-2xl'>
+                            Danh sách đơn hàng bị hủy
+                        </div>
+                    </div>                    
+                </CardHeader>
+
+                <CardContent>
+                    <DataTable 
+                        columns={columnsWithActions1} 
+                        data={rejectedOrders} 
+                    />
+                </CardContent>
+
+                <DetailsModal 
+                    order={selectedOrder}
+                    open={isDetailsModalOpen}
+                    onClose={() => setIsDetailsModalOpen(false)}
+                />
             </Card>
         </SidebarInset>
     )

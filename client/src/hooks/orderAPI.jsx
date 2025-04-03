@@ -47,6 +47,15 @@ export const getUnprocessedOrders = async (setData) => {
     }
 }
 
+export const getRejectedOrders = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/order/rejected');
+        setData(result.data.rejected);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getProcessedOrders = async (setData) => {
     try {
         const result = await axios.get('http://localhost:5000/api/order/processed');

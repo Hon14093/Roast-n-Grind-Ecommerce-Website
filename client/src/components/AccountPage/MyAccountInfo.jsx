@@ -61,7 +61,7 @@ function MyAccountInfo() {
                 </article>
 
                 <article className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="accountName" className='font-semibold text-lg'>Tên tài khoản</Label>
+                    <Label htmlFor="accountName" className='font-semibold text-lg'>Số điện thoại</Label>
                     <Input 
                         id="accountName" 
                         defaultValue={data.phone}
