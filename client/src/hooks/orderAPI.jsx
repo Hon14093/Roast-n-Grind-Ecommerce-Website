@@ -96,13 +96,16 @@ export const getAllOrderStatuses = async (setData) => {
     }
 };
 
+// hooks/orderAPI.jsx (trích đoạn createVNPayPaymentUrl)
 export const createVNPayPaymentUrl = async (orderData) => {
     try {
         const response = await axios.post(
             `${BASE_URL}/api/payment/create_payment_url`,
             {
                 address_id: orderData.address_id,
-                discount_id: orderData.discount_id || null
+                shipping_id: orderData.shipping_id,
+                note: orderData.note,
+                discount_code: orderData.discount_code
             },
             {
                 headers: { "Content-Type": "application/json" },
@@ -110,7 +113,7 @@ export const createVNPayPaymentUrl = async (orderData) => {
             }
         );
         console.log("API createVNPayPaymentUrl:", response.data);
-        return response.data; // { paymentUrl: "...", orderId: "..." }
+        return response.data;
     } catch (error) {
         console.error("Lỗi khi tạo URL thanh toán VNPAY:", {
             message: error.message,

@@ -1,7 +1,8 @@
+// App.jsx
 import './App.css';
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'sonner'; // Thêm nguồn import
+import { Toaster } from 'sonner';
 
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
@@ -12,14 +13,15 @@ import SignupPage from './pages/SignupPage';
 import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
 import CheckoutPage from './pages/CheckoutPage';
-import PaymentReturn from './components/modals/payment/PaymentReturn';
+import PaymentCallback from './components/PaymentCallback'; // Thêm component mới
+import { PaymentProvider } from './context/PaynmentContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import PaymentSuccess from './components/modals/payment/PaymentSuccess';
 
 function App() {
     return (
-        <>
+        <PaymentProvider>
             <Toaster />
             <AuthProvider>
                 <CartProvider>
@@ -36,14 +38,14 @@ function App() {
                             <Route path="/checkout" element={<CheckoutPage />} />
                             {/* Admin UI */}
                             <Route path="/admin/*" element={<AdminPage />} />
-                            {/* Payment Return URL */}
-                            <Route path="/payment/return" element={<PaymentReturn />} />
+                            {/* Payment Callback */}
+                            <Route path="/payment/stripe-pay-callback" element={<PaymentCallback />} />
                             <Route path="/payment/success" element={<PaymentSuccess />} />
                         </Routes>
                     </Router>
                 </CartProvider>
             </AuthProvider>
-        </>
+        </PaymentProvider>
     );
 }
 

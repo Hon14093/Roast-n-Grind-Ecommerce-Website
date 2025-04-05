@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react'
-// import { PlusSquare } from 'lucide-react'
-import { HousePlus } from 'lucide-react'
-import { Trash2 } from 'lucide-react'
-import { Button } from '../ui/button'
-import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals'
-import { useCart } from '../../context/CartContext'
-import { ScrollArea } from '../ui/scroll-area'
-import { Separator } from '../ui/separator'
-import { Checkbox } from '../ui/checkbox'
-import { getAddressesByAccountId } from '@/hooks/addressAPI'
-import { useAuth } from '../../context/AuthContext'
+// AddressDetails.jsx
+import React, { useState, useEffect } from "react";
+import { HousePlus, Trash2 } from 'lucide-react';
+import { Button } from '../ui/button';
+import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals';
+import { useCart } from '../../context/CartContext';
+import { ScrollArea } from '../ui/scroll-area';
+import { Separator } from '../ui/separator';
+import { Checkbox } from '../ui/checkbox';
+import { getAddressesByAccountId } from '@/hooks/addressAPI';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AddressDetails({ addressId, setSelectedAddressId, nextStep }) {
     const { user } = useAuth();
@@ -22,7 +21,7 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
 
     const handleSubmitSuccess = () => {
         getAddressesByAccountId(user.account_id, setAddresses);
-    }
+    };
 
     useEffect(() => {
         getAddressesByAccountId(user.account_id, setAddresses);
@@ -34,7 +33,7 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
         } else {
             alert('Hãy chọn địa chỉ giao hàng');
         }
-    }
+    };
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -138,5 +137,5 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
                 </section>
             </div>
         </div>
-    )
+    );
 }

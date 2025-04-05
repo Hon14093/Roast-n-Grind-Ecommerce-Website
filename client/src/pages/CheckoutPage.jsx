@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import Footer from '@/components/layout/Footer'
-import CheckoutBody from '@/components/CheckoutPage/CheckoutBody'
+// CheckoutPage.jsx
+import React from 'react';
+import Footer from '@/components/layout/Footer';
+import CheckoutBody from '@/components/CheckoutPage/CheckoutBody';
 import Header from "@/components/layout/Header";
 
 class ErrorBoundary extends React.Component {
@@ -28,7 +29,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function CheckoutPage() {
-    const toggleCart = () => {}; // Thay bằng logic thực nếu dùng Cart
+    const toggleCart = () => {};
 
     return (
         <div className="text-darkOlive bg-ivory min-h-screen flex flex-col">

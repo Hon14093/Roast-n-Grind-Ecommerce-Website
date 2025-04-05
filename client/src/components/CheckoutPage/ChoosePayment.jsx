@@ -1,24 +1,24 @@
-import React from 'react'
-import { Button } from '../ui/button'
-import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals'
-import { useCart } from '../../context/CartContext'
-import { ScrollArea } from '../ui/scroll-area'
-import { Separator } from '../ui/separator'
-import { Checkbox } from '../ui/checkbox'
-import { CreditCard } from 'lucide-react'
-import { Label } from "../ui/label"
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import visaLogo from '../../images/visa.png'
-import vnpayLogo from "../../images/vnpay.png";
+// ChoosePayment.jsx
+import React from 'react';
+import { Button } from '../ui/button';
+import { useCart } from '../../context/CartContext';
+import { usePayment } from "@/context/PaynmentContext";
+import { ScrollArea } from '../ui/scroll-area';
+import { Separator } from '../ui/separator';
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import visaLogo from '../../images/visa.png';
 
-export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
+export default function ChoosePayment({ prevStep, nextStep }) {
     const { cartItems } = useCart();
+    const { pm_id, setPm_id } = usePayment();
     const totalPrice = cartItems.length > 0
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
     const isPaymentChosen = () => {
         if (pm_id) {
+            console.log("pm_id before nextStep:", pm_id);
             nextStep();
         } else {
             alert("Hãy chọn phương thức thanh toán");
@@ -35,29 +35,18 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
 
                 <article className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                     <RadioGroup 
-                        value={pm_id === 1 ? "vnpay" : pm_id === 2 ? "visa" : ""}
-                        onValueChange={(value) => setPm_id(value === "vnpay" ? 1 : 2)}
+                        value={pm_id === 2 ? "stripe" : ""}
+                        onValueChange={(value) => setPm_id(value === "stripe" ? 2 : null)}
                         className="space-y-4"
                     >
                         <div className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-50 transition-colors duration-200">
-                            <RadioGroupItem value="vnpay" id="vnpay" className="border-darkOlive" />
+                            <RadioGroupItem value="stripe" id="stripe" className="border-darkOlive" />
                             <Label 
-                                htmlFor="vnpay" 
+                                htmlFor="stripe" 
                                 className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
                             >
-                                <img src={vnpayLogo} alt="VNPAY" className="h-8 w-auto" />
-                                VNPAY
-                            </Label>
-                        </div>
-
-                        <div className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-50 transition-colors duration-200">
-                            <RadioGroupItem value="visa" id="visa" className="border-darkOlive" />
-                            <Label 
-                                htmlFor="visa" 
-                                className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
-                            >
-                                <img src={visaLogo} alt="Visa" className="h-8 w-auto" />
-                                Visa
+                                <img src={visaLogo} alt="Stripe" className="h-8 w-auto" />
+                                Stripe (Visa)
                             </Label>
                         </div>
                     </RadioGroup>

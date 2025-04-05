@@ -1,19 +1,16 @@
-// routes/paymentRouter.js
+// paymentRouter.js
 import express from "express";
-import { createPaymentUrl, handleVnpayReturn } from "../controllers/paymentController.js";
+import { createCheckoutSession, stripeCallback, checkSession } from "../controllers/stripeController.js";
 
 const router = express.Router();
 
-// Tạo URL thanh toán VNPAY
-router.post('/create_payment_url', (req, res) => {
-    console.log('Received POST request to /create_payment_url');
-    createPaymentUrl(req, res);
-});
+// Tạo phiên thanh toán Stripe
+router.post('/stripe/create-checkout-session', createCheckoutSession);
 
-// Xử lý khách hàng quay lại từ VNPAY (Return URL)
-router.get('/vnpay_return', handleVnpayReturn);
+// Kiểm tra trạng thái thanh toán
+router.get('/stripe/check-session', checkSession);
 
-// Endpoint callback từ VNPAY (server-side)
-router.post('/callback', handleVnpayReturn);
+// Xử lý callback từ Stripe
+router.get('/stripe/stripe-pay-callback', stripeCallback);
 
 export default router;

@@ -1,4 +1,4 @@
-
+// CheckoutBody.jsx
 import React, { useState, useEffect } from "react";
 import { Progress } from "../ui/progress";
 import logoBlack from "../../images/orange.png";
@@ -13,16 +13,11 @@ export default function CheckoutBody() {
     const { cartItems } = useCart();
     const [step, setStep] = useState(1);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
-    const [pm_id, setPm_id] = useState(null);
     const [error, setError] = useState(null);
 
     const nextStep = () => {
         if (step === 1 && !selectedAddressId) {
             setError("Vui lòng chọn địa chỉ giao hàng trước khi tiếp tục.");
-            return;
-        }
-        if (step === 2 && !pm_id) {
-            setError("Vui lòng chọn phương thức thanh toán VNPAY.");
             return;
         }
         if (step < 3) setStep(step + 1);
@@ -72,9 +67,8 @@ export default function CheckoutBody() {
                             </span>
                         </div>
                         <Progress 
-                            value={(step / 3) * 100} 
-                            className="mt-4 h-2 bg-gray-200" 
-                            indicatorClassName="bg-darkOlive"
+                            value={(step / 3) * 100}
+                            className="mt-4 h-2 bg-gray-200"
                         />
                     </div>
                 </header>
@@ -97,8 +91,6 @@ export default function CheckoutBody() {
                     )}
                     {step === 2 && (
                         <ChoosePayment
-                            pm_id={pm_id}
-                            setPm_id={setPm_id}
                             prevStep={prevStep}
                             nextStep={nextStep}
                         />
@@ -106,8 +98,9 @@ export default function CheckoutBody() {
                     {step === 3 && (
                         <OrderSummary
                             addressId={selectedAddressId}
-                            pm_id={pm_id}
                             prevStep={prevStep}
+                            shippingPrice={20000}
+                            sm_id={1}
                         />
                     )}
                 </main>
