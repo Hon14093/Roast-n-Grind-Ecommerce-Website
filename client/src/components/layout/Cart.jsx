@@ -29,7 +29,15 @@ export default function Cart({ isOpen, toggleCart }) {
     
     const handleOrder = async () => {
         try {
-            console.log(cartItems)
+            if (!user.cart_id) {
+                alert("Vui lòng đăng nhập để đặt hàng!");
+                return;
+            }
+            if (cartItems.length === 0) {
+                alert("Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi đặt hàng.");
+                return;
+            }
+
             const cartDetailsData = cartItems.map(item => ({
                 cart_id: user.cart_id,
                 quantity: item.quantity,

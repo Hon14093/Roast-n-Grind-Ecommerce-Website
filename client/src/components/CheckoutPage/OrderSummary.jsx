@@ -20,7 +20,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
-    const [discount_id, setDiscount_id] = useState(null); // haven't figured out this one yet
+    const [discount_id, setDiscount_id] = useState(null);
     const [discountCode, setDiscountCode] = useState(null);
     const [discountAmount, setDiscountAmount] = useState(0);
     const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
@@ -40,7 +40,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
 
     useEffect(() => {
         getAddressesByAccountId(user.account_id ,setAddresses);
-    })
+    }, [])
 
     const calculateDiscount = (minOrder, maxDiscount, value) => {
         if (totalPrice >= minOrder) {

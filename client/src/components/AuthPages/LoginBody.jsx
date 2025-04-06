@@ -5,12 +5,17 @@ import axios from 'axios'
 
 function LoginBody() {
     const { user, login, logout} = useAuth();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmitLogin = async (e) => {
         e.preventDefault();
+        if (!email || !password) {
+            alert('Vui lòng nhập đầy đủ thông tin!');
+            return;
+        }
+
         axios.post('http://localhost:5000/api/auth/login', {email, password})
         .then(result => {
             console.log(result);
@@ -23,8 +28,10 @@ function LoginBody() {
                 navigate('/');
             }
         })
-        .catch(result => console.log(result))
-
+        .catch(result => {
+            alert('Đăng nhập không thành công!');
+            console.log(result);
+        })
     }
 
     return (
