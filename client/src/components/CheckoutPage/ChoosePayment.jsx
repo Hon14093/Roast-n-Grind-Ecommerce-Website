@@ -9,9 +9,9 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import visaLogo from '../../images/visa.png';
 
-export default function ChoosePayment({ prevStep, nextStep }) {
+export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
     const { cartItems } = useCart();
-    const { pm_id, setPm_id } = usePayment();
+    // const { pm_id, setPm_id } = usePayment();
     const totalPrice = cartItems.length > 0
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
@@ -67,7 +67,7 @@ export default function ChoosePayment({ prevStep, nextStep }) {
                     </Button>
                 </div>
             </section>
-
+{/* Lên github coi lại đi, tại commit r thì nó trên branch */}
             {/* Cart Section */}
             <section className="md:col-span-5">
                 <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
@@ -85,28 +85,27 @@ export default function ChoosePayment({ prevStep, nextStep }) {
                                 alt={item.product_name}
                                 className="w-20 h-20 object-cover rounded-md"
                             />
-                            <div className="flex-1">
-                                <p className="font-semibold text-gray-900">{item.product_name}</p>
-                                <p className="text-sm text-gray-600">Size: {item.weight_name}</p>
-                                <p className="text-sm text-gray-600">Số lượng: {item.quantity}</p>
-                                <p className="text-sm text-gray-600">
-                                    Xay: {item.grind ? "Có" : "Không"}
-                                </p>
-                                <p className="text-sm font-medium text-gray-900">
-                                    {item.price.toLocaleString()} vnđ
-                                </p>
+
+                            <div>
+                                <p className="font-medium">{item.product_name}</p>
+                                <p className="text-base">Size: {item.weight_name}</p>
+                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
+                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
+                                <p className="text-base">Thành tiền: {item.price.toLocaleString()} vnđ</p>
                             </div>
                         </div>
                     ))}
                 </ScrollArea>
 
-                <div className="mt-6 bg-white rounded-lg border border-gray-200 p-4">
-                    <div className="flex items-center justify-between text-lg">
-                        <span className="font-bold text-gray-800">Tổng cộng:</span>
-                        <span className="font-semibold text-darkOlive">
+                <div>
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Thành tiền:
+                        </span>
+                        <span className="ml-auto pr-3">
                             {totalPrice.toLocaleString()} vnđ
                         </span>
-                    </div>
+                    </article>
                 </div>
             </section>
         </div>

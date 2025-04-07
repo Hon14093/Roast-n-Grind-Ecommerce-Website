@@ -29,7 +29,7 @@ export const getAllAccounts = async () => {
 };
 
 export const getAccountInfo = async (account_id) => {
-    return await prisma.account.findFirst({
+    const data = await prisma.account.findFirst({
         select: {
             account_id: true,
             account_name: true,
@@ -40,8 +40,18 @@ export const getAccountInfo = async (account_id) => {
         },
         where: {account_id: account_id}
     });
+
+    const formattedData = {
+        ...data, 
+        date_created: data.date_created.toISOString().slice(0, 10)
+    };
+
+    return formattedData;
 }
 
+export const getTotalAccounts = async () => {
+    return await prisma.account.count();
+}
 
 
 // const data = {

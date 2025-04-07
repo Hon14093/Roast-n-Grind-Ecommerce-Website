@@ -21,6 +21,7 @@ export default function Admin() {
             {/* Other content on right side with SPA application */}
             <Routes>
                 <Route path="/" element={<Analytics />} />
+                <Route path="/analytics" element={<Analytics />} />
                 <Route path="/accounts" element={<Accounts />} />
                 <Route path="/discounts" element={<Discounts />} />
                 <Route path="/products" element={<Products />} />    

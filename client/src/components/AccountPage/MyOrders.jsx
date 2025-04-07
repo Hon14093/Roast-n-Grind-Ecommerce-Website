@@ -5,16 +5,18 @@ import { useAuth } from '../../context/AuthContext';
 import { orderColumns } from '../columns';
 import OrderStatusComboBox from '../combobox/OrderStatusCombobox';
 import { Button } from '../ui/button';
-import { DetailsModal } from '../modals/order/OrderModals';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs'
+import { DetailsModal, DetailsModalWithReview } from '../modals/order/OrderModals';
 
 function MyOrders() {
     const { user } = useAuth();
-    const [data, setData] = useState([]);
+    const [processingOrders, setProcessingOrders] = useState([]);
+    const [deliveredOrders, setDeliveredOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
     useEffect(() => {
-        getOrdersByAccountId(user.account_id, setData);
+        getOrdersByAccountId(user.account_id, setProcessingOrders, setDeliveredOrders);
     }, []);
 
     const handleViewDetails = (order) => {
@@ -26,7 +28,6 @@ function MyOrders() {
         ...orderColumns,
         { accessorKey: "Order_Status.status_name", header: "Trạng Thái" },
         {
-            header: "Hành Động",
             id: "actions",
             cell: ({ row }) => (
                 <div className='flex gap-2'>
@@ -42,14 +43,34 @@ function MyOrders() {
     ];
 
     return (
-        <div>
-            <DataTable data={data} columns={columnsWithActions} />
+        <div className='min-h-40'>
+            <Tabs defaultValue="processing">
+                <TabsList className='w-full mx-auto bg-ivory'>
+                    <TabsTrigger value="processing">Đơn hàng đang xử lý</TabsTrigger>
+                    <TabsTrigger value="delivered">Đơn hàng đã giao</TabsTrigger>
+                </TabsList>
 
-            <DetailsModal 
-                order={selectedOrder}
-                open={isDetailsModalOpen}
-                onClose={() => setIsDetailsModalOpen(false)}
-            />
+                <TabsContent value="processing">
+                    <DataTable data={processingOrders} columns={columnsWithActions} />
+
+                    <DetailsModal 
+                        order={selectedOrder}
+                        open={isDetailsModalOpen}
+                        onClose={() => setIsDetailsModalOpen(false)}
+                    />
+                </TabsContent>
+
+                <TabsContent value="delivered">
+                    <DataTable data={deliveredOrders} columns={columnsWithActions} />
+
+                    <DetailsModalWithReview 
+                        order={selectedOrder}
+                        open={isDetailsModalOpen}
+                        onClose={() => setIsDetailsModalOpen(false)}
+                    />
+                </TabsContent>
+
+            </Tabs>
         </div>
     )
 }

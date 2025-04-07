@@ -6,6 +6,11 @@
   /* text-align: center; */
 }
 
+.star-svg {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

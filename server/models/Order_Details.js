@@ -33,6 +33,34 @@ export const getOrderDetailsByOrderId = async (orderId) => {
     });
 };
 
+export const getSpecificOrderDetails = async (completedOrders) => {
+    return await prisma.order_Details.findMany({
+        where: {
+            order_id: {
+                in: completedOrders.map(o => o.order_id)
+            }
+        },
+        include: {
+            Product_Weight: {
+                include: {
+                    Product: {
+                        include: {
+                            Product_Weight: {
+                                include: {
+                                    Weight_Option: {
+                                        select: { weight_name: true }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+}
+
+
 
 
 export const findOrderDetailById = async (id) => {

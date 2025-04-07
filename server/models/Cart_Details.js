@@ -21,7 +21,6 @@ export const deleteCartDetailByCartIdAndPwId = async (cart_id, pw_id) => {
 }
 
 export const getCartDetailsByCartId = async (cart_id) => {
-    console.log(cart_id)
     return await prisma.cart_Details.findMany({
         select: {
             cd_id: true,

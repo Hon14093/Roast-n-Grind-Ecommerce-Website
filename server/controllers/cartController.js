@@ -12,7 +12,6 @@ import {
 export const addCartDetails = async (req,res) => {
     try {
         const data = req.body;
-        console.log(data)
         if (!Array.isArray(data)) {
             return res.status(400).json({
                 success: 0,
@@ -80,7 +79,6 @@ export const returnCartDetailsByCartId = async (req,res) => {
 
 export const removeCartDetail = async (req,res) => {
     try {
-        console.log(req.body)
         const cart_id = req.body.cart_id;
         const pw_id = req.body.pw_id;
         

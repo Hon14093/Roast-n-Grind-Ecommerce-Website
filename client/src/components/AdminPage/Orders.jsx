@@ -25,9 +25,11 @@ import { Button } from '../ui/button.jsx'
 import { DataTable } from '../data-table.jsx'
 import { orderColumns } from '../columns.jsx'
 import { DetailsModal } from '../modals/order/OrderModals.jsx'
-import { getProcessedOrders } from '@/hooks/orderAPI.jsx'
+import { 
+    getProcessedOrders,
+    updateOrderStatus
+} from '@/hooks/orderAPI.jsx'
 import { Link } from 'react-router-dom'
-import { updateOrderStatus } from '@/hooks/orderAPI.jsx'
 import OrderStatusComboBox from '../combobox/OrderStatusCombobox.jsx'
 
 function Orders() {
@@ -118,15 +120,6 @@ function Orders() {
                     <div className='flex'>
                         <div className='font-bold text-2xl'>
                             Danh sách đơn hàng
-                        </div>
-
-                        <div className='ml-auto'>
-                                <Button variant='outline' className='mr-3' onClick={test}>
-                                    <PackagePlus />
-                                    Biến thể
-                                </Button>
-
-                            {/* <AddModal onSubmitSuccess={handleSubmitSuccess} /> */}
                         </div>
                     </div>                    
                 </CardHeader>

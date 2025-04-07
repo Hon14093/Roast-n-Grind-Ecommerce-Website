@@ -3,6 +3,7 @@ import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import ShopBody from '@/components/ShopPage/ShopBody'
 import Cart from '@/components/layout/Cart'
+import { Toaster } from '@/components/ui/sonner'
 
 function ShopPage() {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,7 @@ function ShopPage() {
 
                 <main className='px-10 relative pt-20'>
                     <ShopBody />
+                    <Toaster />
                 </main>
 
                 <Footer />

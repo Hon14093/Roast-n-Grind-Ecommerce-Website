@@ -6,6 +6,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { addCartDetails } from "@/hooks/cartAPI"; 
+import { Separator } from "../ui/separator";
+import ReviewSection from "./ReviewSection";
 
 export function ProductDetailsBody() {
     const location = useLocation();
@@ -23,7 +25,7 @@ export function ProductDetailsBody() {
         return <p className="text-center mt-10 text-red-500">Product not found</p>;
     }
 
-    const handleAddToCart = async () => {
+    const handleAddToCart1 = async () => {
         if (!selectedWeight) return;
         if (!user?.cart_id) {
             setError("Vui lòng đăng nhập để thêm vào giỏ hàng.");
@@ -57,6 +59,23 @@ export function ProductDetailsBody() {
         } else {
             setError("Không thể thêm sản phẩm vào giỏ hàng.");
         }
+
+    };
+
+    const handleAddToCart = () => {
+        if (!selectedWeight) return;
+
+        updateCart({
+            product_id: product.product_id,
+            pw_id: selectedWeight.pw_id,
+            product_name: product.product_name,
+            weight_id: selectedWeight.weight_id,
+            weight_name: selectedWeight.weight_name,
+            price: selectedWeight.product_price,
+            image_url: product.image_url,
+            grind: grind,
+            quantity: qty,
+        });
     };
 
     const handleQuantityChange = (e) => {
@@ -69,8 +88,8 @@ export function ProductDetailsBody() {
 
     return (
         <div className="text-darkOlive">
-            <div className="bg-ivory">
-                <div className="p-4 grid grid-cols-12">
+            <div className="bg-ivory max-w-[1250px] mx-auto">
+                <div className="p-4 grid grid-cols-12 ">
                     <section className="col-span-6">
                         <img 
                             src={product.image_url} 
@@ -84,7 +103,7 @@ export function ProductDetailsBody() {
 
                         <span className="text-4xl font-serifs mt-4">
                             {hasVariations ? 
-                                `${selectedWeight.price} vnđ` : 
+                                `${selectedWeight.product_price.toLocaleString()} vnđ` : 
                                 <span className="text-red-500">Out of Stock</span>}
                         </span>
 
@@ -130,7 +149,7 @@ export function ProductDetailsBody() {
                         {error && <p className="text-red-500 mt-2">{error}</p>}
 
                         <button 
-                            className={`w-full mt-5 big-action-button
+                            className={`w-full mt-5 big-action-button font-bold
                                 ${hasVariations ? "text-ivory" : "bg-second_bg_color text-gray-700 cursor-not-allowed"}`}
                             onClick={handleAddToCart}
                             disabled={!hasVariations}
@@ -139,6 +158,11 @@ export function ProductDetailsBody() {
                         </button>
                     </section>
                 </div>
+
+                <Separator className='bg-darkOlive my-4 mx-auto max-w-[80%]'/>
+
+                <ReviewSection productId={product.product_id} />
+
             </div>
         </div>
     );

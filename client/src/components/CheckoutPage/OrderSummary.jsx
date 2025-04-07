@@ -1,39 +1,37 @@
-// OrderSummary.jsx
-import React, { useEffect, useState, useCallback } from "react";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { useCart } from "../../context/CartContext";
-import { useAuth } from "../../context/AuthContext";
-import { usePayment } from "@/context/PaynmentContext";
-import { getAddressesByAccountId } from "@/hooks/addressAPI";
-import { toast } from "sonner";
-import axios from "axios";
+import React, { useEffect, useState } from 'react'
+import { ScrollArea } from '../ui/scroll-area'
+import { Separator } from '../ui/separator'
+import { Label } from '../ui/label';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { useCart } from '../../context/CartContext';
+import { getAddressesByAccountId } from '@/hooks/addressAPI';
+import { useAuth } from '../../context/AuthContext';
+import { VisaModal } from '../modals/payment/PaymentModals';
 
 export default function OrderSummary({ prevStep, addressId, shippingPrice: initialShippingPrice, sm_id }) {
     const { cartItems } = useCart();
     const { user } = useAuth();
     const { pm_id } = usePayment();
     const [addresses, setAddresses] = useState([]);
-    const [selectedAddress, setSelectedAddress] = useState(null);
-    const [note, setNote] = useState("");
-    const [discountCode, setDiscountCode] = useState("");
-    const [discountAmount, setDiscountAmount] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isAddressLoading, setIsAddressLoading] = useState(true);
-    const [shippingOption, setShippingOption] = useState(sm_id || 1);
-    const [shippingPrice, setShippingPrice] = useState(initialShippingPrice || 20000);
-
-    console.log("OrderSummary pm_id:", pm_id);
-
-    const totalPrice = cartItems.length > 0
+    const [note, setNote] = useState(null);
+    const [sm_id, setSm_id] = useState(1);
+    const [shippingPrice, setShippingPrice] = useState(20000);
+    const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
+    const [discount_id, setDiscount_id] = useState(null); // haven't figured out this one yet
+    const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
-    const finalTotal = totalPrice + shippingPrice - discountAmount;
-
+    
+    
     const orderData = {
+        order_total: totalPrice + shippingPrice,
+        note: note,
+        account_id: user.account_id,
+        shipping_id: sm_id,
+        discount_id: discount_id,
         address_id: addressId,
         shipping_id: shippingOption,
         note: note || null,
@@ -57,219 +55,96 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
     }, [user?.account_id, addressId]);
 
     useEffect(() => {
-        fetchAddresses();
-    }, [fetchAddresses]);
-
-    const handleShippingChange = (option) => {
-        setShippingOption(option);
-        setShippingPrice(option === 1 ? 20000 : 40000);
-        console.log("Selected shipping option:", option, "Price:", option === 1 ? 20000 : 40000);
-    };
-
-    const handleApplyDiscount = async () => {
-        if (!discountCode.trim()) {
-            toast.error("Vui lòng nhập mã giảm giá");
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            const response = await axios.post(
-                'http://localhost:5000/api/discount/apply',
-                { discount_code: discountCode, total: totalPrice },
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }
-            );
-            const discount = response.data;
-            if (discount && discount.discount_value) {
-                const discountValue = Math.min(
-                    totalPrice * (discount.discount_value / 100),
-                    discount.max_discount_amount || Infinity
-                );
-                setDiscountAmount(discountValue);
-                toast.success("Mã giảm giá đã được áp dụng");
-            } else {
-                toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn");
-                setDiscountAmount(0);
-                setDiscountCode("");
-            }
-        } catch (error) {
-            console.error("Lỗi khi áp dụng mã giảm giá:", error);
-            toast.error(error.response?.data?.error || "Không thể áp dụng mã giảm giá. Vui lòng thử lại sau.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handlePlaceOrder = async () => {
-        if (!user?.account_id) {
-            toast.error("Vui lòng đăng nhập để thanh toán.");
-            return;
-        }
-        if (cartItems.length === 0) {
-            toast.error("Giỏ hàng trống, không thể thanh toán.");
-            return;
-        }
-        if (!addressId) {
-            toast.error("Vui lòng chọn địa chỉ giao hàng.");
-            return;
-        }
-        if (!pm_id) {
-            toast.error("Vui lòng chọn phương thức thanh toán.");
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            let apiUrl = '';
-            let redirectMessage = '';
-
-            console.log("user.account_id:", user.account_id);
-
-            if (pm_id === 2) {
-                apiUrl = `http://localhost:5000/api/payment/stripe/create-checkout-session`;
-                redirectMessage = "Đang chuyển hướng đến Stripe...";
-            } else {
-                throw new Error("Phương thức thanh toán không hợp lệ.");
-            }
-
-            console.log(`Dữ liệu gửi lên Stripe:`, orderData);
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    userId: user.account_id,
-                    cartItems: cartItems.map(item => ({
-                        product_id: item.product_id,
-                        weight_id: item.weight_id,
-                        quantity: item.quantity,
-                        price: item.price,
-                        product_name: item.product_name,
-                    })),
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Không thể tạo URL thanh toán");
-            }
-
-            const data = await response.json();
-            console.log(`Dữ liệu thanh toán từ Stripe:`, data);
-
-            if (data && data.data.paymentUrl) {
-                toast.success(redirectMessage);
-                // Lưu sessionId vào localStorage để sử dụng sau khi thanh toán
-                localStorage.setItem('paymentSessionId', data.data.sessionId);
-                // Chuyển hướng tab hiện tại đến giao diện thanh toán Stripe
-                window.location.href = data.data.paymentUrl;
-            } else {
-                throw new Error("Không nhận được URL thanh toán từ server.");
-            }
-        } catch (error) {
-            console.error("Lỗi khi đặt hàng:", error);
-            toast.error(error.message || "Không thể xử lý thanh toán. Vui lòng thử lại.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        getAddressesByAccountId(user.account_id ,setAddresses);
+    })
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <section className="md:col-span-7">
-                <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">Tổng kết đơn hàng</h1>
+        <div className='grid grid-cols-12 gap-4'>
+        
+            <section className='col-start-2 col-span-6 mx-auto w-full'>
+                <h1 className='font-semibold uppercase text-2xl pb-2'>Tổng kết đơn hàng</h1>
+                <ScrollArea className='h-[400px]'>
+                    
+                    {cartItems.map((item) => (
+                        <div
+                            key={`${item.product_id}-${item.weight_id}`}
+                            className="flex items-start gap-4 mb-4"
+                        >
+                            <img
+                                src={item.image_url}
+                                alt={item.product_name}
+                                className="w-28 h-28 object-cover rounded"
+                            />
 
-                {isAddressLoading ? (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-yellow-700">
-                        Đang tải địa chỉ giao hàng...
-                    </div>
-                ) : selectedAddress ? (
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6 shadow-sm">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-2">Địa chỉ giao hàng</h2>
-                        <p className="text-gray-700">{selectedAddress.Address.last_name} {selectedAddress.Address.first_name}</p>
-                        <p className="text-gray-600">{selectedAddress.Address.address_line}</p>
-                        <p className="text-gray-600">{selectedAddress.Address.ward}, {selectedAddress.Address.district}, {selectedAddress.Address.City?.city_name || "Không xác định"}</p>
-                        <p className="text-gray-600">Mã bưu điện: {selectedAddress.Address.postal_code}</p>
-                    </div>
-                ) : (
-                    <div className="bg-red-50 border border-yellow-200 rounded-lg p-4 mb-6 text-yellow-700">
-                        Vui lòng chọn địa chỉ giao hàng
-                    </div>
-                )}
-
-                {cartItems.length === 0 ? (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-yellow-700">
-                        Giỏ hàng của bạn đang trống
-                    </div>
-                ) : (
-                    <ScrollArea className="h-[400px] bg-white border border-gray-200 rounded-lg p-4 mb-6">
-                        {cartItems.map((item) => (
-                            <div
-                                key={`${item.product_id}-${item.weight_id}`}
-                                className="flex items-start gap-4 py-4 border-b border-gray-100 last:border-b-0"
-                            >
-                                <img 
-                                    src={item.image_url || "https://via.placeholder.com/80"} 
-                                    alt={item.product_name} 
-                                    className="w-20 h-20 object-cover rounded-md" 
-                                    onError={(e) => { e.target.src = "https://via.placeholder.com/80"; }}
-                                />
-                                <div className="flex-1">
-                                    <p className="font-semibold text-gray-900">{item.product_name || "Sản phẩm không xác định"}</p>
-                                    <p className="text-sm text-gray-600">Size: {item.weight_name || "N/A"}</p>
-                                    <p className="text-sm text-gray-600">Số lượng: {item.quantity || 0}</p>
-                                    <p className="text-sm text-gray-600">Xay: {item.grind ? "Có" : "Không"}</p>
-                                    <p className="text-sm font-medium text-gray-900">
-                                        {(item.price * item.quantity).toLocaleString()} vnđ
-                                    </p>
-                                </div>
+                            <div>
+                                <p className="font-medium">{item.product_name}</p>
+                                <p className="text-base">Size: {item.weight_name}</p>
+                                <span className="text-base w-[5rem]">Số lượng: {item.quantity}</span>
+                                <p className="text-base">Xay: {item.grind ? "Có" : "Không"}</p>
+                                <p className="text-base">Thành tiền: {item.price}</p>
                             </div>
-                        ))}
-                    </ScrollArea>
-                )}
+                        </div>
+                    ))}
 
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Phương thức giao hàng</h2>
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="radio"
-                                name="shipping"
-                                value={1}
-                                checked={shippingOption === 1}
-                                onChange={() => handleShippingChange(1)}
-                                disabled={isLoading}
-                            />
-                            Bình thường - 20.000 VNĐ
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="radio"
-                                name="shipping"
-                                value={2}
-                                checked={shippingOption === 2}
-                                onChange={() => handleShippingChange(2)}
-                                disabled={isLoading}
-                            />
-                            Hỏa tốc - 40.000 VNĐ
-                        </label>
-                    </div>
+                </ScrollArea>
+
+                <Separator className='bg-darkOlive h-[0.5px] w-[75%] mb-4'/>
+
+                <div className=''>
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Phí vận chuyển:
+                        </span>
+                        <span className="ml-auto pr-3">
+                            {shippingPrice} vnđ
+                        </span>
+                    </article>
+
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Voucher:
+                        </span>
+                        <span className="ml-auto pr-3">
+                            {/* {totalPrice + shippingPrice} vnđ */}
+                            - 0 vnđ
+                        </span>
+                    </article>
+
+                    <article className="flex text-lg">
+                        <span className='font-bold'>
+                            Tổng tiền:
+                        </span>
+                        <span className="ml-auto pr-3">
+                            {totalPrice + shippingPrice} vnđ
+                        </span>
+                    </article>
+
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                    <div className="space-y-3 text-lg text-gray-800">
-                        <div className="flex justify-between">
-                            <span className="font-semibold">Tạm tính:</span>
-                            <span>{totalPrice.toLocaleString()} vnđ</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="font-semibold">Phí vận chuyển:</span>
-                            <span>{shippingPrice.toLocaleString()} vnđ</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="font-semibold">Giảm giá:</span>
-                            <span>-{discountAmount.toLocaleString()} vnđ</span>
+                <article className='flex pt-4'>
+                    <Button className='' variant='secondary' onClick={prevStep}>Quay lại</Button>
+                    {/* <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
+                        Đặt hàng
+                    </Button> */}
+
+                    <VisaModal orderData={orderData} totalPrice={totalPrice} />
+                </article>
+            </section>
+
+            <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
+                <article className='pb-2'>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức vận chuyển</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-2'/>
+
+                    <RadioGroup defaultValue="slow" className='col-start-2 grid gap-2'>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="slow" id="slow" onClick={() => {
+                                setSm_id(1);
+                                setShippingPrice(20000);
+                            }} />
+                            <Label htmlFor="slow" className='text-base flex gap-2'>
+                                Tiết kiệm
+                            </Label>
                         </div>
                         <Separator className="bg-gray-200" />
                         <div className="flex justify-between font-bold text-xl text-darkOlive">
@@ -283,41 +158,25 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                     </div>
                 </div>
 
-                <div className="flex gap-4 mt-6">
-                    <Button
-                        onClick={prevStep}
-                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition-colors"
-                        disabled={isLoading}
-                    >
-                        Quay lại
-                    </Button>
-                    <Button
-                        onClick={handlePlaceOrder}
-                        className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors"
-                        disabled={isLoading || cartItems.length === 0 || !pm_id}
-                    >
-                        {isLoading ? "Đang xử lý..." : `Đặt hàng qua ${pm_id === 2 ? "Stripe" : "..."}`}
-                    </Button>
-                </div>
-            </section>
+                <article className='pb-2'>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức thanh toán</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-2'/>
 
-            <section className="md:col-span-5 space-y-6">
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Mã giảm giá</h2>
-                    <div className="flex gap-2">
-                        <Input
-                            placeholder="Nhập mã giảm giá"
-                            value={discountCode}
-                            onChange={(e) => setDiscountCode(e.target.value)}
-                            className="border-gray-300 focus:border-darkOlive"
-                            disabled={isLoading}
-                        />
-                        <Button
-                            onClick={handleApplyDiscount}
-                            className="bg-darkOlive hover:bg-darkOlive/90 text-white"
-                            disabled={isLoading || !discountCode.trim()}
-                        >
-                            {isLoading ? "..." : "Áp dụng"}
+                    {pm_id === 1 ? (
+                        <p className='text-lg'>Phương thức: Chuyển khoản</p>
+                    ) : (
+                        <p className='text-lg'>Phương thức: Visa</p>
+                    )}
+                </article>
+
+                <article className='pb-2'>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Voucher</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-3'/>
+
+                    <div className='flex gap-1'>
+                        <Input placeholder='Nhập mã voucher' className='border-darkOlive border-2 w-3/4 text-lg'/>
+                        <Button className='bg-darkOlive' onClick={() => console.log(orderData)}>
+                            Áp dụng
                         </Button>
                     </div>
                     {discountAmount > 0 && (

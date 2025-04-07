@@ -55,6 +55,15 @@ export const getUnprocessedOrders = async (setData) => {
     }
 };
 
+export const getRejectedOrders = async (setData) => {
+    try {
+        const result = await axios.get('http://localhost:5000/api/order/rejected');
+        setData(result.data.rejected);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getProcessedOrders = async (setData) => {
     try {
         const result = await axios.get(`${BASE_URL}/api/order/processed`);
@@ -65,11 +74,19 @@ export const getProcessedOrders = async (setData) => {
     }
 };
 
-export const getOrdersByAccountId = async (account_id, setData) => {
+export const getOrdersByAccountId = async (account_id, setProcessingOrders, setDeliveredOrders) => {
     try {
-        const result = await axios.get(`${BASE_URL}/api/order/my-orders/${account_id}`);
-        console.log("API getOrdersByAccountId:", result.data.orders);
-        setData(result.data.orders); // Gọi setData để cập nhật state
+
+        const result = await axios.get(`http://localhost:5000/api/order/my-orders/${account_id}`);
+        const allOrders = result.data.orders;
+
+        // Filter orders into processing and delivered
+        const delivered = allOrders.filter(order => order.status_id === 5);
+        const processing = allOrders.filter(order => order.status_id !== 5);
+
+        setDeliveredOrders(delivered);
+        setProcessingOrders(processing);
+
     } catch (error) {
         console.log("Lỗi khi lấy đơn hàng theo account_id:", error);
     }

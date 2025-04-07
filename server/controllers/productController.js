@@ -1,3 +1,5 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 import { getAllRoastLevels } from "../models/Roast_Level.js";
 import { getAllTypes } from "../models/Product_Type.js";
 import { getAllOptions } from "../models/Weight_Option.js";
@@ -15,6 +17,10 @@ import {
     updateProduct,
     deleteProduct,
 } from "../models/Product.js";
+import { getCompletedOrders } from "../models/Order.js";
+import { getSpecificOrderDetails } from "../models/Order_Details.js";
+
+
 
 export const returnAllProducts = async (req,res) => {
     try {
@@ -52,7 +58,7 @@ export const returnDetailedVaritions = async (req, res) => {
                 pw_id: weight.pw_id,
                 weight_id: weight.Weight_Option.weight_id,
                 weight_name: weight.Weight_Option.weight_name,
-                price: weight.product_price,
+                product_price: weight.product_price,
                 stock: weight.qty_in_stock,
             }))
         }));
@@ -84,6 +90,46 @@ export const returnAllProductVariations = async (req,res) => {
         res.status(200).json({ variations });
     } catch (error) {
         console.log(error);
+    }
+}
+
+// need to be refined
+export const returnPopularProducts = async (req,res) => {
+    try {
+        const completedOrders = await getCompletedOrders();
+        const orderDetails = await getSpecificOrderDetails(completedOrders);
+
+        let productSales = {};
+        orderDetails.forEach(od => {
+            const productId = od.Product_Weight.Product.product_id;
+            if (!productSales[productId]) {
+                productSales[productId] = {
+                    product: od.Product_Weight.Product,
+                    totalSold: 0
+                };
+            }
+            productSales[productId].totalSold += od.quantity;
+        });
+
+        const sortedProducts = Object.values(productSales)
+            .sort((a, b) => b.totalSold - a.totalSold)
+            .slice(0, 3)
+            .map(item => ({
+                ...item.product,
+                variations: item.product.Product_Weight.map(weight => ({
+                    pw_id: weight.pw_id,
+                    product_price: weight.product_price,
+                    qty_in_stock: weight.qty_in_stock,
+                    weight_id: weight.weight_id,
+                    weight_name: weight.Weight_Option.weight_name
+                })),
+                total_sold: item.totalSold
+            }));
+    
+        res.status(200).json({ sortedProducts });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -141,6 +187,8 @@ export const deleteProductWithID = async (req,res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+
 
 // aroma -------------------------------------------------
 export const returnAllAromas = async (req,res) => {

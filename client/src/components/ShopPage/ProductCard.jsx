@@ -6,7 +6,7 @@ const ProductCard = ({ product }) => {
     const navigate = useNavigate();
 
     const minPrice = product.variations.length > 0 
-        ? Math.min(...product.variations.map(v => v.price))
+        ? Math.min(...product.variations.map(v => v.product_price))
         : "N/A";
 
     return (
@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
                     // className="w-full h-96 object-cover rounded-md"
                 />
                 <h2 className="text-lg font-medium mt-2">{product.product_name}</h2>
-                <p className="mt-2 font-semibold">{minPrice !== "N/A" ? `vnđ ${minPrice}` : "Price unavailable"}</p>
+                <p className="mt-2 font-semibold">{minPrice !== "N/A" ? `vnđ ${minPrice.toLocaleString()}` : "Price unavailable"}</p>
             </CardContent>
         </Card>
     );

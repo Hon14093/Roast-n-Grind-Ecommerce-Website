@@ -1,12 +1,11 @@
-// CheckoutBody.jsx
-import React, { useState, useEffect } from "react";
-import { Progress } from "../ui/progress";
-import logoBlack from "../../images/orange.png";
-import AddressDetails from "./AddressDetails";
-import ChoosePayment from "./ChoosePayment";
-import OrderSummary from "./OrderSummary";
-import { useAuth } from "../../context/AuthContext";
-import { useCart } from "../../context/CartContext";
+import React, { useEffect, useState } from 'react'
+import { Progress } from '../ui/progress'
+import { Button } from '../ui/button'
+import logoBlack from '../../images/orange.png'
+import AddressDetails from './AddressDetails'
+import ChoosePayment from './ChoosePayment'
+import OrderSummary from './OrderSummary'
+import { useAuth } from '../../context/AuthContext'
 
 export default function CheckoutBody() {
     const { user } = useAuth();
@@ -105,6 +104,8 @@ export default function CheckoutBody() {
                     )}
                 </main>
             </div>
+
+            <Toaster />
         </div>
     );
 }

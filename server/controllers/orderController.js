@@ -1,6 +1,7 @@
 import { createOrder, 
     getAllOrders, 
     getOrdersByAccountId, 
+    getRejectedOrders, 
     getRemainingOrders, 
     getUnprocessedOrders, 
     updateOrderStatus
@@ -66,6 +67,16 @@ export const returnUnprocessedOrders = async (req,res) => {
     try {
         const unprocessed = await getUnprocessedOrders();
         res.status(200).json({unprocessed});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+export const returnRejectedOrders = async (req,res) => {
+    try {
+        const rejected = await getRejectedOrders();
+        res.status(200).json({rejected});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });

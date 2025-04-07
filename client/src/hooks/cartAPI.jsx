@@ -3,8 +3,10 @@ import axios from 'axios';
 export const addCartDetails = async (detail) => {
     console.log("Dữ liệu gửi lên addCartDetails:", detail);
     try {
+
         const result = await axios.post("http://localhost:5000/api/cart/details/create", detail);
         console.log("Kết quả từ addCartDetails:", result.data);
+
         return result;
     } catch (error) {
         console.error("Lỗi khi thêm chi tiết giỏ hàng:", error);

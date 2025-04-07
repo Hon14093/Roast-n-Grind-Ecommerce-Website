@@ -11,13 +11,6 @@ function HomeBody() {
             <HeroSection />
 
             <FeaturedProductsSection />
-
-            <StorySection />
-
-            {/* Reviews Section ? */}
-            <article>
-
-            </article>
             
         </section>
         </>

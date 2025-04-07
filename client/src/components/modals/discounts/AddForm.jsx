@@ -28,6 +28,7 @@ export default function AddForm({ onSubmitSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
             const data = {
                 discount_code: discountCode.toUpperCase(),

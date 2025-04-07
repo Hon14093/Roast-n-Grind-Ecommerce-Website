@@ -8,6 +8,7 @@ import {
     returnOrderDetailsByOrderId, 
     returnOrdersByAccountId, 
     returnOrderStatuses, 
+    returnRejectedOrders, 
     returnRemainingOrders, 
     returnUnprocessedOrders 
 } from "../controllers/orderController.js";
@@ -17,6 +18,7 @@ const router = express.Router();
 router.get('/all', returnAllOrders);
 router.get('/details/all/:order_id', returnOrderDetailsByOrderId);
 router.get('/unprocessed', returnUnprocessedOrders);
+router.get('/rejected', returnRejectedOrders);
 router.get('/processed', returnRemainingOrders);
 router.get('/status/all', returnOrderStatuses);
 router.get('/my-orders/:account_id', returnOrdersByAccountId);
