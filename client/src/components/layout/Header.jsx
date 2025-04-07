@@ -67,7 +67,9 @@ function Header({ darkBG = true, toggleCart }) {
                             </Link>
                         </li>
                         <li className='navList group'>
+                            <Link to="/contact">
                             <a className='navAnchor'>Liên Hệ</a>
+                            </Link>
                         </li>
                         <li className='navList group'>
                             <a className='navAnchor' onClick={() => console.log(isLoggedIn)}>FAQ</a>

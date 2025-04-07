@@ -2,7 +2,6 @@
 import React from 'react';
 import Footer from '@/components/layout/Footer';
 import CheckoutBody from '@/components/CheckoutPage/CheckoutBody';
-import Header from "@/components/layout/Header";
 
 class ErrorBoundary extends React.Component {
     state = { hasError: false };
@@ -29,7 +28,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function CheckoutPage() {
-    const toggleCart = () => {};
+    // const toggleCart = () => {};
 
     return (
         <div className="text-darkOlive bg-ivory min-h-screen flex flex-col">

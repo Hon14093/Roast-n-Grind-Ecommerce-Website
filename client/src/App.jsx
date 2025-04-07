@@ -8,12 +8,13 @@ import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import AboutUsPage from './pages/AboutUsPage';
+import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AdminPage from './pages/AdminPage';
 import AccountPage from './pages/AccountPage';
 import CheckoutPage from './pages/CheckoutPage';
-import PaymentCallback from './components/PaymentCallback'; // Thêm component mới
+import PaymentCallback from './components/PaymentCallback';
 import { PaymentProvider } from './context/PaynmentContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -32,6 +33,7 @@ function App() {
                             <Route path="/shop" element={<ShopPage />} />
                             <Route path="/product/:product_id" element={<ProductDetailsPage />} />
                             <Route path="/about" element={<AboutUsPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/signup" element={<SignupPage />} />
                             <Route path="/account" element={<AccountPage />} />

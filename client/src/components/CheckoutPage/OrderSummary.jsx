@@ -4,59 +4,153 @@ import { Separator } from '../ui/separator'
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { toast } from 'sonner';
 import { Textarea } from '../ui/textarea';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useCart } from '../../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
 import { useAuth } from '../../context/AuthContext';
 import { VisaModal } from '../modals/payment/PaymentModals';
+import { getDiscountByCode } from '@/hooks/discountAPI';
 
-export default function OrderSummary({ prevStep, addressId, shippingPrice: initialShippingPrice, sm_id }) {
+export default function OrderSummary({ prevStep, pm_id, addressId }) {
     const { cartItems } = useCart();
     const { user } = useAuth();
-    const { pm_id } = usePayment();
+    const [isLoading, setIsLoading] = useState(false);
+    // const { pm_id } = usePayment(); ??????????
     const [addresses, setAddresses] = useState([]);
     const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
     const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
     const [discount_id, setDiscount_id] = useState(null); // haven't figured out this one yet
+    const [discountCode, setDiscountCode] = useState(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
     const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
     
     
-    const orderData = {
-        order_total: totalPrice + shippingPrice,
+    let orderData = {
+        order_total: totalPrice + shippingPrice - discountAmount,
         note: note,
         account_id: user.account_id,
         shipping_id: sm_id,
         discount_id: discount_id,
         address_id: addressId,
-        shipping_id: shippingOption,
-        note: note || null,
-        discount_code: discountCode || null,
-    };
+        method_id: pm_id
+    }
 
-    const fetchAddresses = useCallback(() => {
-        if (!user?.account_id) return;
+    const handlePlaceOrder = async () => {
+        if (!user?.account_id) {
+            toast.error("Vui lòng đăng nhập để thanh toán.");
+            return;
+        }
+        if (cartItems.length === 0) {
+            toast.error("Giỏ hàng trống, không thể thanh toán.");
+            return;
+        }
+        if (!addressId) {
+            toast.error("Vui lòng chọn địa chỉ giao hàng.");
+            return;
+        }
+        if (!pm_id) {
+            toast.error("Vui lòng chọn phương thức thanh toán.");
+            return;
+        }
 
-        setIsAddressLoading(true);
-        getAddressesByAccountId(user.account_id, (fetchedAddresses) => {
-            console.log("Fetched addresses:", fetchedAddresses);
-            setAddresses(fetchedAddresses || []);
-            if (addressId && fetchedAddresses && fetchedAddresses.length > 0) {
-                const address = fetchedAddresses.find(addr => addr.address_id === addressId);
-                setSelectedAddress(address || null);
-                console.log("Selected address:", address);
+        setIsLoading(true);
+        try {
+            let apiUrl = '';
+            let redirectMessage = '';
+
+            console.log("user.account_id:", user.account_id);
+
+            if (pm_id === 2) {
+                apiUrl = `http://localhost:5000/api/payment/stripe/create-checkout-session`;
+                redirectMessage = "Đang chuyển hướng đến Stripe...";
+            } else {
+                throw new Error("Phương thức thanh toán không hợp lệ.");
             }
-            setIsAddressLoading(false);
-        });
-    }, [user?.account_id, addressId]);
+
+            console.log(`Dữ liệu gửi lên Stripe:`, orderData);
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    userId: user.account_id,
+                    cartItems: cartItems.map(item => ({
+                        product_id: item.product_id,
+                        weight_id: item.weight_id,
+                        quantity: item.quantity,
+                        price: item.price,
+                        product_name: item.product_name,
+                    })),
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Không thể tạo URL thanh toán");
+            }
+
+            const data = await response.json();
+            console.log(`Dữ liệu thanh toán từ Stripe:`, data);
+
+            if (data && data.data.paymentUrl) {
+                toast.success(redirectMessage);
+                // Lưu sessionId vào localStorage để sử dụng sau khi thanh toán
+                localStorage.setItem('paymentSessionId', data.data.sessionId);
+                // Chuyển hướng tab hiện tại đến giao diện thanh toán Stripe
+                window.location.href = data.data.paymentUrl;
+            } else {
+                throw new Error("Không nhận được URL thanh toán từ server.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi đặt hàng:", error);
+            toast.error(error.message || "Không thể xử lý thanh toán. Vui lòng thử lại.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         getAddressesByAccountId(user.account_id ,setAddresses);
-    })
+    }, [])
+
+    const calculateDiscount = (minOrder, maxDiscount, value) => {
+        if (totalPrice >= minOrder) {
+            let discountAmount = totalPrice * value / 100;
+            
+            if (discountAmount > maxDiscount) {
+                setDiscountAmount(maxDiscount);
+            } else {
+                setDiscountAmount(discountAmount);
+            }
+
+            toast("Mã giảm giá đã được áp dụng");
+        } else {
+            toast("Đơn hàng của bạn không đủ điều kiện để sử dụng mã giảm giá này");
+        }
+    }
+
+    // try to find discount code in db
+    // if found, set discount id and update orderData
+    // else, notify user that the code is invalid
+    const handleApplyDiscount = async () => {
+        const discount = await getDiscountByCode(discountCode);
+
+        if (discount) {
+            setDiscount_id(discount.discount_id);
+            orderData.discount_id = discount.discount_id;
+
+            calculateDiscount(discount.min_order_amount, discount.max_discount_amount, discount.discount_value);
+        } else {
+            toast('Mã giảm giá không hợp lệ');
+        }
+    }
 
     return (
         <div className='grid grid-cols-12 gap-4'>
@@ -105,8 +199,7 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                             Voucher:
                         </span>
                         <span className="ml-auto pr-3">
-                            {/* {totalPrice + shippingPrice} vnđ */}
-                            - 0 vnđ
+                            - {discountAmount.toLocaleString()} vnđ
                         </span>
                     </article>
 
@@ -115,7 +208,7 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                             Tổng tiền:
                         </span>
                         <span className="ml-auto pr-3">
-                            {totalPrice + shippingPrice} vnđ
+                            {(totalPrice + shippingPrice - discountAmount).toLocaleString()} vnđ
                         </span>
                     </article>
 
@@ -123,9 +216,19 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
 
                 <article className='flex pt-4'>
                     <Button className='' variant='secondary' onClick={prevStep}>Quay lại</Button>
-                    {/* <Button className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'>
-                        Đặt hàng
-                    </Button> */}
+
+                    <Button
+                        onClick={handlePlaceOrder}
+                        className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors"
+                        disabled={isLoading || cartItems.length === 0 || !pm_id}
+                    >
+                        {isLoading ? "Đang xử lý..." : `Đặt hàng qua ${pm_id === 2 ? "Stripe" : "..."}`}
+                        {/* Bla */}
+                    </Button>
+
+                    {/* Khúc Stripe để đâu?=)))  t gọi api nó rồi thêm hàm callback về */}
+
+
 
                     <VisaModal orderData={orderData} totalPrice={totalPrice} />
                 </article>
@@ -137,7 +240,7 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                     <Separator className='bg-darkOlive w-[50%] mb-2'/>
 
                     <RadioGroup defaultValue="slow" className='col-start-2 grid gap-2'>
-                        <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2">
                             <RadioGroupItem value="slow" id="slow" onClick={() => {
                                 setSm_id(1);
                                 setShippingPrice(20000);
@@ -146,17 +249,50 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                                 Tiết kiệm
                             </Label>
                         </div>
-                        <Separator className="bg-gray-200" />
+
+                        <div className="flex items-center space-x-2 ">
+                            <RadioGroupItem value="fast" id="fast" onClick={() => {
+                                setSm_id(2);
+                                setShippingPrice(40000);
+                            }} />
+                            <Label htmlFor="fast" className='text-base'>
+                                Hỏa tốc
+                            </Label>
+                        </div>
+
+                        {/* ????????????? */}
+                        {/* <Separator className="bg-gray-200" />
+
                         <div className="flex justify-between font-bold text-xl text-darkOlive">
                             <span>Tổng cộng:</span>
                             <span>{finalTotal.toLocaleString()} vnđ</span>
                         </div>
+
                         <div className="flex justify-between text-lg text-gray-800 mt-2">
                             <span className="font-semibold">Phương thức thanh toán:</span>
                             <span>{pm_id === 2 ? "Stripe (Visa)" : "Chưa chọn"}</span>
-                        </div>
+                        </div> */}
+
+                    </RadioGroup>
+                </article>
+
+                <article className='pb-2'>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Địa chỉ giao hàng</h1>
+                    <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-2'/>
+
+                    <div>
+                        {selectedAddress ? (
+                            <div>
+                                <p className='text-lg'>{selectedAddress.Address.last_name} {selectedAddress.Address.first_name}</p>
+                                <p className='text-lg'>{selectedAddress.Address.address_line}</p>
+                                <p className='text-lg'>{selectedAddress.Address.ward}</p>
+                                <p className='text-lg'>{selectedAddress.Address.district}</p>
+                            </div>
+                        ) : (
+                            <p>Không có dữ liệu</p>
+                        )}
                     </div>
-                </div>
+                </article>
 
                 <article className='pb-2'>
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Phương thức thanh toán</h1>
@@ -174,30 +310,27 @@ export default function OrderSummary({ prevStep, addressId, shippingPrice: initi
                     <Separator className='bg-darkOlive w-[50%] mb-3'/>
 
                     <div className='flex gap-1'>
-                        <Input placeholder='Nhập mã voucher' className='border-darkOlive border-2 w-3/4 text-lg'/>
-                        <Button className='bg-darkOlive' onClick={() => console.log(orderData)}>
+                        <Input 
+                            className='border-darkOlive border-2 w-3/4 text-lg'
+                            placeholder='Nhập mã voucher' 
+                            onChange={(e) => setDiscountCode(e.target.value)}
+                        />
+                        <Button className='bg-darkOlive' onClick={() => handleApplyDiscount()}>
                             Áp dụng
                         </Button>
                     </div>
-                    {discountAmount > 0 && (
-                        <p className="text-green-600 text-sm mt-2">
-                            Đã áp dụng giảm giá: -{discountAmount.toLocaleString()} vnđ
-                        </p>
-                    )}
-                </div>
+                </article>
 
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Ghi chú</h2>
-                    <Textarea
-                        placeholder="Hãy nhập ghi chú của bạn (nếu có)"
-                        value={note}
+                <article>
+                    <h1 className='font-semibold uppercase text-2xl pb-2'>Ghi chú</h1>
+                    <Separator className='bg-darkOlive w-[50%] mb-3'/>
+
+                    <Textarea 
+                        className='border-darkOlive border-2' 
+                        placeholder="Hãy nhập ghi chú của bạn (nếu có)" 
                         onChange={(e) => setNote(e.target.value)}
-                        className="border-gray-300 focus:border-darkOlive"
-                        maxLength={200}
-                        disabled={isLoading}
                     />
-                    <p className="text-sm text-gray-500 mt-1">{note.length}/200 ký tự</p>
-                </div>
+                </article>
             </section>
         </div>
     );

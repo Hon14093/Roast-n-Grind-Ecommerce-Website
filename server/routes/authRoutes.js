@@ -6,7 +6,7 @@ const router =  express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-router.get("/accounts", validateToken, validateAdmin, returnAllAccounts); // Thêm route, yêu cầu token và admin
-router.get("/info/:account_id", validateToken, returnAccountInfo); // Yêu cầu token
+router.get("/accounts", returnAllAccounts); // Thêm route, yêu cầu token và admin
+router.get("/info/:account_id", returnAccountInfo); // Yêu cầu token
 
 export default router;

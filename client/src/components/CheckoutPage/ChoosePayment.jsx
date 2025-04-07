@@ -2,9 +2,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import { useCart } from '../../context/CartContext';
-import { usePayment } from "@/context/PaynmentContext";
 import { ScrollArea } from '../ui/scroll-area';
-import { Separator } from '../ui/separator';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import visaLogo from '../../images/visa.png';

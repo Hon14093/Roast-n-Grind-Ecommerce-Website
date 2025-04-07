@@ -5,13 +5,15 @@ import logoBlack from '../../images/orange.png'
 import AddressDetails from './AddressDetails'
 import ChoosePayment from './ChoosePayment'
 import OrderSummary from './OrderSummary'
+import { Toaster } from '../ui/sonner';
 import { useAuth } from '../../context/AuthContext'
 
 export default function CheckoutBody() {
     const { user } = useAuth();
-    const { cartItems } = useCart();
+    // const { cartItems } = useCart();
     const [step, setStep] = useState(1);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [pm_id, setPm_id] = useState(null);
     const [error, setError] = useState(null);
 
     const nextStep = () => {
@@ -31,12 +33,12 @@ export default function CheckoutBody() {
     useEffect(() => {
         if (!user?.account_id) {
             setError("Vui lòng đăng nhập để tiếp tục thanh toán.");
-        } else if (cartItems.length === 0) {
-            setError("Giỏ hàng trống, không thể tiếp tục thanh toán.");
+        // } else if (cartItems.length === 0) {
+        //     setError("Giỏ hàng trống, không thể tiếp tục thanh toán.");
         } else {
             setError(null);
         }
-    }, [user, cartItems]);
+    }, [user]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -81,27 +83,26 @@ export default function CheckoutBody() {
 
                 {/* Main Content */}
                 <main className="bg-white rounded-lg shadow-sm p-6">
-                    {step === 1 && (
+                    {step === 1 && 
                         <AddressDetails
                             addressId={selectedAddressId}
                             setSelectedAddressId={setSelectedAddressId}
                             nextStep={nextStep}
-                        />
-                    )}
-                    {step === 2 && (
-                        <ChoosePayment
+                        />}
+                    {step === 2 && 
+                        <ChoosePayment 
+                            pm_id={pm_id}
+                            setPm_id={setPm_id}
                             prevStep={prevStep}
                             nextStep={nextStep}
-                        />
-                    )}
-                    {step === 3 && (
-                        <OrderSummary
+                        />}
+            
+                    {step === 3 && 
+                        <OrderSummary 
                             addressId={selectedAddressId}
+                            pm_id={pm_id}
                             prevStep={prevStep}
-                            shippingPrice={20000}
-                            sm_id={1}
-                        />
-                    )}
+                        />}
                 </main>
             </div>
 
