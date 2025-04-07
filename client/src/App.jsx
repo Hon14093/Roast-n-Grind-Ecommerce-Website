@@ -18,7 +18,7 @@ import PaymentCallback from './components/PaymentCallback';
 import { PaymentProvider } from './context/PaynmentContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
-import PaymentSuccess from './components/modals/payment/PaymentSuccess';
+
 
 function App() {
     return (
@@ -42,7 +42,7 @@ function App() {
                             <Route path="/admin/*" element={<AdminPage />} />
                             {/* Payment Callback */}
                             <Route path="/payment/stripe-pay-callback" element={<PaymentCallback />} />
-                            <Route path="/payment/success" element={<PaymentSuccess />} />
+
                         </Routes>
                     </Router>
                 </CartProvider>

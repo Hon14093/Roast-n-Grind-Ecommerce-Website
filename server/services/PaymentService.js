@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const stripe = new Stripe('sk_test_51RAS78FmUaMcgwsdgl8gev4woeYgql1WztTy6pKOMk09fP4Roc0f2wXQxVuQdlJWfBHbgrUKIAxLsPQs4NiXHaOw007RiIZmnl');
 
 export class PaymentService {
-    async createStripeCheckoutSession(userId, cartItems) {
+    async createStripeCheckoutSession(userId, cartItems, sm_id, addressId, orderData) {
         try {
             if (!userId || !cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
                 throw new Error('Missing required parameters: userId or cartItems');
@@ -20,15 +20,15 @@ export class PaymentService {
                 throw new Error('User not found');
             }
 
-            // Tạo line_items từ cartItems
+            // Tạo lineItems từ cartItems
             const lineItems = cartItems.map(item => ({
                 price_data: {
-                    currency: 'vnd', // Sử dụng VNĐ
+                    currency: 'vnd',
                     product_data: {
                         name: item.product_name,
                         images: [item.image_url],
                     },
-                    unit_amount: Math.round(item.price),
+                    unit_amount: Math.round(item.price), // VNĐ không cần nhân với 100
                 },
                 quantity: item.quantity,
             }));
@@ -41,6 +41,9 @@ export class PaymentService {
                 cancel_url: `http://localhost:5000/api/payment/stripe/stripe-pay-callback?status=canceled&session_id={CHECKOUT_SESSION_ID}`,
                 metadata: {
                     userId: userId,
+                    sm_id: sm_id.toString(),
+                    addressId: addressId,
+                    orderData: JSON.stringify(orderData),
                 },
             });
 
@@ -63,6 +66,9 @@ export class PaymentService {
             }
 
             const userId = session.metadata.userId;
+            const sm_id = parseInt(session.metadata.sm_id);
+            const addressId = session.metadata.addressId;
+            const orderData = JSON.parse(session.metadata.orderData);
 
             const user = await prisma.account.findUnique({
                 where: { account_id: userId },
@@ -79,10 +85,12 @@ export class PaymentService {
                     order_date: new Date(),
                     order_total: totalAmount,
                     account_id: userId,
-                    shipping_id: 1,
-                    status_id: 1,
+                    shipping_id: sm_id,
+                    status_id: 1, // Sử dụng status_id kiểu Int (1: Đang xử lý)
                     method_id: 2, // Stripe
-                    address_id: '6dec34e2-d8f3-45a5-baf3-036643829359',
+                    address_id: addressId, // addressId là String (UUID), phù hợp với schema
+                    note: orderData.note,
+                    discount_id: orderData.discount_id,
                 },
             });
 
@@ -101,7 +109,7 @@ export class PaymentService {
                             subtotal: item.amount_total,
                             is_ground: false,
                             order_id: order.order_id,
-                            pw_id: '550e8400-e29b-41d4-a716-446655440001', // Có thể cần ánh xạ động
+                            pw_id: '550e8400-e29b-41d4-a716-446655440001', // Thay bằng giá trị thực tế
                         },
                     });
                 }

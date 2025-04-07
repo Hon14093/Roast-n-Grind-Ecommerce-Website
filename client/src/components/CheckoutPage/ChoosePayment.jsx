@@ -5,8 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { ScrollArea } from '../ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
-import visaLogo from '../../images/visa.png';
-
+import stripeLogo from '../../images/stripe.png';
 export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
     const { cartItems } = useCart();
     // const { pm_id, setPm_id } = usePayment();
@@ -43,8 +42,8 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
                                 htmlFor="stripe" 
                                 className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
                             >
-                                <img src={visaLogo} alt="Stripe" className="h-8 w-auto" />
-                                Stripe (Visa)
+                                <img src={stripeLogo} alt="Stripe" className="h-8 w-auto" />
+                                Stripe
                             </Label>
                         </div>
                     </RadioGroup>

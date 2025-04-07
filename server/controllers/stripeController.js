@@ -7,7 +7,7 @@ const stripe = new Stripe('sk_test_51RAS78FmUaMcgwsdgl8gev4woeYgql1WztTy6pKOMk09
 
 export const createCheckoutSession = async (req, res) => {
     try {
-        const { userId, cartItems } = req.body;
+        const { userId, cartItems, sm_id, addressId, orderData } = req.body;
 
         if (!userId || !cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
             return res.status(400).json({
@@ -16,7 +16,7 @@ export const createCheckoutSession = async (req, res) => {
             });
         }
 
-        const stripeResponse = await paymentService.createStripeCheckoutSession(userId, cartItems);
+        const stripeResponse = await paymentService.createStripeCheckoutSession(userId, cartItems, sm_id, addressId, orderData);
 
         return res.status(200).json({
             status: 'OK',
