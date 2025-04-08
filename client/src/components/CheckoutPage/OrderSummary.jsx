@@ -18,6 +18,8 @@ export default function OrderSummary({ prevStep, pm_id, addressId }) {
     const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [addresses, setAddresses] = useState([]);
+    const [isLoadingAddresses, setIsLoadingAddresses] = useState(true); // Thêm trạng thái loading cho địa chỉ
+    const [selectedAddress, setSelectedAddress] = useState(null); // Thêm trạng thái cho selectedAddress
     const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
@@ -39,82 +41,111 @@ export default function OrderSummary({ prevStep, pm_id, addressId }) {
         method_id: pm_id
     };
 
-    // OrderSummary.jsx
-const handlePlaceOrder = async () => {
-    if (!user?.account_id) {
-        toast.error("Vui lòng đăng nhập để thanh toán.");
-        return;
-    }
-    if (cartItems.length === 0) {
-        toast.error("Giỏ hàng trống, không thể thanh toán.");
-        return;
-    }
-    if (!addressId) {
-        toast.error("Vui lòng chọn địa chỉ giao hàng.");
-        return;
-    }
-    if (!pm_id) {
-        toast.error("Vui lòng chọn phương thức thanh toán.");
-        return;
-    }
+    // Lấy danh sách địa chỉ và cập nhật selectedAddress
+    useEffect(() => {
+        const fetchAddresses = async () => {
+            try {
+                setIsLoadingAddresses(true);
+                await getAddressesByAccountId(user.account_id, setAddresses);
+            } catch (error) {
+                console.error("Lỗi khi lấy địa chỉ:", error);
+                toast.error("Không thể lấy danh sách địa chỉ. Vui lòng thử lại.");
+            } finally {
+                setIsLoadingAddresses(false);
+            }
+        };
 
-    setIsLoading(true);
-    try {
-        let apiUrl = '';
-        let redirectMessage = '';
+        if (user?.account_id) {
+            fetchAddresses();
+        }
+    }, [user]);
 
-        console.log("user.account_id:", user.account_id);
-
-        if (pm_id === 2) {
-            apiUrl = `http://localhost:5000/api/payment/stripe/create-checkout-session`;
-            redirectMessage = "Đang chuyển hướng đến Stripe...";
+    // Cập nhật selectedAddress khi addresses hoặc addressId thay đổi
+    useEffect(() => {
+        if (addresses.length > 0 && addressId) {
+            const foundAddress = addresses.find(address => address.Address?.address_id === addressId);
+            setSelectedAddress(foundAddress || null);
         } else {
-            throw new Error("Phương thức thanh toán không hợp lệ.");
+            setSelectedAddress(null);
+        }
+    }, [addresses, addressId]);
+
+    const handlePlaceOrder = async () => {
+        if (!user?.account_id) {
+            toast.error("Vui lòng đăng nhập để thanh toán.");
+            return;
+        }
+        if (cartItems.length === 0) {
+            toast.error("Giỏ hàng trống, không thể thanh toán.");
+            return;
+        }
+        if (!addressId) {
+            toast.error("Vui lòng chọn địa chỉ giao hàng.");
+            return;
+        }
+        if (!pm_id) {
+            toast.error("Vui lòng chọn phương thức thanh toán.");
+            return;
         }
 
-        console.log(`Dữ liệu gửi lên Stripe:`, orderData);
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                userId: user.account_id,
-                cartItems: cartItems.map(item => ({
-                    product_id: item.product_id,
-                    weight_id: item.weight_id,
-                    quantity: item.quantity,
-                    price: item.price,
-                    product_name: item.product_name,
-                })),
-                sm_id: sm_id, // Thêm sm_id vào dữ liệu gửi lên
-                addressId: addressId, // Thêm addressId
-                orderData: orderData, // Gửi toàn bộ orderData
-            }),
-        });
+        setIsLoading(true);
+        try {
+            let apiUrl = '';
+            let redirectMessage = '';
 
-        if (!response.ok) {
-            throw new Error("Không thể tạo URL thanh toán");
+            console.log("user.account_id:", user.account_id);
+
+            if (pm_id === 2) {
+                apiUrl = `http://localhost:5000/api/payment/stripe/create-checkout-session`;
+                redirectMessage = "Đang chuyển hướng đến Stripe...";
+            } else {
+                throw new Error("Phương thức thanh toán không hợp lệ.");
+            }
+
+            console.log(`Dữ liệu gửi lên Stripe:`, orderData);
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    userId: user.account_id,
+                    cartItems: cartItems.map(item => ({
+                        product_id: item.product_id,
+                        weight_id: item.weight_id,
+                        quantity: item.quantity,
+                        price: item.price,
+                        product_name: item.product_name,
+                    })),
+                    sm_id: sm_id,
+                    addressId: addressId,
+                    orderData: orderData,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Không thể tạo URL thanh toán");
+            }
+
+            const data = await response.json();
+            console.log(`Dữ liệu thanh toán từ Stripe:`, data);
+
+            if (data && data.data.paymentUrl) {
+                toast.success(redirectMessage);
+                localStorage.setItem('paymentSessionId', data.data.sessionId);
+                window.location.href = data.data.paymentUrl;
+            } else {
+                throw new Error("Không nhận được URL thanh toán từ server.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi đặt hàng:", error);
+            toast.error(error.message || "Không thể xử lý thanh toán. Vui lòng thử lại.");
+        } finally {
+            setIsLoading(false);
         }
+    };
 
-        const data = await response.json();
-        console.log(`Dữ liệu thanh toán từ Stripe:`, data);
-
-        if (data && data.data.paymentUrl) {
-            toast.success(redirectMessage);
-            localStorage.setItem('paymentSessionId', data.data.sessionId);
-            window.location.href = data.data.paymentUrl;
-        } else {
-            throw new Error("Không nhận được URL thanh toán từ server.");
-        }
-    } catch (error) {
-        console.error("Lỗi khi đặt hàng:", error);
-        toast.error(error.message || "Không thể xử lý thanh toán. Vui lòng thử lại.");
-    } finally {
-        setIsLoading(false);
-    }
-};
     const calculateDiscount = (minOrder, maxDiscount, value) => {
         if (totalPrice >= minOrder) {
             let discountAmount = totalPrice * value / 100;
@@ -145,7 +176,7 @@ const handlePlaceOrder = async () => {
     };
 
     return (
-        <div className='grid grid-cols-12 gap-4 #ede8e1 min-h-screen'>
+        <div className='grid grid-cols-12 gap-4 bg-beige min-h-screen'>
             <section className='col-start-2 col-span-6 mx-auto w-full'>
                 <h1 className='font-semibold uppercase text-2xl pb-2'>Tổng kết đơn hàng</h1>
                 <ScrollArea className='h-[400px]'>
@@ -225,7 +256,9 @@ const handlePlaceOrder = async () => {
                     <h1 className='font-semibold uppercase text-2xl pb-2'>Địa chỉ giao hàng</h1>
                     <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-2'/>
                     <div>
-                        {selectedAddress ? (
+                        {isLoadingAddresses ? (
+                            <p>Đang tải địa chỉ...</p>
+                        ) : selectedAddress ? (
                             <div>
                                 <p className='text-lg'>{selectedAddress.Address.last_name} {selectedAddress.Address.first_name}</p>
                                 <p className='text-lg'>{selectedAddress.Address.address_line}</p>
