@@ -57,6 +57,7 @@ export default function CheckOrders() {
         const res = await updateOrderStatus(order.order_id, 2);
         if (res.success) {
             getUnprocessedOrders(setData);
+            getRejectedOrders(setRejectedOrders);
         }
     }
 
@@ -64,6 +65,7 @@ export default function CheckOrders() {
         const res = await updateOrderStatus(order.order_id, 6);
         if (res.success) {
             getUnprocessedOrders(setData);
+            getRejectedOrders(setRejectedOrders);
         }
     }
 

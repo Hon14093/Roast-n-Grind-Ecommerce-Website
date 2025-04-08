@@ -21,7 +21,6 @@ export default function OrderSummary({ prevStep, pm_id, addressId }) {
     const [note, setNote] = useState(null);
     const [sm_id, setSm_id] = useState(1);
     const [shippingPrice, setShippingPrice] = useState(20000);
-    const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
     const [discount_id, setDiscount_id] = useState(null);
     const [discountCode, setDiscountCode] = useState(null);
     const [discountAmount, setDiscountAmount] = useState(0);

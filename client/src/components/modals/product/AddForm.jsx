@@ -36,6 +36,11 @@ export function AddForm({ onSubmitSuccess }) {
         e.preventDefault();
         setLoading(true);
 
+        if (productName === '' || description === '' || aromaValue === '' || typeValue === '' || roastValue === '') {
+            alert("Vui lòng điền đầy đủ thông tin!");
+            return;
+        }
+
         try {
             const imageUpload = await uploadImage1(imageFile);
 

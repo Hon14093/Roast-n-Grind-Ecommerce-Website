@@ -4,10 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import axios from 'axios'
 
 function SignupBody() {
-    const [account_name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [phone, setPhone] = useState();
-    const [password, setPassword] = useState();
+    const [account_name, setName] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [phone, setPhone] = useState(null);
+    const [password, setPassword] = useState(null);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -15,6 +15,11 @@ function SignupBody() {
 
     const handleSubmitSignup = async (e) => {
         e.preventDefault();
+        if (!account_name || !email || !phone || !password) {
+            alert('Vui lòng nhập đầy đủ thông tin!');
+            return;
+        }
+        
         axios.post('http://localhost:5000/api/auth/register', {account_name, email, phone, password})
         .then(result => {
             console.log(result);

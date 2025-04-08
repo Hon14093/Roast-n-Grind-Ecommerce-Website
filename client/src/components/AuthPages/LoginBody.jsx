@@ -5,40 +5,33 @@ import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 function LoginBody() {
-    const { login } = useAuth();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
+    const { user, login, logout} = useAuth();
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
     const navigate = useNavigate();
 
     const handleSubmitLogin = async (e) => {
         e.preventDefault();
-        setError(null);
-
         if (!email || !password) {
-            setError("Vui lòng nhập email và mật khẩu.");
+            alert('Vui lòng nhập đầy đủ thông tin!');
             return;
         }
 
-        try {
-            const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-            console.log("API login response:", response.data);
+        axios.post('http://localhost:5000/api/auth/login', {email, password})
+        .then(result => {
+            console.log(result);
+            // login function from auth context
+            login(result.data.token);
 
-            if (response.data.token) {
-                login(response.data.token);
-                if (response.data.is_admin) {
-                    navigate("/admin");
-                } else {
-                    navigate("/");
-                }
+            if (result.data.is_admin) {
+                navigate('/admin');
             } else {
                 setError("Không nhận được token từ server.");
             }
-        } catch (err) {
-            console.error("Lỗi khi đăng nhập:", err.response?.data || err.message);
-            setError(err.response?.data?.error || "Đăng nhập thất bại. Vui lòng thử lại.");
-        }
-    };
+        })
+        .catch(result => console.log(result))
+
+    }
 
     return (
         <section className="bg-blue-100 w-full flex h-screen">
