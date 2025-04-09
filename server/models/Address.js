@@ -1,6 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+export const getAddressesByUserId = async (account_id) => {
+    return prisma.address.findMany({
+        include: {
+            City: true
+        },
+        where: { account_id: account_id },
+    })
+}
+
 export const createAddress = async (data) => {
     return prisma.address.create({ data });
 }

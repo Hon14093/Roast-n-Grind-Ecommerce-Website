@@ -15,24 +15,25 @@ model Account {
   password      String          @db.VarChar(60)
   is_admin      Boolean         @default(false)
   date_created  DateTime        @default(now()) @db.Timestamp(6)
+  Address       Address[]
   Order         Order[]
   Review        Review[]
   Shopping_Cart Shopping_Cart[]
-  User_Address  User_Address[]
 }
 
 model Address {
-  address_id   String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  address_line String         @db.VarChar(100)
-  ward         String         @db.VarChar(100)
-  district     String         @db.VarChar(100)
+  address_id   String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  address_line String  @db.VarChar(100)
+  ward         String  @db.VarChar(100)
+  district     String  @db.VarChar(100)
   city_id      Int
-  first_name   String         @db.VarChar(30)
-  last_name    String         @db.VarChar(30)
-  postal_code  String         @db.VarChar(20)
-  City         City           @relation(fields: [city_id], references: [city_id], onDelete: Cascade, map: "fk_city")
+  first_name   String  @db.VarChar(30)
+  last_name    String  @db.VarChar(30)
+  postal_code  String  @db.VarChar(20)
+  account_id   String  @db.Uuid
+  Account      Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_address_account")
+  City         City    @relation(fields: [city_id], references: [city_id], onDelete: Cascade, map: "fk_city")
   Order        Order[]
-  User_Address User_Address[]
 }
 
 model Aroma {
@@ -54,11 +55,6 @@ model Cart_Details {
   @@unique([cart_id, pw_id], map: "unique_cart_id_pw_id")
 }
 
-model Country {
-  country_id   Int    @id @default(autoincrement())
-  country_name String @db.VarChar(50)
-}
-
 model Discount {
   discount_id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   discount_code       String   @unique(map: "discountCode") @db.VarChar(15)
@@ -69,12 +65,6 @@ model Discount {
   end_date            DateTime @db.Timestamp(6)
   is_active           Boolean
   Order               Order[]
-}
-
-model Flavour_Note {
-  flavour_id      Int               @id @default(autoincrement())
-  flavour_name    String            @db.VarChar(30)
-  Product_Flavour Product_Flavour[]
 }
 
 model Order {
@@ -121,29 +111,18 @@ model Payment_Method {
 }
 
 model Product {
-  product_id      String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  product_name    String            @db.VarChar(50)
-  description     String?           @db.VarChar(1000)
-  image_url       String            @db.VarChar(200)
-  roast_id        Int
-  type_id         Int
-  aroma_id        Int
-  Aroma           Aroma             @relation(fields: [aroma_id], references: [aroma_id], onDelete: Cascade, map: "fk_aroma")
-  Product_Type    Product_Type      @relation(fields: [type_id], references: [type_id], onDelete: Cascade, map: "fk_product_type")
-  Roast_Level     Roast_Level       @relation(fields: [roast_id], references: [roast_id], onDelete: Cascade, map: "fk_roast_lvl")
-  Product_Blend   Product_Blend[]
-  Product_Flavour Product_Flavour[]
-  Product_Weight  Product_Weight[]
-  Review          Review[]
-}
-
-model Product_Flavour {
-  product_id   String       @db.Uuid
-  flavour_id   Int
-  Flavour_Note Flavour_Note @relation(fields: [flavour_id], references: [flavour_id], onDelete: Cascade, map: "fk_flavour_to_product")
-  Product      Product      @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_to_flavour")
-
-  @@id([product_id, flavour_id])
+  product_id     String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  product_name   String           @db.VarChar(50)
+  description    String?          @db.VarChar(1000)
+  image_url      String           @db.VarChar(200)
+  roast_id       Int
+  type_id        Int
+  aroma_id       Int
+  Aroma          Aroma            @relation(fields: [aroma_id], references: [aroma_id], onDelete: Cascade, map: "fk_aroma")
+  Product_Type   Product_Type     @relation(fields: [type_id], references: [type_id], onDelete: Cascade, map: "fk_product_type")
+  Roast_Level    Roast_Level      @relation(fields: [roast_id], references: [roast_id], onDelete: Cascade, map: "fk_roast_lvl")
+  Product_Weight Product_Weight[]
+  Review         Review[]
 }
 
 model Product_Type {
@@ -170,7 +149,7 @@ model Review {
   review_id   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   review_date DateTime @default(now()) @db.Timestamp(6)
   star        Int
-  comment     String?  @db.VarChar(1000)
+  comment     String?  @db.VarChar(3000)
   product_id  String   @db.Uuid
   account_id  String   @db.Uuid
   Account     Account  @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_review")
@@ -191,33 +170,10 @@ model Shopping_Cart {
   Account      Account        @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_cart")
 }
 
-model User_Address {
-  ua_id      String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  account_id String  @db.Uuid
-  address_id String  @db.Uuid
-  Account    Account @relation(fields: [account_id], references: [account_id], onDelete: Cascade, map: "fk_account_to_address")
-  Address    Address @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fk_address_to_account")
-}
-
 model Weight_Option {
   weight_id      Int              @id @default(autoincrement())
   weight_name    String           @db.VarChar(15)
   Product_Weight Product_Weight[]
-}
-
-model Coffee_Bean {
-  bean_id       Int             @id(map: "Coffee_Beans_pkey") @default(autoincrement())
-  bean_name     String          @db.VarChar(60)
-  Product_Blend Product_Blend[]
-}
-
-model Product_Blend {
-  product_id  String      @db.Uuid
-  bean_id     Int
-  Coffee_Bean Coffee_Bean @relation(fields: [bean_id], references: [bean_id], onDelete: Cascade, map: "fk_bean_to_product")
-  Product     Product     @relation(fields: [product_id], references: [product_id], onDelete: Cascade, map: "fk_product_to_bean")
-
-  @@id([product_id, bean_id])
 }
 
 model Roast_Level {
