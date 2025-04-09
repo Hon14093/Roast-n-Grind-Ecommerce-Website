@@ -9,36 +9,43 @@ import { Toaster } from '../ui/sonner';
 import { useAuth } from '../../context/AuthContext'
 
 export default function CheckoutBody() {
-    const { user } = useAuth();
-    // const { cartItems } = useCart();
+    // const { user } = useAuth();
+    // // const { cartItems } = useCart();
+    // const [step, setStep] = useState(1);
+    // const [selectedAddressId, setSelectedAddressId] = useState(null);
+    // const [pm_id, setPm_id] = useState(null);
+    // const [error, setError] = useState(null);
+
+    // const nextStep = () => {
+    //     if (step === 1 && !selectedAddressId) {
+    //         setError("Vui lòng chọn địa chỉ giao hàng trước khi tiếp tục.");
+    //         return;
+    //     }
+    //     if (step < 3) setStep(step + 1);
+    //     setError(null);
+    // };
+
+    // const prevStep = () => {
+    //     if (step > 1) setStep(step - 1);
+    //     setError(null);
+    // };
+
     const [step, setStep] = useState(1);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [pm_id, setPm_id] = useState(null);
-    const [error, setError] = useState(null);
 
-    const nextStep = () => {
-        if (step === 1 && !selectedAddressId) {
-            setError("Vui lòng chọn địa chỉ giao hàng trước khi tiếp tục.");
-            return;
-        }
-        if (step < 3) setStep(step + 1);
-        setError(null);
-    };
+    const nextStep = () => { if (step < 3) setStep(step + 1); }
+    const prevStep = () => { if (step > 1) setStep(step - 1); }
 
-    const prevStep = () => {
-        if (step > 1) setStep(step - 1);
-        setError(null);
-    };
-
-    useEffect(() => {
-        if (!user?.account_id) {
-            setError("Vui lòng đăng nhập để tiếp tục thanh toán.");
-        // } else if (cartItems.length === 0) {
-        //     setError("Giỏ hàng trống, không thể tiếp tục thanh toán.");
-        } else {
-            setError(null);
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (!user?.account_id) {
+    //         setError("Vui lòng đăng nhập để tiếp tục thanh toán.");
+    //     // } else if (cartItems.length === 0) {
+    //     //     setError("Giỏ hàng trống, không thể tiếp tục thanh toán.");
+    //     } else {
+    //         setError(null);
+    //     }
+    // }, [user]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -75,11 +82,11 @@ export default function CheckoutBody() {
                 </header>
 
                 {/* Error Message */}
-                {error && (
+                {/* {error && (
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-center">
                         {error}
                     </div>
-                )}
+                )} */}
 
                 {/* Main Content */}
                 <main className="bg-white rounded-lg shadow-sm p-6">

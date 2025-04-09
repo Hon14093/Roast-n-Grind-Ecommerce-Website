@@ -7,9 +7,14 @@ export const placeOrder = async (data) => {
     try {
         const result = await axios.post(`${BASE_URL}/api/order/create`, data);
         console.log("API placeOrder:", result.data);
-        return result.data; // { order: { order_id: "xxx", ... } }
+        return result.data; // Trả về dữ liệu đơn hàng
     } catch (error) {
-        console.error("Lỗi khi tạo đơn hàng:", error.response?.data || error.message);
+        console.error("Lỗi khi tạo đơn hàng:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status,
+            headers: error.response?.headers
+        });
         throw error.response?.data || new Error("Không thể tạo đơn hàng trên server.");
     }
 };

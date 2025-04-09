@@ -50,10 +50,6 @@ const data = {
           url: "http://localhost:5173/admin/discounts",
         },
         {
-          title: "Tài khoản",
-          url: "http://localhost:5173/admin/accounts",
-        },
-        {
           title: "Đơn hàng",
           url: "http://localhost:5173/admin/orders",
         },

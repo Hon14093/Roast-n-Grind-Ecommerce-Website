@@ -26,11 +26,12 @@ export const getCartByAccountId = async (account_id, setCart) => {
     }
 }
 
+// cartAPI.js
 export const getCartDetailsByCartId = async (cart_id) => {
     try {
-        const result = await axios.get(`http://localhost:5000/api/cart/details/${cart_id}`);
-        console.log("API getCartDetailsByCartId:", result.data.formattedDetails);
-        return result.data.formattedDetails || [];
+        const response = await axios.get(`http://localhost:5000/api/cart/details/${cart_id}`);
+        console.log("API getCartDetailsByCartId:", response.data);
+        return response.data;
     } catch (error) {
         console.error("Lỗi khi lấy chi tiết giỏ hàng:", error);
         return [];

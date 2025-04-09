@@ -1,12 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors'
+import analyticsRoutes from './routes/analyticsRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import addressRoutes from './routes/addressRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
 import discountRoutes from './routes/discountRoutes.js'
 import imageUpload from './controllers/imageUpload.js'
 import orderRoutes from './routes/orderRoutes.js'
+import reviewRoutes from './routes/reviewRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 
@@ -28,13 +30,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/discount', discountRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/order', orderRoutes)
+app.use('/api/order', orderRoutes);
+app.use('/api/review', reviewRoutes)
 app.use('/image/', imageUpload);
 
 app.listen(PORT, () => {

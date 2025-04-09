@@ -10,34 +10,11 @@ import {
 } from "../ui/breadcrumb.jsx";
 import { Separator } from "../ui/separator.jsx";
 import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.jsx";
-import {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "../ui/chart.jsx"; // Import từ chart.jsx
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useEffect, useState } from "react";
 import StatsCards from "./analytics/StatsCards.jsx";
 import Popular from "./analytics/Popular.jsx";
 import RevenuesChart from "./analytics/RevenuesChart.jsx";
-import { getAllStats, getPopularProducts, getMonthlyRevenues } from "@/hooks/analyticsAPI.jsx";
-
-// Dữ liệu mẫu
-const chartData = [
-    { month: "Tháng 1", revenue: 12000000 },
-    { month: "Tháng 2", revenue: 19000000 },
-    { month: "Tháng 3", revenue: 3000000 },
-    { month: "Tháng 4", revenue: 5000000 },
-];
-
-// Config cho biểu đồ (dùng trong ChartContainer)
-const chartConfig = {
-    revenue: {
-        label: "Doanh thu",
-        color: "#4bc0c0", // Màu teal
-    },
-};
+import { getAllStats, getPopularProducts } from "@/hooks/analyticsAPI.jsx";
 
 function Analytics() {
     const [data, setData] = useState({ revenue: 0, revenueLast30: 0 });
@@ -74,28 +51,6 @@ function Analytics() {
                 <Popular products={popularProducts} />
 
                 <RevenuesChart />
-
-                <Card className="min-h-[400px] max-h-[500px] flex-1 md:min-h-min">
-                    <CardHeader>
-                        <CardTitle>Thống kê doanh thu</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ChartContainer config={chartConfig} className='max-h-[500px] w-full'>
-                            <BarChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis
-                                    tickFormatter={(value) => `${value / 1000000}M`}
-                                />
-                                <ChartTooltip
-                                    content={<ChartTooltipContent />}
-                                    formatter={(value) => `${value.toLocaleString()} VND`}
-                                />
-                                <Bar dataKey="revenue" fill="var(--color-revenue)" />
-                            </BarChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
 
             </div>
         </SidebarInset>

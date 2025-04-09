@@ -28,7 +28,12 @@ export default function ReviewForm({ detail, open, onClose }) {
                 account_id: user.account_id
             }
 
-            await createReview(data);
+            console.log('jlkjdlkjalskdj')
+
+            const res = await createReview(data);
+            if (res.success) {
+                onClose();
+            }
         } catch (error) {
             console.log(error)
         }

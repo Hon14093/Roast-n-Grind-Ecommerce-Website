@@ -8,7 +8,8 @@ import {
 import {
     getShoppingCartByUserId
 } from "../models/Shopping_Cart.js"
-
+import { Prisma } from "@prisma/client";
+const prisma = Prisma.PrismaClient;
 export const addCartDetails = async (req,res) => {
     try {
         const data = req.body;
@@ -46,36 +47,31 @@ export const returnCartByAccountId = async (req,res) => {
     }
 }
 
-export const returnCartDetailsByCartId = async (req,res) => {
+// CartController.js
+export const returnCartDetailsByCartId = async (req, res) => {
     try {
         const { cart_id } = req.params;
         const details = await getCartDetailsByCartId(cart_id);
 
+        // Chuẩn hóa dữ liệu để bao gồm product_name, image_url, price
         const formattedDetails = details.map(detail => ({
-            cd_id: detail.cd_id,
             cart_id: detail.cart_id,
-            item_subtotal: detail.item_subtotal,
-            product_id: detail.Product_Weight.Product.product_id,
-            pw_id: detail.pw_id,
-            product_name: detail.Product_Weight.Product.product_name,
-            weight_id: detail.Product_Weight.Weight_Option.weight_id,
-            weight_name: detail.Product_Weight.Weight_Option.weight_name,
-            price: detail.Product_Weight.product_price,
-            item_subtotal: detail.Product_Weight.product_price * detail.quantity,
-            image_url: detail.Product_Weight.Product.image_url,
-            grind: detail.is_ground,
             quantity: detail.quantity,
-        }))
+            pw_id: detail.pw_id,
+            item_subtotal: detail.item_subtotal,
+            is_ground: detail.is_ground,
+            product_name: detail.Product_Weight.Product.product_name,
+            image_url: detail.Product_Weight.Product.image_url,
+            price: detail.Product_Weight.product_price,
+            weight_name: detail.Product_Weight.Weight_Option.weight_name
+        }));
 
-        res.status(201).json({
-            success: 1,
-            formattedDetails
-        })
+        res.status(200).json(formattedDetails);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
 
 export const removeCartDetail = async (req,res) => {
     try {

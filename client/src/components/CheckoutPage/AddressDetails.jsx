@@ -44,36 +44,36 @@ export default function AddressDetails({ addressId, setSelectedAddressId, nextSt
             <div className='flex flex-wrap gap-4'>
                 {addresses.map((address) => (
                     <article 
-                        key={address.Address.address_id}
+                        key={address.address_id}
                         className='py-1 pl-2 mb-4 h-52 w-64 items-stretch border-darkOlive border-2 rounded-xl'
                     >
                         <Checkbox
-                            id={`address-${address.Address.address_id}`}
-                            checked={addressId === address.Address.address_id}
+                            id={`address-${address.address_id}`}
+                            checked={addressId === address.address_id}
                             onCheckedChange={(checked) => {
                                 if (checked) {
-                                    setSelectedAddressId(address.Address.address_id);
+                                    setSelectedAddressId(address.address_id);
                                 } else {
                                     setSelectedAddressId(null); // Unselect if unchecked (optional)
                                 }
                             }}
                         />
-                        <p className='text-lg'>{address.Address.last_name} {address.Address.first_name}</p>
-                        <p className='text-lg'>{address.Address.address_line}</p>
-                        <p className='text-lg'>{address.Address.ward}</p>
-                        <p className='text-lg'>{address.Address.district}</p>
+                        <p className='text-lg'>{address.last_name} {address.first_name}</p>
+                        <p className='text-lg'>{address.address_line}</p>
+                        <p className='text-lg'>{address.ward}</p>
+                        <p className='text-lg'>{address.district}</p>
                         <span className='flex'>
-                            <p className='text-lg'>{address.Address.City.city_name}</p>
+                            <p className='text-lg'>{address.City.city_name}</p>
                             
                             <DeleteWarning 
-                                address_id={address.Address.address_id} 
+                                address_id={address.address_id} 
                                 onSubmitSuccess={handleSubmitSuccess} 
                             />
                         </span>
                         <span className='flex'>
-                            <p className='text-lg'>{address.Address.postal_code}</p>
+                            <p className='text-lg'>{address.postal_code}</p>
                             <EditAddress 
-                                address={address.Address}
+                                address={address}
                                 onSubmitSuccess={handleSubmitSuccess} 
                             />
                             {/* <Button className='ml-auto text-blue-600' variant='link'>Chỉnh sửa</Button> */}
