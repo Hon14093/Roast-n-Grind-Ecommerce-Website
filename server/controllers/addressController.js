@@ -1,9 +1,10 @@
 import { getAllCities } from "../models/City.js";
 import { 
-    getUserAddressesByUserId,
-    createUserAddress
-} from "../models/User_Address.js"
-import { createAddress, deleteAddress, updateAddress } from "../models/Address.js";
+    getAddressesByUserId,
+    createAddress, 
+    deleteAddress, 
+    updateAddress 
+} from "../models/Address.js";
 
 export const returnAllCities = async (req,res) => {
     try {
@@ -21,10 +22,8 @@ export const returnAllCities = async (req,res) => {
 export const returnAllAddressesByAccountId = async (req,res) => {
     try {
         const { account_id } = req.params;
-        const addresses = await getUserAddressesByUserId(account_id);
-        res.status(201).json({
-            addresses
-        })
+        const addresses = await getAddressesByUserId(account_id);
+        res.status(201).json({ addresses })
     } catch (error) {
         res.status(500).json({ error: error.message });
         console.log(error)
@@ -39,14 +38,15 @@ export const addAddressByAccountId = async (req,res) => {
         const data = req.body;
         const newAddress = await createAddress(data);
 
-        const usData = {
-            account_id: account_id,
-            address_id: newAddress.address_id
-        }
-        const newUA = await createUserAddress(usData);
+        // const usData = {
+        //     account_id: account_id,
+        //     address_id: newAddress.address_id
+        // }
+        // const newUA = await createUserAddress(usData);
+
         res.status(201).json({
             success: 1,
-            newUA
+            newAddress
         })
     } catch (error) {
         res.status(500).json({ error: error.message });

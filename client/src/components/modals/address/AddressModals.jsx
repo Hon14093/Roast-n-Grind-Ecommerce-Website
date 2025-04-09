@@ -39,7 +39,8 @@ export const AddAddress = ({ onSubmitSuccess }) => {
                 ward: ward,
                 district: district,
                 postal_code: postalCode,
-                city_id: city
+                city_id: city,
+                account_id: user.account_id
             }
 
             const result = await createAddressFromUser(user.account_id, data);
@@ -47,7 +48,6 @@ export const AddAddress = ({ onSubmitSuccess }) => {
                 onSubmitSuccess();
                 setOpen(false);
             }
-
 
         } catch (error) {
             console.log(error);
