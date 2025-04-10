@@ -67,7 +67,7 @@ export default function PaymentSuccess() {
     // }, 2000)
 
     return (
-        <div class="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center h-screen">
             <CheckCircle2 size={100} color="green" />
             <h1>Thanh toán thành công!</h1>
             <p>Session: {sessionId}</p>
