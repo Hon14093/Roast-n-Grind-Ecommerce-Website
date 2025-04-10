@@ -3,7 +3,6 @@
 ### Cloning repo:
 ```
 git init
-git remote add <remote_name> https://github.com/Hon14093/Roast-n-Grind-Ecommerce-Website
 git clone https://github.com/Hon14093/Roast-n-Grind-Ecommerce-Website
 git checkout -b <branch_name>
 git add .
@@ -15,6 +14,7 @@ git push -u origin <branch_name>
 ```
 cd client
 npm install
+npx shadcn@latest init
 npm run dev
 ```
 
@@ -22,5 +22,7 @@ npm run dev
 ```
 cd server
 npm install
+npx prisma db pull
+npx prisma generate
 npm start
 ```
