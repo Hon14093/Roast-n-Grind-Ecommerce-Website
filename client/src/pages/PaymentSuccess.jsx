@@ -21,8 +21,13 @@ export default function PaymentSuccess() {
         const handlePlaceOrder = async () => {
             try {
                 const orderData = JSON.parse(localStorage.getItem('orderData'));
-                console.log(orderData);
+                if (!orderData) {
+                    console.error("Missing orderData in localStorage");
+                    return;
+                }
+    
                 const res = await placeOrder(orderData);
+                console.log('Order created:', res);
     
                 const orderDetails = cartItems.map((item) => ({
                     quantity: item.quantity,
@@ -32,6 +37,8 @@ export default function PaymentSuccess() {
                     pw_id: item.pw_id,
                 }));
     
+                console.log('Order details:', orderDetails);
+    
                 const details = await createOrderDetails(orderDetails);
                 const removeItems = await removeAllCartDetails(user.cart_id);
     
@@ -40,22 +47,20 @@ export default function PaymentSuccess() {
     
                     setTimeout(() => {
                         navigate('/');
-                    }, 2000)
+                    }, 2000);
     
                     setTimeout(() => {
                         location.reload();
-                    }, 2500)
+                    }, 2500);
                 }
-                console.log(details);
+    
             } catch (error) {
-                console.log(error);
+                console.error("Order creation error:", error);
             }
-        }
-
-        if (!hasPlacedOrder.current) {
+        };
+    
+        if (!hasPlacedOrder.current && cartItems.length > 0) {
             hasPlacedOrder.current = true;
-
-            // optional delay
             setTimeout(() => {
                 handlePlaceOrder();
             }, 2000);
