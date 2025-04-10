@@ -1,70 +1,14 @@
-// CartContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
-import { useAuth } from "./AuthContext";
-import { getCartDetailsByCartId, addCartDetails } from "@/hooks/cartAPI";
+// contexts/CartContext.jsx
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { getCartDetailsByCartId, addCartDetails } from '@/hooks/cartAPI';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-    const { user } = useAuth();
+    const { user } = useAuth(); // cart_id, account_id, is_admin
     const [cartItems, setCartItems] = useState([]);
-    const [load, reload] = useState(false);
-
-
-    // useEffect(() => {
-    //     const fetchCart = async () => {
-    //         try {
-    //             let savedCart ;
-    //             var itemsInDB = [];
-
-    //             // if user is logged in, idea 1
-    //             // else check the localstorage 
-    //             if (user && user.account_id) {
-    //                 // idea 1: fetch items from db and localstorage
-    //                 // if there are items in local storage, update them in db
-    //                 // else set them in localstorage as 'cart'
-    //                 itemsInDB = await getCartDetailsByCartId(user.cart_id);
-    //                 const temp = JSON.parse(localStorage.getItem("cart")).items;
-    //                 console.log('Items in cart: ', temp)
-                    
-    //                 if (temp) {
-    //                     const cartDetailsData = temp.map(item => ({
-    //                         cart_id: user.cart_id,
-    //                         quantity: item.quantity,
-    //                         pw_id: item.pw_id,
-    //                         item_subtotal: item.price * item.quantity,
-    //                         is_ground: item.grind
-    //                     }));
-            
-    //                     await addCartDetails(cartDetailsData);
-    //                     itemsInDB = await getCartDetailsByCartId(user.cart_id);
-    //                     savedCart = itemsInDB;
-    //                 } else {
-    //                     savedCart = itemsInDB;
-    //                 }
-
-    //             } else {
-    //                 // check the localStorage
-    //                 savedCart = localStorage.getItem("cart");
-    //                 console.log('Not logged in');
-    //             }
-    
-    //             // this works
-    //             if (typeof savedCart !== 'object') {
-    //                 setCartItems(JSON.parse(savedCart).items);
-    //                 console.log(typeof savedCart, savedCart)
-    //             } else {
-    //                 setCartItems(savedCart);
-    //                 console.log(typeof savedCart, savedCart)
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching cart:", error);
-    //         }
-    //     };
-    
-    //     fetchCart();
-        
-    // }, [user]); 
+    const [load, reload] = useState();
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -139,18 +83,21 @@ export function CartProvider({ children }) {
     };
 
     const removeFromCart = (product_id, weight_id) => {
-        if (!cartItems) return;
         setCartItems((prev) =>
-            prev.filter((item) => !(item.product_id === product_id && item.weight_id === weight_id))
+            prev.filter(
+                (item) =>
+                !(item.product_id === product_id && item.weight_id === weight_id)
+            )
         );
     };
 
+    // this returns the number of items in cart, not total price
     const getTotalItems = () => {
+        console.log('Total items', cartItems)
         return cartItems ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
-    };
+    }
 
     const updateQuantity = (product_id, weight_id, newQuantity) => {
-        if (!cartItems) return;
         setCartItems((prev) =>
             prev.map((item) =>
                 item.product_id === product_id && item.weight_id === weight_id
@@ -158,12 +105,6 @@ export function CartProvider({ children }) {
                     : item
             )
         );
-    };
-
-    const clearCart = () => {
-        setCartItems([]);
-        localStorage.setItem("cart", JSON.stringify({ items: [] }));
-        console.log("Cart cleared");
     };
 
     const data = {
@@ -174,12 +115,12 @@ export function CartProvider({ children }) {
         getTotalItems,
         updateQuantity,
         removeFromCart,
-        setCartItems,
-        clearCart, // Thêm hàm clearCart
-    };
+    }
 
     return (
-        <CartContext.Provider value={data}>
+        <CartContext.Provider 
+            value={ data }
+        >
             {children}
         </CartContext.Provider>
     );

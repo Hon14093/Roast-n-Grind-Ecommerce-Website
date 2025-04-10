@@ -4,7 +4,6 @@ import {
     addOrder, 
     addOrderDetails, 
     editOrderStatus, 
-    createOrderDetails,
     returnAllOrders, 
     returnOrderDetailsByOrderId, 
     returnOrdersByAccountId, 
@@ -26,7 +25,6 @@ router.get('/my-orders/:account_id', returnOrdersByAccountId);
 
 router.post('/create', addOrder); 
 router.post('/details/create', addOrderDetails);
-router.post('/details/create-many', createOrderDetails);
 
 router.put('/check/:order_id', editOrderStatus);
 

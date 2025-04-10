@@ -3,9 +3,12 @@ import { PrismaClient } from '@prisma/client';
 export const prisma = new PrismaClient();
 
 export const createOrder = async (data) => {
+    return await prisma.order.create({ data });
+}
+
+export const createOrder1 = async (data) => {
     console.log("Dữ liệu nhận được từ client:", data);
 
-    // Kiểm tra các trường bắt buộc
     const requiredFields = ["account_id", "shipping_id", "address_id", "method_id", "order_total"];
     for (const field of requiredFields) {
         if (!data[field]) {

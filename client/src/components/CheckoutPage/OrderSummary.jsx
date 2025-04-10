@@ -13,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 // import { VisaModal } from '../modals/payment/PaymentModals';
 import { getDiscountByCode } from '@/hooks/discountAPI';
 import { placeOrder } from '@/hooks/orderAPI';
+import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 
 export default function OrderSummary({ addressId, pm_id, prevStep }) {
@@ -77,7 +78,36 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
         }
     }
 
-    const handlePlaceOrder = async () => {
+    const handlePayment = async () => {
+        console.log(orderData)
+        localStorage.setItem('orderData', JSON.stringify(orderData));
+
+        try {
+            const stripe = await loadStripe('pk_test_51RC0uAP2tCpSt8NrqLBhlp1RYdeEEetUWHrtYCjH8vAkOT3h4ZPZ1wr6lk79d4vFYzHqOhAmq727SxPHCziITbZo00ofyPJrwg');
+            console.log('Processing payment...');
+
+            const response = await axios.post('http://localhost:5000/api/payment/stripe/create-checkout-session',
+                { items: cartItems },
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            )
+
+            const result = await stripe.redirectToCheckout({
+                sessionId: response.data.id
+            });
+        
+            if (result.error) {
+                console.error('Stripe redirect error:', result.error);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handlePlaceOrder1 = async () => {
         
         setIsLoading(true);
         try {
@@ -229,12 +259,19 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                         Đặt hàng
                     </Button> */}
 
-                    <Button
-                        onClick={handlePlaceOrder}
+                    {/* <Button
+                        onClick={handlePayment}
                         className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors"
                         // disabled={isLoading || cartItems.length === 0 || !pm_id}
                     >
-                        {/* {isLoading ? "Đang xử lý..." : "Đặt hàng"} */}
+                        {isLoading ? "Đang xử lý..." : "Đặt hàng"}
+                        Đặt hàng
+                    </Button> */}
+
+                    <Button 
+                        onClick={handlePayment}
+                        className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'
+                    >
                         Đặt hàng
                     </Button>
 

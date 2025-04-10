@@ -20,13 +20,13 @@ export const placeOrder = async (data) => {
 };
 
 export const createOrderDetails = async (data) => {
+    console.log('data in api:', data)
     try {
         const result = await axios.post(`${BASE_URL}/api/order/details/create`, data);
         console.log("Actual result: ", result.data);
-        return result.data; // Giả định trả về { success: true, details: [...] }
+        return result.data;
     } catch (error) {
         console.log("Lỗi khi tạo chi tiết đơn hàng:", error);
-        return null;
     }
 };
 

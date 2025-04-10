@@ -8,43 +8,14 @@ import { createOrder,
 } from "../models/Order.js";
 
 import { 
+    createOrderDetails,
     getOrderDetailsByOrderId 
 } from "../models/Order_Details.js";
 import { getAllOrderStatuses, getOrderStatusByName } from "../models/Order_Status.js";
 
-export const createOrderDetails = async (req, res) => {
-    try {
-        const { orderDetails } = req.body; // Nhận mảng orderDetails từ body
-
-        if (!orderDetails || !Array.isArray(orderDetails) || orderDetails.length === 0) {
-            return res.status(400).json({ message: 'orderDetails không hợp lệ hoặc rỗng' });
-        }
-
-        // Kiểm tra và tạo Order_Details
-        const createdDetails = await prisma.order_Details.createMany({
-            data: orderDetails.map(detail => ({
-                quantity: detail.quantity,
-                subtotal: detail.subtotal,
-                is_ground: detail.is_ground,
-                order_id: detail.order_id,
-                pw_id: detail.pw_id,
-            })),
-            skipDuplicates: true,
-        });
-
-        res.status(201).json({
-            success: 1,
-            message: 'Order_Details created successfully',
-            createdDetails,
-        });
-    } catch (error) {
-        console.error('Error creating Order_Details:', error);
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
-    }
-};
-
 export const addOrder = async (req, res) => {
     try {
+        console.log('test', req.body)
         const result = await createOrder(req.body);
         res.json(result);
     } catch (error) {
@@ -61,7 +32,6 @@ export const addOrderDetails = async (req,res) => {
         const data = req.body;
         console.log(data)
         const newDetails = await createOrderDetails(data);
-
 
         res.status(201).json({ 
             success: 1,

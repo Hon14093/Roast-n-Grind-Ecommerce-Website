@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { ScrollArea } from '../ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
+import { Separator } from '../ui/separator';
 import stripeLogo from '../../images/stripe.png';
 export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
     const { cartItems } = useCart();
@@ -30,7 +31,7 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
                     Chọn phương thức thanh toán
                 </h1>
 
-                <article className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <article className="border border-darkOlive rounded-lg p-6 shadow-sm">
                     <RadioGroup 
                         value={pm_id === 2 ? "stripe" : ""}
                         onValueChange={(value) => setPm_id(value === "stripe" ? 2 : null)}
@@ -64,23 +65,21 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
                     </Button>
                 </div>
             </section>
-{/* Lên github coi lại đi, tại commit r thì nó trên branch */}
-            {/* Cart Section */}
-            <section className="md:col-span-5">
-                <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
-                    Giỏ hàng
-                </h1>
-                
-                <ScrollArea className="h-[500px] bg-white rounded-lg border border-gray-200 p-4">
+
+             {/* Display cart */}
+            <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
+                <h1 className='font-semibold uppercase text-2xl pb-2'>Giỏ hàng</h1>
+                <ScrollArea className='h-[500px]'>
+                    
                     {cartItems.map((item) => (
                         <div
                             key={`${item.product_id}-${item.weight_id}`}
-                            className="flex items-start gap-4 py-4 border-b border-gray-100 last:border-b-0"
+                            className="flex items-start gap-4 mb-4"
                         >
                             <img
                                 src={item.image_url}
                                 alt={item.product_name}
-                                className="w-20 h-20 object-cover rounded-md"
+                                className="w-28 h-28 object-cover rounded"
                             />
 
                             <div>
@@ -92,8 +91,11 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
                             </div>
                         </div>
                     ))}
+
                 </ScrollArea>
 
+                <Separator className='bg-darkOlive h-[0.5px] w-[50%] mb-4'/>
+                
                 <div>
                     <article className="flex text-lg">
                         <span className='font-bold'>
@@ -104,6 +106,7 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
                         </span>
                     </article>
                 </div>
+
             </section>
         </div>
     );
