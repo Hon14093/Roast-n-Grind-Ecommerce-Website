@@ -66,5 +66,66 @@ export default function CheckoutBody() {
 
             <Toaster />
         </div>
-    )
+        
+        // <div >
+        //     <div className="container mx-auto px-4 py-8">
+        //         {/* Header Section */}
+        //         <header className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center mb-8">
+        //             <div className="col-span-1 md:col-span-3">
+        //                 <a href="/">
+        //                     <img 
+        //                         src={logoBlack} 
+        //                         className="w-24 h-auto" 
+        //                         alt="Roast n Grind Logo" 
+        //                     />
+        //                 </a>
+        //             </div>
+
+        //             <div className="col-span-1 md:col-span-9 w-full">
+        //                 <div className="flex justify-between items-center text-sm font-medium text-gray-600">
+        //                     <span className={`${step >= 1 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+        //                         Địa chỉ giao hàng
+        //                     </span>
+        //                     <span className={`${step >= 2 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+        //                         Phương thức thanh toán
+        //                     </span>
+        //                     <span className={`${step >= 3 ? "text-darkOlive font-semibold" : "text-gray-400"} transition-colors duration-200`}>
+        //                         Tổng kết đơn hàng
+        //                     </span>
+        //                 </div>
+        //                 <Progress 
+        //                     value={(step / 3) * 100}
+        //                     className="mt-4 h-2 bg-gray-200"
+        //                 />
+        //             </div>
+        //         </header>
+
+        //         {/* Main Content */}
+        //         <main className="bg-white rounded-lg shadow-sm p-6">
+        //             {step === 1 && 
+        //                 <AddressDetails
+        //                     addressId={selectedAddressId}
+        //                     setSelectedAddressId={setSelectedAddressId}
+        //                     nextStep={nextStep}
+        //                 />}
+        //             {step === 2 && 
+        //                 <ChoosePayment 
+        //                     pm_id={pm_id}
+        //                     setPm_id={setPm_id}
+        //                     prevStep={prevStep}
+        //                     nextStep={nextStep}
+        //                 />}
+            
+        //             {step === 3 && 
+        //                 <OrderSummary 
+        //                     addressId={selectedAddressId}
+        //                     pm_id={pm_id}
+        //                     prevStep={prevStep}
+        //                 />}
+        //         </main>
+        //     </div>
+
+        //     <Toaster />
+        // </div>
+    );
 }

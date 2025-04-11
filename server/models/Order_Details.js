@@ -1,14 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const createOrderDetail = async (data) => {
-    return await prisma.order_Details.create({
-        data: data
-    });
-};
 
-// pay attention to which function you actually want to import
-// one is plural and one is singular 
 export const createOrderDetails = async (data) => {
     console.log(data)
     return await prisma.order_Details.createMany({ 

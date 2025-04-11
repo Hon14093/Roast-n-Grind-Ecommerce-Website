@@ -1,64 +1,72 @@
-import React from 'react'
-import { Button } from '../ui/button'
-import { EditAddress, AddAddress, DeleteWarning } from '../modals/address/AddressModals'
-import { useCart } from '../../context/CartContext'
-import { ScrollArea } from '../ui/scroll-area'
-import { Separator } from '../ui/separator'
-import { Checkbox } from '../ui/checkbox'
-import { CreditCard } from 'lucide-react'
-import { Label } from "../ui/label"
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import visaLogo from '../../images/visa.png'
-
-export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
+// ChoosePayment.jsx
+import React from 'react';
+import { Button } from '../ui/button';
+import { useCart } from '../../context/CartContext';
+import { ScrollArea } from '../ui/scroll-area';
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import { Separator } from '../ui/separator';
+import stripeLogo from '../../images/stripe.png';
+export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep }) {
     const { cartItems } = useCart();
-    const totalPrice = (cartItems.length > 0)
+    // const { pm_id, setPm_id } = usePayment();
+    const totalPrice = cartItems.length > 0
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
 
     const isPaymentChosen = () => {
         if (pm_id) {
+            console.log("pm_id before nextStep:", pm_id);
             nextStep();
         } else {
-            alert('Hãy chọn phương thức thanh toán')
+            alert("Hãy chọn phương thức thanh toán");
         }
-    }
+    };
 
     return (
-        <div className='grid grid-cols-12 gap-4'>
-        
-            <section className='col-span-7 mx-auto w-full'>
-                <h1 className='font-semibold uppercase text-2xl pb-2'>Chọn phương thức thanh toán</h1>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            {/* Payment Method Section */}
+            <section className="md:col-span-7">
+                <h1 className="text-2xl font-bold uppercase text-gray-800 mb-6">
+                    Chọn phương thức thanh toán
+                </h1>
 
-                <article className='border-2 border-darkOlive min-h-36 rounded-lg grid grid-cols-4'>
-                    <RadioGroup defaultValue="option-one" className='col-start-2 grid gap-6'>
-                        <div className="flex items-center space-x-2 self-end">
-                            <RadioGroupItem value="bank" id="bank" onClick={() => setPm_id(1)} />
-                            <Label htmlFor="bank" className='text-base flex gap-2'>
-                                <CreditCard />
-                                Chuyển khoản
+                <article className="border border-darkOlive rounded-lg p-6 shadow-sm">
+                    <RadioGroup 
+                        value={pm_id === 2 ? "stripe" : ""}
+                        onValueChange={(value) => setPm_id(value === "stripe" ? 2 : null)}
+                        className="space-y-4"
+                    >
+                        <div className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                            <RadioGroupItem value="stripe" id="stripe" className="border-darkOlive" />
+                            <Label 
+                                htmlFor="stripe" 
+                                className="flex items-center gap-3 text-gray-700 cursor-pointer text-lg font-medium"
+                            >
+                                <img src={stripeLogo} alt="Stripe" className="h-8 w-auto" />
+                                Stripe
                             </Label>
                         </div>
-
-                        <div className="flex items-center space-x-2 self-start">
-                            <RadioGroupItem value="visa" id="visa" onClick={() => setPm_id(2)} />
-                            <Label htmlFor="visa" className='text-base'>
-                                <img src={visaLogo} alt="" className='h-6' />
-                            </Label>
-                        </div>
-                    </RadioGroup>   
-
+                    </RadioGroup>
                 </article>
 
-                <article className='flex pt-4'>
-                    <Button onClick={prevStep} className='bg-darkOlive'>Quay lại</Button>
-
-                    <Button onClick={isPaymentChosen} className='ml-auto bg-darkOlive'>Tiếp theo</Button>
-
-                </article>
+                <div className="flex justify-between mt-6 gap-4">
+                    <Button 
+                        onClick={prevStep} 
+                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+                    >
+                        Quay lại
+                    </Button>
+                    <Button 
+                        onClick={isPaymentChosen} 
+                        className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+                    >
+                        Tiếp theo
+                    </Button>
+                </div>
             </section>
 
-            {/* Display cart */}
+             {/* Display cart */}
             <section className='col-span-4 text-darkOlive' onClick={() => console.log(addresses)}>
                 <h1 className='font-semibold uppercase text-2xl pb-2'>Giỏ hàng</h1>
                 <ScrollArea className='h-[500px]'>
@@ -101,6 +109,5 @@ export default function ChoosePayment({ pm_id, setPm_id, prevStep, nextStep}) {
 
             </section>
         </div>
-    )
+    );
 }
-

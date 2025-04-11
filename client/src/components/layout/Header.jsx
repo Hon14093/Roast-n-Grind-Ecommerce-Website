@@ -11,7 +11,7 @@ function Header({ darkBG = true, toggleCart }) {
     const [isTop, setIsTop] = useState(true);
     const { getTotalItems } = useCart();
     const totalItems = getTotalItems(); // this counts how many items are there in cart, not total price
-    const { isLoggedIn } = useAuth()
+    const { isLoggedIn } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -67,7 +67,9 @@ function Header({ darkBG = true, toggleCart }) {
                             </Link>
                         </li>
                         <li className='navList group'>
+                            <Link to="/contact">
                             <a className='navAnchor'>Liên Hệ</a>
+                            </Link>
                         </li>
                         <li className='navList group'>
                             <a className='navAnchor' onClick={() => console.log(isLoggedIn)}>FAQ</a>
@@ -93,9 +95,6 @@ function Header({ darkBG = true, toggleCart }) {
                         </Link>
                     )}
                     
-                    
-                    
-
                     <button 
                         onClick={toggleCart}
                         className='group top-right-button p-2 bg-white rounded-full flex gap-1 items-center'

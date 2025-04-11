@@ -31,6 +31,7 @@ export const getDiscountByCode = async (discount_code) => {
 }
 
 
+
 export const findDiscountById = async (id) => {
     return await prisma.discount.findUnique({
         where: { discount_id: id } // Fixed field name

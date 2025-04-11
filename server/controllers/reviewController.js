@@ -4,8 +4,12 @@ export const addReview = async (req,res) => {
     try {
         const data = req.body;
         const newReview = await createReview(data);
+        console.log(newReview)
 
-        res.status(200).json({ newReview })
+        res.status(200).json({ 
+            success: 1,
+            newReview
+         })
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });

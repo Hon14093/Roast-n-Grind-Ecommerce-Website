@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { X } from "lucide-react"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,7 +8,7 @@ import { Input } from "../ui/input"
 import { Trash2 } from "lucide-react"
 import { useAuth } from "../../context/AuthContext"
 import { useCart } from "../../context/CartContext"
-import { addCartDetails, getCartByAccountId, removeCartDetail } from "@/hooks/cartAPI"
+import { addCartDetails, removeCartDetail } from "@/hooks/cartAPI"
 import { useNavigate } from "react-router-dom"
 
 export default function Cart({ isOpen, toggleCart }) {

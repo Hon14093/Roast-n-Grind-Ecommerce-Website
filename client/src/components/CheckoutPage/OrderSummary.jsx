@@ -10,11 +10,15 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useCart } from '../../context/CartContext';
 import { getAddressesByAccountId } from '@/hooks/addressAPI';
 import { useAuth } from '../../context/AuthContext';
-import { VisaModal } from '../modals/payment/PaymentModals';
+// import { VisaModal } from '../modals/payment/PaymentModals';
 import { getDiscountByCode } from '@/hooks/discountAPI';
+import { placeOrder } from '@/hooks/orderAPI';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
 
 export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const { cartItems } = useCart();
+    const [isLoading, setIsLoading] = useState(false);
     const { user } = useAuth();
     const [addresses, setAddresses] = useState([]);
     const [note, setNote] = useState(null);
@@ -23,7 +27,7 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
     const [discount_id, setDiscount_id] = useState(null);
     const [discountCode, setDiscountCode] = useState(null);
     const [discountAmount, setDiscountAmount] = useState(0);
-    const selectedAddress = addresses.find(address => address.Address.address_id === addressId);
+    const selectedAddress = addresses.find(address => address.address_id === addressId);
     const totalPrice = (cartItems.length > 0)
         ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
         : 0;
@@ -73,6 +77,120 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
             toast('Mã giảm giá không hợp lệ');
         }
     }
+
+    const handlePayment = async () => {
+        console.log(orderData)
+        localStorage.setItem('orderData', JSON.stringify(orderData));
+
+        try {
+            const stripe = await loadStripe('pk_test_51RC0uAP2tCpSt8NrqLBhlp1RYdeEEetUWHrtYCjH8vAkOT3h4ZPZ1wr6lk79d4vFYzHqOhAmq727SxPHCziITbZo00ofyPJrwg');
+            console.log('Processing payment...');
+
+            const response = await axios.post('http://localhost:5000/api/payment/stripe/create-checkout-session',
+                { items: cartItems },
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            )
+
+            const result = await stripe.redirectToCheckout({
+                sessionId: response.data.id
+            });
+        
+            if (result.error) {
+                console.error('Stripe redirect error:', result.error);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handlePlaceOrder1 = async () => {
+        
+        setIsLoading(true);
+        try {
+            const res = await placeOrder(orderData);
+            const order_id = res?.newOrder?.order_id;
+            const orderDetails = cartItems.map(item => ({
+                // product_id: item.product_id,
+                // weight_id: item.weight_id,
+                // quantity: item.quantity,
+                // price: item.price,
+                // product_name: item.product_name,
+
+                quantity: item.quantity,
+                subtotal: item.price * item.quantity,
+                is_ground: item.grind,
+                order_id: order_id,
+                pw_id: item.pw_id,
+            }))
+
+            let apiUrl = '';
+            let redirectMessage = '';
+
+            console.log("user.account_id:", user.account_id);
+
+            if (pm_id === 2) {
+                apiUrl = `http://localhost:5000/api/payment/stripe/create-checkout-session`;
+                redirectMessage = "Đang chuyển hướng đến Stripe...";
+            } else {
+                throw new Error("Phương thức thanh toán không hợp lệ.");
+            }
+
+            console.log(`Dữ liệu gửi lên Stripe:`, orderData);
+            
+            setTimeout(async () => {
+                const response = await axios.post(
+                    apiUrl,
+                    {
+                        userId: user.account_id,
+                        cartItems: orderDetails,
+                        sm_id,
+                        addressId,
+                        orderData,
+                    },
+                    {
+                        withCredentials: true, // same as credentials: 'include' in fetch
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+    
+                const data = response.data;
+                if (data?.data?.paymentUrl) {
+                    toast.success(redirectMessage);
+                    localStorage.setItem('paymentSessionId', data.data.sessionId);
+                    window.location.href = data.data.paymentUrl;
+                } else {
+                    throw new Error("Không nhận được URL thanh toán từ server.");
+                }
+            }, 500)
+
+            // if (!response.ok) {
+            //     throw new Error("Không thể tạo URL thanh toán");
+            // }
+
+            // const data = await response.json();
+            // console.log(`Dữ liệu thanh toán từ Stripe:`, data);
+
+            // if (data && data.data.paymentUrl) {
+            //     toast.success(redirectMessage);
+            //     localStorage.setItem('paymentSessionId', data.data.sessionId);
+            //     window.location.href = data.data.paymentUrl;
+            // } else {
+            //     throw new Error("Không nhận được URL thanh toán từ server.");
+            // }
+
+        } catch (error) {
+            console.error("Lỗi khi đặt hàng:", error);
+            toast.error(error.message || "Không thể xử lý thanh toán. Vui lòng thử lại.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className='grid grid-cols-12 gap-4'>
@@ -141,7 +259,23 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                         Đặt hàng
                     </Button> */}
 
-                    <VisaModal orderData={orderData} totalPrice={totalPrice} />
+                    {/* <Button
+                        onClick={handlePayment}
+                        className="w-full bg-darkOlive hover:bg-darkOlive/90 text-white font-medium py-3 rounded-lg transition-colors"
+                        // disabled={isLoading || cartItems.length === 0 || !pm_id}
+                    >
+                        {isLoading ? "Đang xử lý..." : "Đặt hàng"}
+                        Đặt hàng
+                    </Button> */}
+
+                    <Button 
+                        onClick={handlePayment}
+                        className='bg-crimsonRed text-ivory border-2 border-crimsonRed hover:bg-ivory hover:text-crimsonRed ml-auto'
+                    >
+                        Đặt hàng
+                    </Button>
+
+                    {/* <VisaModal orderData={orderData} totalPrice={totalPrice} /> */}
                 </article>
             </section>
 
@@ -180,10 +314,10 @@ export default function OrderSummary({ addressId, pm_id, prevStep }) {
                     <div>
                         {selectedAddress ? (
                             <div>
-                                <p className='text-lg'>{selectedAddress.Address.last_name} {selectedAddress.Address.first_name}</p>
-                                <p className='text-lg'>{selectedAddress.Address.address_line}</p>
-                                <p className='text-lg'>{selectedAddress.Address.ward}</p>
-                                <p className='text-lg'>{selectedAddress.Address.district}</p>
+                                <p className='text-lg'>{selectedAddress.last_name} {selectedAddress.first_name}</p>
+                                <p className='text-lg'>{selectedAddress.address_line}</p>
+                                <p className='text-lg'>{selectedAddress.ward}</p>
+                                <p className='text-lg'>{selectedAddress.district}</p>
                             </div>
                         ) : (
                             <p>Không có dữ liệu</p>
